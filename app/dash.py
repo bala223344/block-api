@@ -7,7 +7,7 @@ from app.util import serialize_doc
 from app import mongo
 
 
-def usdc_data(address,symbol,Preferred_Safename,Email,type_id):
+def dash_data(address,symbol,Preferred_Safename,Email,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']
     if "url_transaction" in records:
@@ -15,32 +15,35 @@ def usdc_data(address,symbol,Preferred_Safename,Email,type_id):
     ret=url.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
-    
+
     doc=url1.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
-    transactions=res['result']
-    
-
+    transactions=res['txs'] 
     array=[]
+    
     for transaction in transactions:
         frm=[]
         to=[]
-        fee =""
-        timestamp = transaction['timeStamp']
-        first_date=int(timestamp)
-        dt_object = datetime.fromtimestamp(first_date)
-        fro =transaction['from']
-        send_amount=transaction['value']
-        too=transaction['to']
-        to.append({"to":too,"receive_amount":""})
-        frm.append({"from":fro,"send_amount":send_amount})
+        fee = transaction['fees']
+        time =transaction['time']
+        dt_object = datetime.fromtimestamp(time)
+        vin = transaction['vin']
+        vout = transaction['vout']
+        for v_in in vin:
+            fro = v_in['addr']
+            send_amount=v_in['value']
+            frm.append({"from":fro,"send_amount":send_amount})
+
+        for v_out in vout:
+            val = v_out['value']
+            scriptPubKey = v_out['scriptPubKey']
+            if "addresses" in scriptPubKey:
+                addresses=scriptPubKey['addresses']
+                for addd in addresses:
+                    to.append({"to":addd,"receive_amount":val})
         array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
     
-    balance = response['result']
-    amount_recived =""
-    amount_sent =""
-
     ret = mongo.db.address.update({
             "address":address            
         },{
@@ -57,6 +60,10 @@ def usdc_data(address,symbol,Preferred_Safename,Email,type_id):
     })
     _id=ret['_id']
 
+    balance=response['balance']
+    amount_recived =response['totalReceived']
+    amount_sent =response['totalSent']
+    
     ret = mongo.db.sws_history.update({
         "address":address            
     },{
@@ -72,4 +79,4 @@ def usdc_data(address,symbol,Preferred_Safename,Email,type_id):
                 "amountSent":amount_sent
             }},upsert=True)
     
-    return jsonify(transactions)
+    return jsonify(response)

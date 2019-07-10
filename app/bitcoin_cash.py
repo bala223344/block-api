@@ -7,7 +7,7 @@ from app.util import serialize_doc
 from app import mongo
 
 
-def btc_cash_data(address,symbol):
+def btc_cash_data(address,symbol,Preferred_Safename,Email,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']
     if "url_transaction" in records:
@@ -53,7 +53,10 @@ def btc_cash_data(address,symbol):
         },{
         "$set":{
                 "address":address,
-                "symbol":symbol
+                "symbol":symbol,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
+                "Email":Email
             }},upsert=True)
 
     ret = mongo.db.address.find_one({
@@ -61,13 +64,15 @@ def btc_cash_data(address,symbol):
     })
     _id=ret['_id']
 
-    ret = mongo.db.balance.update({
+    ret = mongo.db.sws_history.update({
         "address":address            
     },{
         "$set":{
                 "record_id":str(_id),    
                 "address":address,
                 "symbol":symbol,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
                 "balance":bal,
                 "transactions":array,
                 "amountReceived":(receive_amount/100000000),

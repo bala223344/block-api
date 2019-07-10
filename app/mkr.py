@@ -7,7 +7,7 @@ from app.util import serialize_doc
 from app import mongo
 
 
-def mkr_data(address,symbol):
+def mkr_data(address,symbol,Preferred_Safename,Email,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']
     if "url_transaction" in records:
@@ -34,7 +34,7 @@ def mkr_data(address,symbol):
         too=transaction['to']
         send_amount=transaction['value']
         to.append({"to":too,"receive_amount":""})
-        frm.append({"from":fro,"send_amount":send_amount})
+        frm.append({"from":fro,"send_amount":(int(send_amount)/1000000000000000000)})
         array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
     
     balance = response['result']
@@ -46,7 +46,10 @@ def mkr_data(address,symbol):
         },{
         "$set":{
                 "address":address,
-                "symbol":symbol
+                "symbol":symbol,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
+                "Email":Email
             }},upsert=True)
 
     ret = mongo.db.address.find_one({
@@ -54,14 +57,16 @@ def mkr_data(address,symbol):
     })
     _id=ret['_id']
 
-    ret = mongo.db.balance.update({
+    ret = mongo.db.sws_history.update({
         "address":address            
     },{
         "$set":{
                 "record_id":str(_id),    
                 "address":address,
                 "symbol":symbol,
-                "balance":balance,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
+                "balance":(int(balance)/1000000000000000000),
                 "transactions":array,
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent

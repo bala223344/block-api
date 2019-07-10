@@ -7,13 +7,12 @@ from app.util import serialize_doc
 from app import mongo
 
 
-def qtum_data(address,symbol):
+def qtum_data(address,symbol,Preferred_Safename,Email,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']
     url_hash=records['url_hash']
     if "url_transaction" in records:
         url1=records['url_transaction']
-    
     ret=url.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
@@ -21,38 +20,34 @@ def qtum_data(address,symbol):
     doc=url1.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
-
+    transactions=res['transactions']
+    
     array=[]
-    transactions=res['transactions']    
     for transaction in transactions:
-        print(transaction)
-        ret=url_hash.replace("{{hash}}",''+transaction+'')
-        print(ret)
-        '''
-        fee =transaction['fee']
-        timestamp = transaction['timestamp']
-        dt_object = datetime.fromtimestamp(timestamp)
-        vin = transaction['vin']
-        vout= transaction['vout']
-        frm=[]
-        for v_in in vin:
-            if v_in is not None:
-                retrievedVout = v_in['retrievedVout']['scriptPubKey']
-                val = v_in['retrievedVout']['value']
-                if "addresses" in retrievedVout:
-                    addresses=retrievedVout['addresses']
-                    for h in addresses:
-                        frm.append({"from":h,"send_amount":val})
-        to=[]
-        for v_out in vout:
-            if v_out is not None:
-                retrieved = v_out['scriptPubKey']['addresses']
-                valu = v_out['value']
-                for a in retrieved:
-                    to.append({"to":a,"receive_amount":valu})
-
-        array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
-        '''
+        
+        
+        ret1=url_hash.replace("{{hash}}",''+transaction+'')
+        response_u = requests.get(url=ret1)
+        res1 = response_u.json()
+        
+        for tran in res1:
+            fee=tran['fees']
+            timestamp=tran['timestamp']
+            dt_object = datetime.fromtimestamp(timestamp)
+            inputs=tran['inputs']
+            outputs=tran['outputs']
+            frm=[]
+            for inp in inputs:
+                addre=inp['address']
+                val=inp['value']
+                frm.append({"from":addre,"send_amount":(int(val)/100000000)})
+            to=[]
+            for inpp in outputs:
+                ad=inpp['address']
+                value=inpp['value']
+                to.append({"to":ad,"receive_amount":(int(value)/100000000)})
+            array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
+    
     balance = response['balance']
     amount_recived =response['totalReceived']
     amount_sent =response['totalSent']
@@ -62,7 +57,10 @@ def qtum_data(address,symbol):
         },{
         "$set":{
                 "address":address,
-                "symbol":symbol
+                "symbol":symbol,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
+                "Email":Email
             }},upsert=True)
 
     ret = mongo.db.address.find_one({
@@ -70,16 +68,19 @@ def qtum_data(address,symbol):
     })
     _id=ret['_id']
 
-    ret = mongo.db.balance.update({
+    ret = mongo.db.sws_history.update({
         "address":address            
     },{
         "$set":{
                 "record_id":str(_id),    
                 "address":address,
                 "symbol":symbol,
-                "balance":balance,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
+                "balance":(int(balance)/100000000),
                 "transactions":array,
-                "amountReceived":amount_recived,
-                "amountSent":amount_sent
+                "amountReceived":(int(amount_recived)/100000000),
+                "amountSent":(int(amount_sent)/100000000)
             }},upsert=True)
-    return jsonify(ret)
+
+    return jsonify(res1)

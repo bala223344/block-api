@@ -7,10 +7,10 @@ from app.util import serialize_doc
 from app import mongo
 
 
-def tether_data(address,symbol):
+def tether_data(address,symbol,Preferred_Safename,Email,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']
-    response_user_token = requests.post(url ,data={"addr":address})
+    response_user_token = requests.post(url ,data={"account_name":address})
     response = response_user_token.json()          
 
     transactions=response['transactions']
@@ -38,7 +38,10 @@ def tether_data(address,symbol):
         },{
         "$set":{
                 "address":address,
-                "symbol":symbol
+                "symbol":symbol,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
+                "Email":Email
             }},upsert=True)
 
     ret = mongo.db.address.find_one({
@@ -52,13 +55,15 @@ def tether_data(address,symbol):
     amount_sent =""
 
 
-    ret = mongo.db.balance.update({
+    ret = mongo.db.sws_history.update({
         "address":address            
     },{
         "$set":{
                 "record_id":str(_id),    
                 "address":address,
                 "symbol":symbol,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
                 "balance":(int(value)/100000000),
                 "transactions":array,
                 "amountReceived":amount_recived,

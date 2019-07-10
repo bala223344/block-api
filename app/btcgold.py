@@ -7,7 +7,7 @@ from app.util import serialize_doc
 from app import mongo
 
 
-def btc_gold_data(address,symbol):
+def btc_gold_data(address,symbol,Preferred_Safename,Email,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']
     if "url_transaction" in records:
@@ -30,19 +30,17 @@ def btc_gold_data(address,symbol):
         vout = transaction['vout']
         frm=[]
         for v_in in transfers:
-            if v_in:
-                amount = v_in['value']
-                fro = v_in['addr']
-                frm.append({"from":fro,"send_amount":amount})
+            amount = v_in['value']
+            fro = v_in['addr']
+            frm.append({"from":fro,"send_amount":amount})
         to=[]
         for v_out in vout:
-            if v_out:
-                scriptPubKey =v_out['scriptPubKey']
-                recv_amount =v_out['value']
-                if "addresses" in scriptPubKey:
-                    adrr =scriptPubKey['addresses']
-                    for address in adrr:
-                        to.append({"to":address,"receive_amount":recv_amount})
+            scriptPubKey =v_out['scriptPubKey']
+            recv_amount =v_out['value']
+            if "addresses" in scriptPubKey:
+                adrr =scriptPubKey['addresses']
+                for addre in adrr:
+                    to.append({"to":addre,"receive_amount":recv_amount})
         array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
     
     ret = mongo.db.address.update({
@@ -50,7 +48,10 @@ def btc_gold_data(address,symbol):
         },{
         "$set":{
                 "address":address,
-                "symbol":symbol
+                "symbol":symbol,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
+                "Email":Email
             }},upsert=True)
 
     ret = mongo.db.address.find_one({
@@ -63,17 +64,18 @@ def btc_gold_data(address,symbol):
     balance = response['balance']
                 
     
-    ret = mongo.db.balance.update({
+    ret = mongo.db.sws_history.update({
         "address":address            
     },{
         "$set":{
                 "record_id":str(_id),    
                 "address":address,
                 "symbol":symbol,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
                 "balance":balance,
                 "transactions":array,
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent
             }},upsert=True)
-    print(ret)
-    return jsonify(res)
+    return jsonify(response)

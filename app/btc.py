@@ -7,7 +7,7 @@ from app.util import serialize_doc
 from app import mongo
 
 
-def btc_data(address,symbol):
+def btc_data(address,symbol,Preferred_Safename,Email,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']
     if "url_trans" in records:
@@ -17,6 +17,7 @@ def btc_data(address,symbol):
     response_user_token = requests.get(url=ret1)
     response = response_user_token.json()       
     
+
     if symbol == "BTC":
         transaction = response['data']
         balance =transaction['balance']
@@ -26,32 +27,33 @@ def btc_data(address,symbol):
         array=[]
         
         for transaction in transactions:
-            if transaction:
-                fee=transaction['fee']
-                frmm=transaction['inputs']
-                frm=[]
-                for trans in frmm:
-                    if trans:
-                        fro=trans['address']
-                        send=trans['value']
-                        frm.append({"from":fro,"send_amount":(send/100000000)})
-                transac=transaction['outputs']
-                to=[]
-                for too in transac:
-                    if too:
-                        t = too['address'] 
-                        recive =too['value']
-                        to.append({"to":t,"receive_amount":(recive/100000000)})
-                timestamp =transaction['timestamp']
-                dt_object = datetime.fromtimestamp(timestamp)
-                array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
+            fee=transaction['fee']
+            frmm=transaction['inputs']
+            frm=[]
+            for trans in frmm:
+                fro=trans['address']
+                send=trans['value']
+                frm.append({"from":fro,"send_amount":(send/100000000)})
+            transac=transaction['outputs']
+            to=[]
+            for too in transac:
+                t = too['address'] 
+                recive =too['value']
+                to.append({"to":t,"receive_amount":(recive/100000000)})
+            timestamp =transaction['timestamp']
+            dt_object = datetime.fromtimestamp(timestamp)
+            array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
         
     ret = mongo.db.address.update({
         "address":address            
     },{
         "$set":{
                 "address":address,
-                "symbol":symbol
+                "symbol":symbol,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
+                "Email":Email
+
             }},upsert=True)
 
     ret = mongo.db.address.find_one({
@@ -59,13 +61,15 @@ def btc_data(address,symbol):
     })
     _id=ret['_id']
 
-    ret = mongo.db.balance.update({
+    ret = mongo.db.sws_history.update({
         "address":address            
     },{
         "$set":{
                 "record_id":str(_id),    
                 "address":address,
                 "symbol":symbol,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
                 "balance":(int(balance)/100000000),
                 "transactions":array,
                 "amountReceived":(int(amountReceived)/100000000),

@@ -7,7 +7,7 @@ from app.util import serialize_doc
 from app import mongo
 
 
-def xtz_data(address,symbol):
+def xtz_data(address,symbol,Preferred_Safename,Email,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']
     if "url_transaction" in records:
@@ -33,7 +33,7 @@ def xtz_data(address,symbol):
             tz = too['tz']
             fro=tra['src']
             tzz=fro['tz']
-            frm.append({"from":tzz,"send_amount":amount})
+            frm.append({"from":tzz,"send_amount":(int(amount)/1000000)})
             to.append({"to":tz,"receive_amount":""})
         array.append({"fee":fee,"from":frm,"to":to,"date":timestamp})
     
@@ -42,7 +42,10 @@ def xtz_data(address,symbol):
         },{
         "$set":{
                 "address":address,
-                "symbol":symbol
+                "symbol":symbol,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
+                "Email":Email
             }},upsert=True)
 
     ret = mongo.db.address.find_one({
@@ -56,14 +59,16 @@ def xtz_data(address,symbol):
     
                 
     
-    ret = mongo.db.balance.update({
+    ret = mongo.db.sws_history.update({
         "address":address            
     },{
         "$set":{
                 "record_id":str(_id),    
                 "address":address,
                 "symbol":symbol,
-                "balance":balance,
+                "type_id":type_id,
+                "Preferred_Safename":Preferred_Safename,
+                "balance":(int(balance)/1000000),
                 "transactions":array,
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent
