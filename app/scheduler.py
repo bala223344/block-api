@@ -3,7 +3,7 @@ from app.util import serialize_doc
 from app import mongo
 from datetime import datetime
 
-
+'''
 def auto_fetch():
     print('running...')
     records = mongo.db.address.find({})
@@ -83,3 +83,32 @@ def auto_fetch():
                     "transactions":array,
                     "symbol":symbol
                 }},upsert=True)
+
+'''
+
+
+def auto_fetch():
+    response_user_token = requests.get(url="https://etherscamdb.info/api/scams")
+    response = response_user_token.json()
+    result = response['result']
+    if result:
+        for record in result:
+            if "addresses" in record:
+                name = record['name']
+                coin = record['coin']
+                category = record['category']
+                status =  record['status']
+                addr = record['addresses']
+                for add in addr:
+                    addresses = add
+                    ret = mongo.db.scam_address_info.update({
+                        "addresses":addresses            
+                    },{
+                        "$set":{
+                                "name":name,    
+                                "coin":coin,
+                                "category":category,
+                                "status":status,
+                                "addresses":addresses
+                            }},upsert=True)
+           

@@ -32,16 +32,22 @@ def create_app(test_config=None):
     
     app.register_blueprint(fetch.bp)
     
+    '''
+    auto_fetch_scheduler = BackgroundScheduler()
+    auto_fetch_scheduler.add_job(auto_fetch, trigger='interval', seconds=)
+    auto_fetch_scheduler.start()
+    '''
 
     auto_fetch_scheduler = BackgroundScheduler()
-    auto_fetch_scheduler.add_job(auto_fetch, trigger='interval', seconds=200000)
+    auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon-sat', hour=17,minute=40)
     auto_fetch_scheduler.start()
-    
         
+
+
     try:
         return app
     except:
         auto_fetch_scheduler.shutdown()
 
-        
+
        

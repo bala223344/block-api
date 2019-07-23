@@ -6,7 +6,7 @@ from datetime import datetime
 from app.util import serialize_doc
 from app.btc import btc_data
 from app.eth import eth_data
-from app.binance_chain import b_chain_data
+from app.bnb import bnb_data
 from app.bitcoin_cash import btc_cash_data
 from app.bitcoin_SV import bitcoin_svs_data
 from app.litecoin import ltc_data
@@ -19,6 +19,7 @@ from app.btt import btt_data
 from app.vet import vet_data
 from app.cro import cro_data
 from app.xrp import xrp_data
+from app.erc_coins import erc_coin_data
 from app.eos import eos_data
 from app.dash import dash_data
 from app.usdc import usdc_data
@@ -32,7 +33,7 @@ from app.unus_s_leo import unus_sed_leo_data
 bp = Blueprint('fetch', __name__, url_prefix='/')
 from app import mongo
 
-mydb = mysql.connector.connect( user="sql12298045" , password="6EzUA5zMDe", host="sql12.freemysqlhosting.net", database="sql12298045")
+mydb = mysql.connector.connect( user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
 mycursor=mydb.cursor()
     
 #Main Api which is using a function for return details by post address and symbol
@@ -61,8 +62,8 @@ def main():
         if symbol == "BTC_CASH":
             currency = btc_cash_data(address,symbol,Preferred_Safename,Email,type_id)
             return currency
-        if symbol == "BINANCE_COIN":
-            currency = b_chain_data(address,symbol,Preferred_Safename,Email,type_id)
+        if symbol == "BNB":
+            currency = bnb_data(address,symbol,Preferred_Safename,Email,type_id)
             return currency
         if symbol == "BTC_SV":
             currency = bitcoin_svs_data(address,symbol,Preferred_Safename,Email,type_id)
@@ -139,6 +140,85 @@ def main():
             currency = eos_data(address,symbol,Preferred_Safename,Email,type_id)
             return currency
 
+        if symbol == "ZRX":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "ELF":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "REP":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "AOA":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "BAT":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "LINK":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "CCCX":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "MCO":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "CRO":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "DAI":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "EKT":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "EGT":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "ENJ":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "GNT":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "HT":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "ICX":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "INB":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "IOST":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "KCS":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
+
+        if symbol == "LAMB":
+            currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+            return currency
     else:
         return jsonify({"msg": "You are not a registered user"}),203
 
@@ -158,9 +238,29 @@ def local_transaction(address):
 
     
 
-
-
-
-
-
-    
+@bp.route("/scam",methods=["GET"])
+def scam():
+    response_user_token = requests.get(url="https://etherscamdb.info/api/scams")
+    response = response_user_token.json()
+    result = response['result']
+    if result:
+        for record in result:
+            if "addresses" in record:
+                name = record['name']
+                coin = record['coin']
+                category = record['category']
+                status =  record['status']
+                addr = record['addresses']
+                for add in addr:
+                    addresses = add
+                    ret = mongo.db.scam_address_info.update({
+                        "addresses":addresses            
+                    },{
+                        "$set":{
+                                "name":name,    
+                                "coin":coin,
+                                "category":category,
+                                "status":status,
+                                "addresses":addresses
+                            }},upsert=True)
+        return jsonify({"success":"ok"})        
