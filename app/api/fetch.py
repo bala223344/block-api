@@ -238,29 +238,3 @@ def local_transaction(address):
 
     
 
-@bp.route("/scam",methods=["GET"])
-def scam():
-    response_user_token = requests.get(url="https://etherscamdb.info/api/scams")
-    response = response_user_token.json()
-    result = response['result']
-    if result:
-        for record in result:
-            if "addresses" in record:
-                name = record['name']
-                coin = record['coin']
-                category = record['category']
-                status =  record['status']
-                addr = record['addresses']
-                for add in addr:
-                    addresses = add
-                    ret = mongo.db.scam_address_info.update({
-                        "addresses":addresses            
-                    },{
-                        "$set":{
-                                "name":name,    
-                                "coin":coin,
-                                "category":category,
-                                "status":status,
-                                "addresses":addresses
-                            }},upsert=True)
-        return jsonify({"success":"ok"})        

@@ -4,7 +4,6 @@ from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
 from app import db
 mongo = db.init_db()
-
 from app.scheduler import auto_fetch
 
 def create_app(test_config=None):
@@ -32,14 +31,9 @@ def create_app(test_config=None):
     
     app.register_blueprint(fetch.bp)
     
-    '''
-    auto_fetch_scheduler = BackgroundScheduler()
-    auto_fetch_scheduler.add_job(auto_fetch, trigger='interval', seconds=)
-    auto_fetch_scheduler.start()
-    '''
 
     auto_fetch_scheduler = BackgroundScheduler()
-    auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon-sat', hour=17,minute=40)
+    auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon-sat', hour=15,minute=59)
     auto_fetch_scheduler.start()
         
 
