@@ -7,6 +7,7 @@ import mysql.connector
 mydb = mysql.connector.connect( user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
 mycursor=mydb.cursor()
 
+
 def auto_fetch():
     print("runing")
     response_user_token = requests.get(url="https://etherscamdb.info/api/scams")
@@ -25,11 +26,14 @@ def auto_fetch():
                     mycursor.execute('SELECT * FROM sws_heist_address WHERE addresses="'+str(addresses)+'"')
                     check = mycursor.fetchall()
                     if not check:
-                        print("adsasdas")
+                        print("added")
                         mycursor.execute('''SELECT MAX(id) FROM sws_heist_address''')
                         maxid = mycursor.fetchone()
-                        ids=maxid[0]+1
-                        print(ids)
+                        check=maxid[0]
+                        if check is None:
+                            ids = 1
+                        else:
+                            ids=(maxid[0]+1)
                         mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category,status,addresses) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(addresses)+'")')
                         mydb.commit()
                         
