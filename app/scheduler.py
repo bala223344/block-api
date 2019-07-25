@@ -23,6 +23,16 @@ def auto_fetch():
                 coin = record['coin']
                 category = record['category']
                 status =  record['status']
+                url = record['url']
+                if "subcategory" in record:         
+                    subcate = record['subcategory']
+                else:
+                    subcate = ""
+                subcategory = subcate
+                if "description" in record:         
+                    description = record['description']
+                else:
+                    description = ""
                 addr = record['addresses']
                 for add in addr:
                     addresses = add
@@ -37,9 +47,8 @@ def auto_fetch():
                             ids = 1
                         else:
                             ids=(maxid[0]+1)
-                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category,status,addresses) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(addresses)+'")')
-                        mydb.commit()
-                        
+                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category,status,addresses,url,subcategory,description) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(addresses)+'","'+str(url)+'","'+str(subcategory)+'","'+str(description)+'")')
+                        mydb.commit()                        
                 
 
 
