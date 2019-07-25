@@ -4,7 +4,10 @@ from app import mongo
 from datetime import datetime
 import mysql.connector
 
-mydb = mysql.connector.connect( user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
+mydb = mysql.connector.connect( user="cguser" , password="cafe@wales1", host="198.38.93.150", database="db_safename",auth_plugin='mysql_native_password')
+
+
+
 mycursor=mydb.cursor()
 
 
