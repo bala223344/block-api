@@ -5,12 +5,13 @@ from datetime import datetime
 import mysql.connector
 from app.config import ETH_SCAM_URL,ETH_TRANSACTION_URL,BTC_TRANSACTION_URL
 
-mydb = mysql.connector.connect( user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
+mydb = mysql.connector.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
 mycursor=mydb.cursor()
 
 def auto_fetch():
     print("runing")
     response_user_token = requests.get(url=ETH_SCAM_URL)
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_heist_address` ( id INT,name text,coin text,category_tags text,status text,addresses text,source text,subcategory text,description text,also_known_as text)""")
     response = response_user_token.json()
     result = response['result']
     if result:
@@ -46,7 +47,7 @@ def auto_fetch():
                             ids=(maxid[0]+1)
                         print(ids)
                         conversion =description.replace('"','')
-                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category,status,addresses,url,subcategory,description) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(addresses)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'")')
+                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category_tags,status,addresses,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(addresses)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'","https://etherscamdb.info/api/scams")')
                         mydb.commit()
     
 
@@ -96,7 +97,7 @@ def heist_associated_fetch():
                         url = ""
                         subcategory = ""
                         conversion = ""
-                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category,status,addresses,url,subcategory,description) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'")')
+                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category_tags,status,addresses,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'","related to heist_address")')
                         mydb.commit()
                     else:
                         print("already_exist")
@@ -120,7 +121,7 @@ def heist_associated_fetch():
                         url = ""
                         subcategory = ""
                         conversion = ""
-                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category,status,addresses,url,subcategory,description) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'")')
+                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category_tags,status,addresses,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'","related to heist_address")')
                         mydb.commit()
                     else:
                         print("already_exist")
@@ -171,7 +172,7 @@ def heist_associated_fetch():
                         url = ""
                         subcategory = ""
                         conversion = ""
-                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category,status,addresses,url,subcategory,description) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'")')
+                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category_tags,status,addresses,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'","related to heist_address")')
                         mydb.commit()
                     else:
                         print("already_exist")
@@ -196,7 +197,7 @@ def heist_associated_fetch():
                         url = ""
                         subcategory = ""
                         conversion = ""
-                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category,status,addresses,url,subcategory,description) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'")')
+                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category_tags,status,addresses,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'","related to heist_address")')
                         mydb.commit()
                     else:
                         print("already_exist")
