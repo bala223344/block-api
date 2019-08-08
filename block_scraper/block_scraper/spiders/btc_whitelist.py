@@ -23,14 +23,22 @@ class QuotesSpider(scrapy.Spider):
         items = BlockScraperItem()
         a=response.css("td > a::text").extract()
         b = len(a)
+        #data = []
         for s in range(0,b):
+            v = s+1 
             address = response.css("td > a::text")[s].extract()
             coin = "BTC"
             url_coming_from = response.url
+            Tx_count = "NA"
+            tag_name = response.css("#tblOne tr:nth-child("+str(v)+") small a::text").get()
             
             items['address']=address
             items['coin']=coin
             items['url_coming_from']=url_coming_from
+            items['Tx_count']=Tx_count
+            items['tag_name']=tag_name
+            items['type_id']='1'
+            items['address_risk_score']=50
             yield items     
 
 

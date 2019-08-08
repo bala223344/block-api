@@ -12,4 +12,8 @@ class BlockScraperItem(scrapy.Item):
     address = scrapy.Field()
     coin = scrapy.Field()
     url_coming_from = scrapy.Field()
+    tag_name = scrapy.Field()
+    Tx_count = scrapy.Field()
+    type_id = scrapy.Field()
+    address_risk_score = scrapy.Field()
     pass

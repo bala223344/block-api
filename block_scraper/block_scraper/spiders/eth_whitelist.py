@@ -7,26 +7,42 @@ class EthSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-            'https://etherscan.io/accounts/?ps=100',
+            'https://etherscan.io/labelcloud',
         ]
         for url in urls:
-            for count in range(1,100):
-                next_url = 'https://etherscan.io/accounts/'+str(count)+'?ps=100'
-                yield scrapy.Request(url=next_url, callback=self.parse)
+            yield scrapy.Request(url=url, callback=self.parse)
             
-    
     def parse(self, response):
+       # items = BlockScraperItem()
+        a=response.css(".dropdown-toggle > span::text").extract()
+        for b in a:
+            b = b.strip()
+            url1='https://etherscan.io/accounts/label/'+b+""
+            url_correct= url1.replace(" ","-")
+            yield scrapy.Request(url=url_correct, callback=self.parse_deep)
+
+    def parse_deep(self, response):
         items = BlockScraperItem()
-        a=response.css(".table-hover a::text").extract()
-        b = len(a)
-        for s in range(0,b):
-            address = response.css(".table-hover a::text")[s].extract()
-            coin = "ETH"
-            url_coming_from = response.url
-            
-            items['address']=address
-            items['coin']=coin
-            items['url_coming_from']=url_coming_from
-            yield items     
+        c = response.css("td a::text").extract()
+        d = response.css("td:nth-child(2)::text").extract()
+        #e = response.css("td:nth-child(3)::text").extract()
+        #f = response.css("td:nth-child(4)::text").extract()
+        if len(c)==len(d):
+            b = len(c)
+            for s in range(0,b):
+                address = response.css("td a::text")[s].extract()
+                tag_name = response.css("td:nth-child(2)::text")[s].extract()
+                Tx_count = response.css("td:nth-child(4)::text")[s].extract()
+                coin = "ETH"
+                url_coming_from = response.url
 
-
+                items['address']=address
+                items['tag_name']=tag_name
+                items['Tx_count']=Tx_count
+                items['coin']=coin
+                items['type_id']='2'
+                items['url_coming_from']=url_coming_from
+                items['address_risk_score']=50
+                yield items
+        else:
+            print("Tags not equal")
