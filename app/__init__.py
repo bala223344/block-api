@@ -33,12 +33,12 @@ def create_app(test_config=None):
     
 
     auto_fetch_scheduler = BackgroundScheduler()
-    auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon-sat', hour=18,minute=21)
+    auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon-sat', hour=16,minute=34)
     auto_fetch_scheduler.start()
         
 
     heist_associated_fetch_scheduler = BackgroundScheduler()
-    heist_associated_fetch_scheduler.add_job(heist_associated_fetch, trigger='cron', day_of_week='mon-sat', hour=17,minute=19)
+    heist_associated_fetch_scheduler.add_job(heist_associated_fetch, trigger='cron', day_of_week='mon-sat', hour=16,minute=47)
     heist_associated_fetch_scheduler.start()
 
 

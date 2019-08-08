@@ -5,19 +5,19 @@ from datetime import datetime
 import mysql.connector
 from app.config import ETH_SCAM_URL,ETH_TRANSACTION_URL,BTC_TRANSACTION_URL
 
-mydb = mysql.connector.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
+mydb = mysql.connector.connect(user="cguser" , password="cafe@wales1", host="198.38.93.150", database="db_safename")
 mycursor=mydb.cursor()
+
 
 def auto_fetch():
     print("runing")
     response_user_token = requests.get(url=ETH_SCAM_URL)
-    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_heist_address` ( id INT,name text,coin text,category_tags text,status text,addresses text,source text,subcategory text,description text,also_known_as text)""")
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_heist_address` ( id INT,coin text,tag_name text,status text,address text,source text,subcategory text,description text,also_known_as text)""")
     response = response_user_token.json()
     result = response['result']
     if result:
         for record in result:
             if "addresses" in record:
-                name = record['name']
                 coin = record['coin']
                 category = record['category']
                 status =  record['status']
@@ -34,7 +34,7 @@ def auto_fetch():
                 addr = record['addresses']
                 for add in addr:
                     addresses = add
-                    mycursor.execute('SELECT * FROM sws_heist_address WHERE addresses="'+str(addresses)+'"')
+                    mycursor.execute('SELECT * FROM sws_heist_address WHERE address="'+str(addresses)+'"')
                     check = mycursor.fetchall()
                     if not check:
                         print("added")
@@ -47,13 +47,14 @@ def auto_fetch():
                             ids=(maxid[0]+1)
                         print(ids)
                         conversion =description.replace('"','')
-                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category_tags,status,addresses,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(addresses)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'","https://etherscamdb.info/api/scams")')
+                        mycursor.execute('INSERT INTO sws_heist_address (id,coin,tag_name,status,address,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(addresses)+'","https://etherscamdb.info/api/scams","'+str(subcategory)+'","'+str(conversion)+'","'+str(url)+'")')
                         mydb.commit()
     
 
 
 def heist_associated_fetch():
-    mycursor.execute('select coin, addresses from `sws_heist_address`')
+    print("runningggggg")
+    mycursor.execute('select coin, address from `sws_heist_address`')
     result = mycursor.fetchall()
     for res in result:
         coin = res[0]
@@ -79,7 +80,7 @@ def heist_associated_fetch():
                     frm.append({"from":fro})
                 for fund_trans in frm:
                     address=fund_trans['from']
-                    mycursor.execute('SELECT * FROM sws_heist_address WHERE addresses="'+str(address)+'"')
+                    mycursor.execute('SELECT * FROM sws_heist_address WHERE address="'+str(address)+'"')
                     check = mycursor.fetchall()
                     if not check:
                         print("added")
@@ -91,19 +92,18 @@ def heist_associated_fetch():
                         else:
                             ids=(maxid[0]+1)
                         print(ids)
-                        name = ""
                         category = "heist_associated"
                         status = "Active"
                         url = ""
                         subcategory = ""
                         conversion = ""
-                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category_tags,status,addresses,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'","related to heist_address")')
+                        mycursor.execute('INSERT INTO sws_heist_address (id,coin,tag_name,status,address,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'","related to heist_address")')
                         mydb.commit()
                     else:
                         print("already_exist")
                 for fund_reci in to:
                     address=fund_reci['to']
-                    mycursor.execute('SELECT * FROM sws_heist_address WHERE addresses="'+str(address)+'"')
+                    mycursor.execute('SELECT * FROM sws_heist_address WHERE address="'+str(address)+'"')
                     check = mycursor.fetchall()
                     if not check:
                         print("to_added")
@@ -121,12 +121,12 @@ def heist_associated_fetch():
                         url = ""
                         subcategory = ""
                         conversion = ""
-                        mycursor.execute('INSERT INTO sws_heist_address (id,name,coin,category_tags,status,addresses,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(name)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'","related to heist_address")')
+                        mycursor.execute('INSERT INTO sws_heist_address (id,coin,tag_name,status,address,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'","related to heist_address")')
                         mydb.commit()
                     else:
                         print("already_exist")
 
-
+        '''
         if coin == 'BTC':
             print("btc")
             url1=BTC_TRANSACTION_URL
@@ -158,7 +158,7 @@ def heist_associated_fetch():
                     check = mycursor.fetchall()
                     if not check:
                         print("added_btc")
-                        mycursor.execute('''SELECT MAX(id) FROM sws_heist_address''')
+                        mycursor.execute('SELECT MAX(id) FROM sws_heist_address'')
                         maxid = mycursor.fetchone()
                         check=maxid[0]
                         if check is None:
@@ -183,7 +183,7 @@ def heist_associated_fetch():
                     check = mycursor.fetchall()
                     if not check:
                         print("to_added_btc")
-                        mycursor.execute('''SELECT MAX(id) FROM sws_heist_address''')
+                        mycursor.execute(''SELECT MAX(id) FROM sws_heist_address'')
                         maxid = mycursor.fetchone()
                         check=maxid[0]
                         if check is None:
@@ -201,7 +201,7 @@ def heist_associated_fetch():
                         mydb.commit()
                     else:
                         print("already_exist")
-
+        '''
 
 
 
