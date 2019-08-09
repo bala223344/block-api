@@ -72,7 +72,6 @@ pymongo==3.7.2
 PyMySQL==0.9.3
 pyOpenSSL==19.0.0
 pyparsing==2.4.0
-pypiwin32==223
 PySocks==1.7.0
 python-dateutil==2.8.0
 python-dotenv==0.10.2
