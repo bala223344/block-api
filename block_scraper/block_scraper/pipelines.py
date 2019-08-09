@@ -13,7 +13,7 @@ class BlockScraperPipeline(object):
     def __init__(self):
         self.create_connection()
         self.create_table()
-    
+    '''
     def create_connection(self):
         self.conn = mysql.connector.connect(
             host='remotemysql.com',#remotemysql.com
@@ -32,7 +32,7 @@ class BlockScraperPipeline(object):
             auth_plugin='mysql_native_password'
         )
         self.curr = self.conn.cursor()
-    '''
+    
     def create_table(self): 
         self.curr.execute("""CREATE TABLE IF NOT EXISTS `sws_known_address` (address_id INT,address varchar(1000),type_id varchar(50),address_risk_score INT, coin varchar(100),tag_name varchar(1000),source varchar(1000),tx_count varchar(1000))""")
 
