@@ -33,7 +33,7 @@ def create_app(test_config=None):
     
 
     auto_fetch_scheduler = BackgroundScheduler()
-    auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon-sat', hour=10,minute=41)
+    auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon-sat', hour=10,minute=48)
     auto_fetch_scheduler.start()
         
 
