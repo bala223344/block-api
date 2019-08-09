@@ -28,7 +28,6 @@ Flask-Cors==3.0.7
 Flask-Ext==0.1
 Flask-JWT-Extended==3.14.0
 Flask-MySQL==1.4.0
-Flask-MySQLdb==0.2.0
 Flask-PyMongo==2.2.0
 Flask-RESTful==0.3.6
 funcparserlib==0.3.6
