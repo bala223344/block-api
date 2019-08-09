@@ -5,7 +5,7 @@ from datetime import datetime
 import mysql.connector
 from app.config import ETH_SCAM_URL,ETH_TRANSACTION_URL,BTC_TRANSACTION_URL
 
-mydb = mysql.connector.connect(user="cguser" , password="cafe@wales1", host="198.38.93.150", database="db_safename")
+mydb = mysql.connector.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="db_safename")
 mycursor=mydb.cursor()
 
 
