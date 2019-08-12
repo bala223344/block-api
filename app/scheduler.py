@@ -3,9 +3,13 @@ from app.util import serialize_doc
 from app import mongo
 from datetime import datetime
 import mysql.connector
+from datetime import datetime
+import datetime
+from dateutil.relativedelta import relativedelta
 from app.config import ETH_SCAM_URL,ETH_TRANSACTION_URL,BTC_TRANSACTION_URL
 
-mydb = mysql.connector.connect(user="cguser" , password="cafe@wales1", host="198.38.93.150", database="db_safename",auth_plugin='mysql_native_password')
+#mydb = mysql.connector.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
+mydb = mysql.connector.connect(host='198.38.93.150',user='cguser',password='cafe@wales1',database='db_safename',auth_plugin='mysql_native_password')
 mycursor=mydb.cursor()
 
 
@@ -126,7 +130,81 @@ def heist_associated_fetch():
                     else:
                         print("already_exist")
 
-        '''
+'''
+def tx_two_yearold():
+    print("runnnnnn")
+    mycursor.execute('SELECT address FROM sws_address WHERE type_id=1 AND (tx_calculated <> 1 OR tx_calculated is null)')
+    check = mycursor.fetchall()
+    for addr in check:
+        address=addr[0]
+        Url = 'http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ'
+        ret=Url.replace("{{address}}",''+address+'')
+        response_user = requests.get(url=ret)
+        res = response_user.json()       
+        transactions=res['result']
+        count =0
+        for transaction in transactions:
+            if not transaction:
+                mycursor.execute('SELECT address_risk_score FROM sws_address WHERE address="'+str(address)+'"')
+                tx_check = mycursor.fetchone()
+                risk_sco = tx_check[0]
+                tx_formula = (risk_sco*5)/100
+                sco = risk_sco - tx_formula
+                mycursor.execute('UPDATE sws_address SET address_risk_score ="'+str(sco)+'" WHERE address = "'+str(address)+'"')
+                mycursor.execute('UPDATE sws_address SET tx_calculated =1 WHERE address = "'+str(address)+'"')
+                print("updated_minus")
+                mydb.commit()
+            else:
+                timestamp = transaction['timeStamp']
+                first_date=int(timestamp)
+                dt_object = datetime.datetime.fromtimestamp(first_date)
+                month = dt_object.strftime("%m/%d/%Y")
+                two_year_back = datetime.datetime.today() + relativedelta(months=-24)
+                back = two_year_back.strftime("%m/%d/%Y")
+                if month<back:
+                    count=count+1
+                    if count == 4:
+                        mycursor.execute('SELECT address_risk_score FROM sws_address WHERE address="'+str(address)+'"')
+                        check = mycursor.fetchone()
+                        risk_score = check[0]
+                        formula = (risk_score*10)/100
+                        sco = risk_score + formula
+                        mycursor.execute('UPDATE sws_address SET address_risk_score ="'+str(sco)+'" WHERE address = "'+str(address)+'"')
+                        mycursor.execute('UPDATE sws_address SET tx_calculated =1 WHERE address = "'+str(address)+'"')
+                        print("updated_plus")
+                        mydb.commit()
+                    else:
+                        pass
+                else:
+                    pass
+'''
+    
+
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
         if coin == 'BTC':
             print("btc")
             url1=BTC_TRANSACTION_URL
@@ -201,7 +279,7 @@ def heist_associated_fetch():
                         mydb.commit()
                     else:
                         print("already_exist")
-        '''
+'''
 
 
 
@@ -228,11 +306,11 @@ def heist_associated_fetch():
 
 
 
-    '''
-    response_user_token = requests.get(url="https://bitcoinwhoswho.com/api/scam/api-key?address=your-bitcoin-address")
-    response = response_user_token.json()
-    result = response['result']                    
-    '''
+'''
+response_user_token = requests.get(url="https://bitcoinwhoswho.com/api/scam/api-key?address=your-bitcoin-address")
+response = response_user_token.json()
+result = response['result']                    
+'''
                 
 '''
 def auto_fetch():
