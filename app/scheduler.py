@@ -244,7 +244,7 @@ def risk_score_by_safename():
             print("line 155")
 
     kyc_secure_users=[]
-    mycursor.execute('SELECT cms_login_name FROM sws_user WHERE (kyc_verified = 1 AND profile_status = "secure")')
+    mycursor.execute('SELECT username FROM sws_user WHERE (kyc_verified = 1 AND profile_status = "secure")')
     che = mycursor.fetchall()
     for addr in che:
         cms_name=addr[0]
@@ -261,7 +261,7 @@ def risk_score_by_safename():
 
 
     secure_users=[]
-    mycursor.execute('SELECT cms_login_name FROM sws_user WHERE profile_status = "secure" AND (kyc_verified <> 1 OR kyc_verified is null )')
+    mycursor.execute('SELECT username FROM sws_user WHERE profile_status = "secure" AND (kyc_verified <> 1 OR kyc_verified is null )')
     chek = mycursor.fetchall()
     for addr in chek:
         cms_name=addr[0]
@@ -459,7 +459,7 @@ def tx_notification():
                 mycursor.execute('SELECT cms_login_name FROM sws_address WHERE address="'+str(address)+'"')
                 cms_login = mycursor.fetchone()
                 cms_name=cms_login[0]
-                mycursor.execute('SELECT email_address FROM sws_user WHERE cms_login_name="'+str(cms_name)+'"')
+                mycursor.execute('SELECT email FROM sws_user WHERE username="'+str(cms_name)+'"')
                 email = mycursor.fetchone()
                 email_id=email[0]
                 print(email_id)
