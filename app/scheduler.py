@@ -10,7 +10,7 @@ from app.config import ETH_SCAM_URL,ETH_TRANSACTION_URL,BTC_TRANSACTION_URL,BTC_
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 #mydb = mysql.connector.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
-mydb = mysql.connector.connect(host='198.38.93.150',user='cguser',password='cafe@wales1',database='db_safename',auth_plugin='mysql_native_password')
+mydb = mysql.connector.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename',auth_plugin='mysql_native_password')
 mycursor=mydb.cursor()
 
 #-------Scheduler for find ETHERNUM heist addresses-------
@@ -411,8 +411,9 @@ def tx_notification():
                 too=transaction['to']
                 total_current_tx.append(too)
                 total_current_tx.append(fro)
-                tx_count=transactions_count[0]
-            if transactions_count is "NULL" or len(total_current_tx) > tx_count:
+            tx_count=transactions_count[0]
+            print(tx_count)
+            if tx_count is None or len(total_current_tx) > tx_count:
                 mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(len(total_current_tx))+'"  WHERE address = "'+str(address)+'"')
                 mycursor.execute('SELECT cms_login_name FROM sws_address WHERE address="'+str(address)+'"')
                 cms_login = mycursor.fetchone()
@@ -451,8 +452,9 @@ def tx_notification():
                 for too in transac:
                     t = too['address'] 
                     total_current_tx.append(t)
-                tx_count=transactions_count[0]
-            if transactions_count is "NULL" or len(total_current_tx) > tx_count:
+            tx_count=transactions_count[0]
+            print(tx_count)
+            if tx_count is None or len(total_current_tx) > tx_count:
                 mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(len(total_current_tx))+'"  WHERE address = "'+str(address)+'"')
                 mycursor.execute('SELECT cms_login_name FROM sws_address WHERE address="'+str(address)+'"')
                 cms_login = mycursor.fetchone()
