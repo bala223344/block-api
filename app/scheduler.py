@@ -418,7 +418,7 @@ def tx_notification():
                 mycursor.execute('SELECT cms_login_name FROM sws_address WHERE address="'+str(address)+'"')
                 cms_login = mycursor.fetchone()
                 cms_name=cms_login[0]
-                mycursor.execute('SELECT email FROM sws_user WHERE cms_login_name="'+str(cms_name)+'"')
+                mycursor.execute('SELECT email FROM sws_user WHERE username="'+str(cms_name)+'"')
                 email = mycursor.fetchone()
                 email_id=email[0]
                 print(email_id)
