@@ -55,7 +55,7 @@ def create_app(test_config=None):
     '''
     tx_notification_scheduler = BackgroundScheduler()
     #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=11,minute=24)
-    tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=10)
+    tx_notification_scheduler.add_job(tx_notification, trigger='interval', seconds=180)
     tx_notification_scheduler.start()
 
 
