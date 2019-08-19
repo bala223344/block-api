@@ -4,6 +4,11 @@ from .. items import BlockScraperItem
 
 class QuotesSpider(scrapy.Spider):
     name = "btc_whitelist"
+    custom_settings = {
+        'ITEM_PIPELINES': {
+            'block_scraper.pipelines.BlockScraperPipeline': 300
+        }
+    }
 
     def start_requests(self):
         urls = [
@@ -37,7 +42,7 @@ class QuotesSpider(scrapy.Spider):
             items['url_coming_from']=url_coming_from
             items['Tx_count']=Tx_count
             items['tag_name']=tag_name
-            items['type_id']='1'
+            items['type_id']='2'
             items['address_risk_score']=50
             yield items     
 

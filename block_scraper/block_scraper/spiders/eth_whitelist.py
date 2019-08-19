@@ -4,6 +4,11 @@ from .. items import BlockScraperItem
 
 class EthSpider(scrapy.Spider):
     name = "eth_whitelist"
+    custom_settings = {
+        'ITEM_PIPELINES': {
+            'block_scraper.pipelines.BlockScraperPipeline': 300
+        }
+    }
 
     def start_requests(self):
         urls = [
@@ -40,7 +45,7 @@ class EthSpider(scrapy.Spider):
                 items['tag_name']=tag_name
                 items['Tx_count']=Tx_count
                 items['coin']=coin
-                items['type_id']='2'
+                items['type_id']='1'
                 items['url_coming_from']=url_coming_from
                 items['address_risk_score']=50
                 yield items

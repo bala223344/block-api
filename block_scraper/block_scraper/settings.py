@@ -64,9 +64,10 @@ ROBOTSTXT_OBEY = False
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-    'block_scraper.pipelines.BlockScraperPipeline': 300,
-}
+#ITEM_PIPELINES = {
+   # 'block_scraper.pipelines.BlockScraperPipeline': 300,
+#    'block_scraper.pipelines.HeistBlockPipeline': 300,
+#}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

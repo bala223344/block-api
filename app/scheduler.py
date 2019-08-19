@@ -6,12 +6,14 @@ import mysql.connector
 from datetime import datetime
 import datetime
 from dateutil.relativedelta import relativedelta
-from app.config import ETH_SCAM_URL,ETH_TRANSACTION_URL,BTC_TRANSACTION_URL
-
+from app.config import ETH_SCAM_URL,ETH_TRANSACTION_URL,BTC_TRANSACTION_URL,BTC_TRANSACTION
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 #mydb = mysql.connector.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
 mydb = mysql.connector.connect(host='198.38.93.150',user='cguser',password='cafe@wales1',database='db_safename',auth_plugin='mysql_native_password')
 mycursor=mydb.cursor()
 
+#-------Scheduler for find ETHERNUM heist addresses-------
 
 def auto_fetch():
     print("runing")
@@ -55,6 +57,8 @@ def auto_fetch():
                         mydb.commit()
     
 
+
+#-------Scheduler for find ETHERNUM heist assosiated addresses-------
 
 def heist_associated_fetch():
     print("runningggggg")
@@ -129,15 +133,66 @@ def heist_associated_fetch():
                         mydb.commit()
                     else:
                         print("already_exist")
+        if coin == 'BTC':
+            print("btc")
+            url1=BTC_TRANSACTION_URL
+            doc=url1.replace("{{address}}",''+address+'')
+            response_user = requests.get(url=doc)
+            res = response_user.json()       
+            transactions = res['txs']
+            frm=[]
+            for transaction in transactions:
+                frmm=transaction['inputs']
+                for trans in frmm:
+                    fro=trans['address']
+                    frm.append({"from":fro})
+            for fund_trans in frm:
+                address=fund_trans['from']
+                mycursor.execute('SELECT * FROM sws_heist_address WHERE address="'+str(address)+'"')
+                check = mycursor.fetchall()
+                if not check:
+                    print("added")
+                    mycursor.execute('''SELECT MAX(id) FROM sws_heist_address''')
+                    maxid = mycursor.fetchone()
+                    check=maxid[0]
+                    if check is None:
+                        ids = 1
+                    else:
+                        ids=(maxid[0]+1)
+                    print(ids)
+                    category = "heist_associated"
+                    status = "Active"
+                    url = ""
+                    subcategory = ""
+                    conversion = ""
+                    mycursor.execute('INSERT INTO sws_heist_address (id,coin,tag_name,status,address,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'","related to heist_address")')
+                    mydb.commit()
+                else:
+                    print("already_exist")
+            
 
-'''
+#-------Scheduler for calculating risk score by two year old tx or no transactions heist addresses-------
+
 def tx_two_yearold():
     print("runnnnnn")
-    mycursor.execute('SELECT address FROM sws_address WHERE type_id=1 AND (tx_calculated <> 1 OR tx_calculated is null)')
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),tx_calculated TINYINT(1) NULL,risk_score_by_tx float(3) NULL,tx_cal_by_safename TINYINT(1) NULL,riskscore_by_safename float(3) NULL,tx_cal_by_knownheist TINYINT(1) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
+    mycursor.execute('SELECT address FROM sws_address WHERE type_id=1')
     check = mycursor.fetchall()
-    for addr in check:
-        address=addr[0]
-        Url = 'http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ'
+    print("line 150")
+    for a in check:
+        address=a[0]
+        print("line 153")
+        mycursor.execute('SELECT * FROM sws_risk_score WHERE address="'+str(address)+'"')
+        check = mycursor.fetchall()
+        if not check:
+            mycursor.execute('INSERT INTO `sws_risk_score`(address) VALUES ("'+str(address)+'")')
+            mydb.commit()
+            print("line 155")
+    mycursor.execute('SELECT address FROM sws_risk_score WHERE (tx_calculated <> 1 OR tx_calculated is null)')
+    check = mycursor.fetchall()
+    for addrr in check:
+        address=addrr[0]
+        Url = ETH_TRANSACTION_URL
         ret=Url.replace("{{address}}",''+address+'')
         response_user = requests.get(url=ret)
         res = response_user.json()       
@@ -145,13 +200,9 @@ def tx_two_yearold():
         count =0
         for transaction in transactions:
             if not transaction:
-                mycursor.execute('SELECT address_risk_score FROM sws_address WHERE address="'+str(address)+'"')
-                tx_check = mycursor.fetchone()
-                risk_sco = tx_check[0]
-                tx_formula = (risk_sco*5)/100
-                sco = risk_sco - tx_formula
-                mycursor.execute('UPDATE sws_address SET address_risk_score ="'+str(sco)+'" WHERE address = "'+str(address)+'"')
-                mycursor.execute('UPDATE sws_address SET tx_calculated =1 WHERE address = "'+str(address)+'"')
+                tx_formula = ((50*5)/100)
+                mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(tx_formula)+'" WHERE address = "'+str(address)+'"')
+                mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
                 print("updated_minus")
                 mydb.commit()
             else:
@@ -164,28 +215,346 @@ def tx_two_yearold():
                 if month<back:
                     count=count+1
                     if count == 4:
-                        mycursor.execute('SELECT address_risk_score FROM sws_address WHERE address="'+str(address)+'"')
-                        check = mycursor.fetchone()
-                        risk_score = check[0]
-                        formula = (risk_score*10)/100
-                        sco = risk_score + formula
-                        mycursor.execute('UPDATE sws_address SET address_risk_score ="'+str(sco)+'" WHERE address = "'+str(address)+'"')
-                        mycursor.execute('UPDATE sws_address SET tx_calculated =1 WHERE address = "'+str(address)+'"')
+                        formula = (50*10)/100
+                        mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(formula)+'" WHERE address = "'+str(address)+'"')
+                        mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
                         print("updated_plus")
                         mydb.commit()
                     else:
                         pass
                 else:
                     pass
-'''
-    
+
+
+#-------Scheduler for calculating risk score by if receive fund from safename or kyc swsuser heist addresses-------
+
+def risk_score_by_safename():
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),tx_calculated TINYINT(1) NULL,risk_score_by_tx float(3) NULL,tx_cal_by_safename TINYINT(1) NULL,riskscore_by_safename float(3) NULL,tx_cal_by_knownheist TINYINT(1) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
+    mycursor.execute('SELECT address FROM sws_address WHERE type_id=1')
+    check = mycursor.fetchall()
+    print("line 150")
+    for addr in check:
+        address=addr[0]
+        print("line 153")
+        mycursor.execute('SELECT * FROM sws_risk_score WHERE address="'+str(address)+'"')
+        check = mycursor.fetchall()
+        if not check:
+            mycursor.execute('INSERT INTO `sws_risk_score`(address) VALUES ("'+str(address)+'")')
+            mydb.commit()
+            print("line 155")
+
+    kyc_secure_users=[]
+    mycursor.execute('SELECT cms_login_name FROM sws_user WHERE (kyc_verified = 1 AND profile_status = "secure")')
+    che = mycursor.fetchall()
+    for addr in che:
+        cms_name=addr[0]
+        kyc_secure_users.append(cms_name)
+
+
+    kyc_and_secure_addresses=[]
+    for cms_user in kyc_secure_users:
+        mycursor.execute('SELECT address FROM sws_address WHERE (cms_login_name = "'+str(cms_user)+'" AND type_id=1)')
+        che = mycursor.fetchall()
+        for addr in che:
+            addres=addr[0]
+            kyc_and_secure_addresses.append(addres)
+
+
+    secure_users=[]
+    mycursor.execute('SELECT cms_login_name FROM sws_user WHERE profile_status = "secure" AND (kyc_verified <> 1 OR kyc_verified is null )')
+    chek = mycursor.fetchall()
+    for addr in chek:
+        cms_name=addr[0]
+        secure_users.append(cms_name)
+
+
+    secure_addresses=[]
+    for cms_user in secure_users:
+        mycursor.execute('SELECT address FROM sws_address WHERE (cms_login_name = "'+str(cms_user)+'" AND type_id=1)')
+        che = mycursor.fetchall()
+        for addr in che:
+            addres=addr[0]
+            secure_addresses.append(addres)
+    print(secure_addresses)
+
+    mycursor.execute('SELECT address FROM sws_risk_score WHERE (tx_cal_by_safename <> 1 OR tx_cal_by_safename is null)')
+    check = mycursor.fetchall()
+
+    for addr in check:
+        address=addr[0]
+        Url = ETH_TRANSACTION_URL
+        ret=Url.replace("{{address}}",''+address+'')
+        response_user = requests.get(url=ret)
+        res = response_user.json()       
+        transactions=res['result']
+        addresses=[]
+        for transaction in transactions:
+            fro =transaction['from']
+            if fro not in addresses:
+                addresses.append(fro)
+
+        for checkk in addresses:
+            if checkk in kyc_and_secure_addresses:
+                tx_safe_name_formula = (50*10)/100
+                mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
+                mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                print(checkk)
+                print("updated_10%")
+                mydb.commit()
+            if checkk in secure_addresses:
+                tx_safe_name_formula = (50*5)/100
+                mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
+                mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                print(checkk)
+                print("updated_5%")
+                mydb.commit()
+            else:
+                pass
+
+
+#-------Scheduler for calculating risk score by if receive fund from heist or heist associated address-------
 
                         
+def risk_score_by_heist():
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),tx_calculated TINYINT(1) NULL,risk_score_by_tx float(3) NULL,tx_cal_by_safename TINYINT(1) NULL,riskscore_by_safename float(3) NULL,tx_cal_by_knownheist TINYINT(1) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
+    mycursor.execute('SELECT address FROM sws_address WHERE type_id=1')
+    check = mycursor.fetchall()
+    print("line 150")
+    for a in check:
+        address=a[0]
+        print("line 153")
+        mycursor.execute('SELECT * FROM sws_risk_score WHERE address="'+str(address)+'"')
+        check = mycursor.fetchall()
+        if not check:
+            mycursor.execute('INSERT INTO `sws_risk_score`(address) VALUES ("'+str(address)+'")')
+            mydb.commit()
+            print("line 155")
+
+    heist_addresses=[]
+    mycursor.execute('SELECT address FROM sws_heist_address WHERE (tag_name <> "heist_associated")')
+    ret = mycursor.fetchall()
+    for addres in ret:
+        address=addres[0]
+        heist_addresses.append(address)        
+    print(len(heist_addresses))
+
+    print("170")
+    heist_associated_addresses=[]
+    mycursor.execute('SELECT address FROM sws_heist_address WHERE (tag_name = "heist_associated")')
+    ret = mycursor.fetchall()
+    for add in ret:
+        addres=add[0]
+        heist_associated_addresses.append(addres)
+    print("177")
+    mycursor.execute('SELECT address FROM sws_risk_score WHERE (tx_cal_by_knownheist <> 1 OR tx_cal_by_knownheist is null)')
+    check = mycursor.fetchall()
+
+    for addr in check:
+        address=addr[0]
+        Url = ETH_TRANSACTION_URL
+        ret=Url.replace("{{address}}",''+address+'')
+        response_user = requests.get(url=ret)
+        res = response_user.json()       
+        transactions=res['result']
+        addresses=[]
+        for transaction in transactions:
+            fro =transaction['from']
+            if fro not in addresses:
+                addresses.append(fro)
+        print("193")
+
+        for checkk in addresses:
+            print("checkkkk")
+            if checkk in heist_addresses:
+                tx_knownheist_formula =-((50*50)/100)
+                mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_knownheist_formula)+'" WHERE address = "'+str(address)+'"')
+                mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                print(checkk)
+                print("updated_50%")
+                mydb.commit()
+            if checkk in heist_associated_addresses:
+                tx_heistassosiated_formula = -((50*30)/100)
+                mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_heistassosiated_formula)+'" WHERE address = "'+str(address)+'"')
+                mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                print(checkk)
+                print("updated_30%")
+                mydb.commit()
+            else:
+                pass
+
+
+#--------Scheduler for send new transactions notifications---------
+
+def tx_notification():
+    print("asdasndas,na")
+    mycursor.execute('SELECT address FROM sws_address WHERE (tx_notification_preferred = 1)')
+    sws_addresses = mycursor.fetchall()
+    print(len(sws_addresses))
+    for addres in sws_addresses:
+        address=addres[0]
+        mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
+        current_tx = mycursor.fetchall()
+        transactions_count=current_tx[0]
+        mycursor.execute('SELECT type_id FROM sws_address WHERE address="'+str(address)+'"')
+        address_type_id = mycursor.fetchall()
+        typ=address_type_id[0]
+        type_id = typ[0]
+        if type_id == 1:
+            total_current_tx = [] 
+            Url = ETH_TRANSACTION_URL
+            ret=Url.replace("{{address}}",''+address+'')
+            response_user = requests.get(url=ret)
+            res = response_user.json()
+            transactions=res['result']
+            for transaction in transactions:                       
+                fro =transaction['from']
+                too=transaction['to']
+                total_current_tx.append(too)
+                total_current_tx.append(fro)
+                tx_count=transactions_count[0]
+            if transactions_count is "NULL" or len(total_current_tx) > tx_count:
+                mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(len(total_current_tx))+'"  WHERE address = "'+str(address)+'"')
+                mycursor.execute('SELECT cms_login_name FROM sws_address WHERE address="'+str(address)+'"')
+                cms_login = mycursor.fetchone()
+                cms_name=cms_login[0]
+                mycursor.execute('SELECT email_address FROM sws_user WHERE cms_login_name="'+str(cms_name)+'"')
+                email = mycursor.fetchone()
+                email_id=email[0]
+                print(email_id)
+                if email_id is not None:
+                    message = Mail(
+                        from_email='notifications@safename.io',
+                        to_emails=email_id,
+                        subject='SafeName - New Transaction Notification In Your Account',
+                        html_content='you got new transaction')
+                    sg = SendGridAPIClient('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')
+                    response = sg.send(message)
+                    print(response.status_code, response.body, response.headers)
+            else:
+                print("no new transaction")
+
+        if type_id == 2:
+            total_current_tx = [] 
+            Url = BTC_TRANSACTION
+            ret=Url.replace("{{address}}",''+address+'')
+            print(ret)
+            response_user = requests.get(url=ret)
+            res = response_user.json()
+            print(res)
+            transactions = res['txs']
+            for transaction in transactions:                       
+                frmm=transaction['inputs']
+                for trans in frmm:
+                    fro=trans['address']
+                    total_current_tx.append(fro)
+                transac=transaction['outputs']
+                for too in transac:
+                    t = too['address'] 
+                    total_current_tx.append(t)
+                tx_count=transactions_count[0]
+            if transactions_count is "NULL" or len(total_current_tx) > tx_count:
+                mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(len(total_current_tx))+'"  WHERE address = "'+str(address)+'"')
+                mycursor.execute('SELECT cms_login_name FROM sws_address WHERE address="'+str(address)+'"')
+                cms_login = mycursor.fetchone()
+                cms_name=cms_login[0]
+                mycursor.execute('SELECT email_address FROM sws_user WHERE cms_login_name="'+str(cms_name)+'"')
+                email = mycursor.fetchone()
+                email_id=email[0]
+                print(email_id)
+                if email_id is not None:
+                    message = Mail(
+                        from_email='notifications@safename.io',
+                        to_emails=email_id,
+                        subject='SafeName - New Transaction Notification In Your Account',
+                        html_content='you got new transaction')
+                    sg = SendGridAPIClient('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')
+                    response = sg.send(message)
+                    print(response.status_code, response.body, response.headers)
+            else:
+                print("no new transaction")
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#-------scheduler for calculating overall riskscore from sws_risk_score table and update in sws_address table------- 
+'''
+def risk_score():
+    mycursor.execute('SELECT address FROM sws_risk_score')
+    check = mycursor.fetchall()
+    for addr in check:
+        address=addr[0]
+        mycursor.execute('SELECT risk_score_by_tx,riskscore_by_safename,riskscore_by_knownheist FROM sws_risk_score WHERE address="'+str(address)+'"')
+        check = mycursor.fetchall()
+        for record in check:
+            print(record)
+            score = 0
+            for lst in record:
+                if lst is not None:
+                    score = lst+score
+            risk_score = 50+score
+            mycursor.execute('UPDATE sws_address SET address_risk_score="'+str(risk_score)+'" WHERE address = "'+str(address)+'"')
+            print("updated")
+            mydb.commit()
+'''
 
 
 

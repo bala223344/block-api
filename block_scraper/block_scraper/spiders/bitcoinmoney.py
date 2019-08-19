@@ -3,6 +3,11 @@ from .. items import BlockScraperItem
 
 class BitcoinmoneySpider(scrapy.Spider):
     name = "bitcoinmoney"
+    custom_settings = {
+        'ITEM_PIPELINES': {
+            'block_scraper.pipelines.BlockScraperPipeline': 300
+        }
+    }
 
     def start_requests(self):
         urls = [
@@ -24,4 +29,8 @@ class BitcoinmoneySpider(scrapy.Spider):
             items['address']=address
             items['coin']=coin
             items['url_coming_from']=url_coming_from
+            items['tag_name']='NA'
+            items['Tx_count']='NA'
+            items['type_id']='2'
+            items['address_risk_score']=0
             yield items     

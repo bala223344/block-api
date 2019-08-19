@@ -16,10 +16,10 @@ class BlockScraperPipeline(object):
     '''
     def create_connection(self):
         self.conn = mysql.connector.connect(
-            host='remotemysql.com',#remotemysql.com
-            user='VsaqpBhCxL',#VsaqpBhCxL
-            password='sW9BgYhqmG',#sW9BgYhqmG
-            database='VsaqpBhCxL'#VsaqpBhCxL
+            host='localhost',#remotemysql.com
+            user='root',#VsaqpBhCxL
+            password='',#sW9BgYhqmG
+            database='db_safename'#VsaqpBhCxL
         )
         self.curr = self.conn.cursor()
     '''
@@ -62,9 +62,63 @@ class BlockScraperPipeline(object):
             self.conn.commit()
         else:
             print("already_exist")
-        
-        
+     
+                    
 
-        
+class HeistBlockPipeline(object):
+    def __init__(self):
+        self.create_connection()
+        self.create_table()
+    
+    def create_connection(self):
+        self.conn = mysql.connector.connect(
+            host='remotemysql.com',#remotemysql.com
+            user='VsaqpBhCxL',#VsaqpBhCxL
+            password='sW9BgYhqmG',#sW9BgYhqmG
+            database='VsaqpBhCxL'#VsaqpBhCxL
+        )
+        self.curr = self.conn.cursor()
+    '''
+    def create_connection(self):
+        self.conn = mysql.connector.connect(
+            host='198.38.93.150',#remotemysql.com
+            user='cguser',#VsaqpBhCxL
+            password='cafe@wales1',#sW9BgYhqmG
+            database='db_safename',#VsaqpBhCxL
+            auth_plugin='mysql_native_password'
+        )
+        self.curr = self.conn.cursor()
+    '''
+    def create_table(self): 
+        self.curr.execute("""CREATE TABLE IF NOT EXISTS `sws_heist_address` ( id INT,coin text,tag_name text,status text,address text,source text,subcategory text,description text,also_known_as text)""")
+
+    def process_item(self, item, spider):
+        self.store_db(item)
+        return item
+
+    def store_db(self,item):
+        address=item['address']
+        coin=item['coin']
+        url_coming_from=item['url_coming_from']
+        tag_name=item['tag_name']
+        subcategory=item['subcategory']
+        status=item['status']
+        description=item['description']
+        also_known_as=item['also_known_as']
+        self.curr.execute('SELECT * FROM sws_known_address WHERE address="'+str(address)+'"')
+        check = self.curr.fetchall()
+        if not check:
+            self.curr.execute('''SELECT MAX(id) FROM sws_known_address''')
+            maxid = self.curr.fetchone()
+            check=maxid[0]
+            if check is None:
+                ids = 1
+            else:
+                ids=(maxid[0]+1)
+            self.curr.execute('INSERT INTO sws_heist_address (id,coin,tag_name,status,address,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(coin)+'","'+str(tag_name)+'","'+str(status)+'","'+str(address)+'","'+str(url_coming_from)+'","'+str(subcategory)+'","'+str(description)+'","'+str(also_known_as)+'")')
+            self.conn.commit()
+        else:
+            print("already_exist")
+
     
     

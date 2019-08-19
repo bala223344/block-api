@@ -17,3 +17,16 @@ class BlockScraperItem(scrapy.Item):
     type_id = scrapy.Field()
     address_risk_score = scrapy.Field()
     pass
+
+
+class HeistScraperItem(scrapy.Item):
+    print("asdasdasfdasfsdfdsfdsfdfdsfdsfdasfad")
+    address = scrapy.Field()
+    coin = scrapy.Field()
+    url_coming_from = scrapy.Field()
+    tag_name = scrapy.Field()
+    subcategory = scrapy.Field()
+    status = scrapy.Field()
+    description = scrapy.Field()
+    also_known_as = scrapy.Field()
+    pass
