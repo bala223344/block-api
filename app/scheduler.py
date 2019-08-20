@@ -397,42 +397,77 @@ def risk_score_by_heist():
         addres=add[0]
         heist_associated_addresses.append(addres)
     print("177")
-    mycursor.execute('SELECT address FROM sws_risk_score WHERE (tx_cal_by_knownheist <> 1 OR tx_cal_by_knownheist is null)')
+    mycursor.execute('SELECT address,type_id FROM sws_risk_score WHERE(tx_cal_by_knownheist <> 1 OR tx_cal_by_knownheist is null)')
     check = mycursor.fetchall()
-
     for addr in check:
         address=addr[0]
-        Url = ETH_TRANSACTION_URL
-        ret=Url.replace("{{address}}",''+address+'')
-        response_user = requests.get(url=ret)
-        res = response_user.json() 
-        print(res)      
-        transactions=res['result']
-        addresses=[]
-        for transaction in transactions:
-            fro =transaction['from']
-            if fro not in addresses:
-                addresses.append(fro)
-        print("193")
-
-        for checkk in addresses:
-            print("checkkkk")
-            if checkk in heist_addresses:
-                tx_knownheist_formula =-((50*50)/100)
-                mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_knownheist_formula)+'" WHERE address = "'+str(address)+'"')
-                mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
-                print(checkk)
-                print("updated_50%")
-                mydb.commit()
-            if checkk in heist_associated_addresses:
-                tx_heistassosiated_formula = -((50*30)/100)
-                mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_heistassosiated_formula)+'" WHERE address = "'+str(address)+'"')
-                mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
-                print(checkk)
-                print("updated_30%")
-                mydb.commit()
-            else:
-                pass
+        type_id=addr[1]
+        if type_id==1:
+            print("jakdasjsacnajhsmcsjdbcjdcasdbcajcbacjbhachshj")
+            '''
+            Url = ETH_TRANSACTION_URL
+            ret=Url.replace("{{address}}",''+address+'')
+            response_user = requests.get(url=ret)
+            res = response_user.json() 
+            print(res)      
+            transactions=res['result']
+            addresses=[]
+            for transaction in transactions:
+                fro =transaction['from']
+                if fro not in addresses:
+                    addresses.append(fro)
+            print("193")
+            for checkk in addresses:
+                print("checkkkk")
+                if checkk in heist_addresses:
+                    tx_knownheist_formula =-((50*50)/100)
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_knownheist_formula)+'" WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                    print(checkk)
+                    print("updated_50%")
+                    mydb.commit()
+                if checkk in heist_associated_addresses:
+                    tx_heistassosiated_formula = -((50*30)/100)
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_heistassosiated_formula)+'" WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                    print(checkk)
+                    print("updated_30%")
+                    mydb.commit()
+                else:
+                    pass
+            '''
+        if type_id==2:
+            Url = BTC_TRANSACTION
+            ret=Url.replace("{{address}}",''+address+'')
+            response_user = requests.get(url=ret)
+            res = response_user.json() 
+            transactions = res['txs']
+            addresses=[]
+            for transaction in transactions:
+                frmm=transaction['inputs']
+                for trans in frmm:
+                    fro=trans['address']
+                    if fro not in addresses:
+                        addresses.append(fro)
+            print("193")
+            for checkk in addresses:
+                print("checkkkk")
+                if checkk in heist_addresses:
+                    tx_knownheist_formula =-((50*50)/100)
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_knownheist_formula)+'" WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                    print(checkk)
+                    print("updated_50%")
+                    mydb.commit()
+                if checkk in heist_associated_addresses:
+                    tx_heistassosiated_formula = -((50*30)/100)
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_heistassosiated_formula)+'" WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                    print(checkk)
+                    print("updated_30%")
+                    mydb.commit()
+                else:
+                    pass
 
 
 #--------Scheduler for send new transactions notifications---------
@@ -442,9 +477,10 @@ def tx_notification():
     mycursor.execute('SELECT address FROM sws_address WHERE (tx_notification_preferred = 1)')
     sws_addresses = mycursor.fetchall()
     for addres in sws_addresses:
-        address=addres
+        address=addres[0]
         mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
         current_tx = mycursor.fetchall()
+        print(current_tx)
         transactions_count=current_tx[0]
         mycursor.execute('SELECT type_id FROM sws_address WHERE address="'+str(address)+'"')
         address_type_id = mycursor.fetchall()
