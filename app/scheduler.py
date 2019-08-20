@@ -324,24 +324,28 @@ def risk_score_by_safename():
     print(secure_addresses)
     mycursor.execute('SELECT address,type_id FROM sws_risk_score WHERE (tx_cal_by_safename <> 1 OR tx_cal_by_safename is null)')
     check = mycursor.fetchall()
-
+    
     for addr in check:
         address=addr[0]
-        type_id=addr[0]
+        type_id=addr[1]
+        print(address)
+        print(type_id)
         if type_id==1:
             Url = ETH_TRANSACTION_URL
             ret=Url.replace("{{address}}",''+address+'')
             response_user = requests.get(url=ret)
             res = response_user.json()       
             transactions=res['result']
+            print("339")
             addresses=[]
             for transaction in transactions:
                 fro =transaction['from']
                 if fro not in addresses:
                     addresses.append(fro)
-
+            print("345")
             for checkk in addresses:
                 if checkk in kyc_and_secure_addresses:
+                    print("adasda")
                     tx_safe_name_formula = (50*10)/100
                     mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
                     mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
@@ -358,6 +362,7 @@ def risk_score_by_safename():
                 else:
                     pass
         if type_id==2:
+            print("type_id 2")
             Url = BTC_TRANSACTION
             ret=Url.replace("{{address}}",''+address+'')
             response_user = requests.get(url=ret)

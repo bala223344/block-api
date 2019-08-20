@@ -37,7 +37,7 @@ def create_app(test_config=None):
     auto_fetch_scheduler.start()
         
     heist_associated_fetch_scheduler = BackgroundScheduler()
-    heist_associated_fetch_scheduler.add_job(heist_associated_fetch, trigger='cron', day_of_week='mon', hour=16,minute=41)
+    heist_associated_fetch_scheduler.add_job(heist_associated_fetch, trigger='cron', day_of_week='mon', hour=12,minute=41)
     heist_associated_fetch_scheduler.start()
 
     
@@ -46,7 +46,7 @@ def create_app(test_config=None):
     tx_two_yearold_scheduler.start()
     
     risk_score_by_safename_scheduler = BackgroundScheduler()
-    risk_score_by_safename_scheduler.add_job(risk_score_by_safename, trigger='cron', day_of_week='mon-sat', hour=17,minute=8)
+    risk_score_by_safename_scheduler.add_job(risk_score_by_safename, trigger='cron', day_of_week='mon-sat', hour=14,minute=7)
     risk_score_by_safename_scheduler.start()
     
     risk_score_by_heist_scheduler = BackgroundScheduler()
