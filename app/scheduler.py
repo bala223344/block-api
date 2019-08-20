@@ -290,75 +290,103 @@ def risk_score_by_safename():
         if not check:
             mycursor.execute('INSERT INTO `sws_risk_score`(address,type_id) VALUES ("'+str(address)+'","'+str(type_id)+'")')
             mydb.commit()
-            print("line 155")
-
+            print("line 155")    
     kyc_secure_users=[]
     mycursor.execute('SELECT username FROM sws_user WHERE (kyc_verified = 1 AND profile_status = "secure")')
     che = mycursor.fetchall()
     for addr in che:
         cms_name=addr[0]
         kyc_secure_users.append(cms_name)
-
-
+    print("300")
     kyc_and_secure_addresses=[]
     for cms_user in kyc_secure_users:
-        mycursor.execute('SELECT address FROM sws_address WHERE (cms_login_name = "'+str(cms_user)+'" AND type_id=1)')
+        mycursor.execute('SELECT address FROM sws_address WHERE (cms_login_name = "'+str(cms_user)+'")')
         che = mycursor.fetchall()
         for addr in che:
             addres=addr[0]
             kyc_and_secure_addresses.append(addres)
-
-
+    print("308")
     secure_users=[]
     mycursor.execute('SELECT username FROM sws_user WHERE profile_status = "secure" AND (kyc_verified <> 1 OR kyc_verified is null )')
     chek = mycursor.fetchall()
     for addr in chek:
         cms_name=addr[0]
         secure_users.append(cms_name)
-
-
+    print("315")
     secure_addresses=[]
     for cms_user in secure_users:
-        mycursor.execute('SELECT address FROM sws_address WHERE (cms_login_name = "'+str(cms_user)+'" AND type_id=1)')
+        mycursor.execute('SELECT address FROM sws_address WHERE (cms_login_name = "'+str(cms_user)+'")')
         che = mycursor.fetchall()
         for addr in che:
             addres=addr[0]
             secure_addresses.append(addres)
+    print("323")
     print(secure_addresses)
-
-    mycursor.execute('SELECT address FROM sws_risk_score WHERE (tx_cal_by_safename <> 1 OR tx_cal_by_safename is null)')
+    mycursor.execute('SELECT address,type_id FROM sws_risk_score WHERE (tx_cal_by_safename <> 1 OR tx_cal_by_safename is null)')
     check = mycursor.fetchall()
 
     for addr in check:
         address=addr[0]
-        Url = ETH_TRANSACTION_URL
-        ret=Url.replace("{{address}}",''+address+'')
-        response_user = requests.get(url=ret)
-        res = response_user.json()       
-        transactions=res['result']
-        addresses=[]
-        for transaction in transactions:
-            fro =transaction['from']
-            if fro not in addresses:
-                addresses.append(fro)
+        type_id=addr[0]
+        if type_id==1:
+            Url = ETH_TRANSACTION_URL
+            ret=Url.replace("{{address}}",''+address+'')
+            response_user = requests.get(url=ret)
+            res = response_user.json()       
+            transactions=res['result']
+            addresses=[]
+            for transaction in transactions:
+                fro =transaction['from']
+                if fro not in addresses:
+                    addresses.append(fro)
 
-        for checkk in addresses:
-            if checkk in kyc_and_secure_addresses:
-                tx_safe_name_formula = (50*10)/100
-                mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
-                mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
-                print(checkk)
-                print("updated_10%")
-                mydb.commit()
-            if checkk in secure_addresses:
-                tx_safe_name_formula = (50*5)/100
-                mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
-                mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
-                print(checkk)
-                print("updated_5%")
-                mydb.commit()
-            else:
-                pass
+            for checkk in addresses:
+                if checkk in kyc_and_secure_addresses:
+                    tx_safe_name_formula = (50*10)/100
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                    print(checkk)
+                    print("updated_10%")
+                    mydb.commit()
+                if checkk in secure_addresses:
+                    tx_safe_name_formula = (50*5)/100
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                    print(checkk)
+                    print("updated_5%")
+                    mydb.commit()
+                else:
+                    pass
+        if type_id==2:
+            Url = BTC_TRANSACTION
+            ret=Url.replace("{{address}}",''+address+'')
+            response_user = requests.get(url=ret)
+            res = response_user.json()       
+            transactions = res['txs']
+            addresses=[]
+            for transaction in transactions:
+                frmm=transaction['inputs']
+                for trans in frmm:
+                    fro=trans['address']
+                    if fro not in addresses:
+                        addresses.append(fro)
+            for checkk in addresses:
+                if checkk in kyc_and_secure_addresses:
+                    tx_safe_name_formula = (50*10)/100
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                    print(checkk)
+                    print("updated_10%")
+                    mydb.commit()
+                if checkk in secure_addresses:
+                    tx_safe_name_formula = (50*5)/100
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                    print(checkk)
+                    print("updated_5%")
+                    mydb.commit()
+                else:
+                    pass
 
 
 #-------Scheduler for calculating risk score by if receive fund from heist or heist associated address-------
@@ -403,8 +431,6 @@ def risk_score_by_heist():
         address=addr[0]
         type_id=addr[1]
         if type_id==1:
-            print("jakdasjsacnajhsmcsjdbcjdcasdbcajcbacjbhachshj")
-            '''
             Url = ETH_TRANSACTION_URL
             ret=Url.replace("{{address}}",''+address+'')
             response_user = requests.get(url=ret)
@@ -423,19 +449,16 @@ def risk_score_by_heist():
                     tx_knownheist_formula =-((50*50)/100)
                     mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_knownheist_formula)+'" WHERE address = "'+str(address)+'"')
                     mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
-                    print(checkk)
                     print("updated_50%")
                     mydb.commit()
                 if checkk in heist_associated_addresses:
                     tx_heistassosiated_formula = -((50*30)/100)
                     mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_heistassosiated_formula)+'" WHERE address = "'+str(address)+'"')
                     mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
-                    print(checkk)
                     print("updated_30%")
                     mydb.commit()
                 else:
                     pass
-            '''
         if type_id==2:
             Url = BTC_TRANSACTION
             ret=Url.replace("{{address}}",''+address+'')
