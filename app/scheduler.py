@@ -528,7 +528,7 @@ def tx_notification():
                     print("sending")
                     message = Mail(
                         from_email='notifications@safename.io',
-                        to_emails='aayushsaini000000@gmail.com',
+                        to_emails=email_id,
                         subject='SafeName - New Transaction Notification In Your Account',
                         html_content= '<h3> You got a new transaction </h3><strong>Date:</strong> ' + str(dt_object) +' <div><strong>From:</strong> ' + str(fr) + ' </div><strong>To:</strong> ' + str(to) + ' </div><div><strong>Amount:</strong> ' + 'No Data' + ' </div><strong>Coin Type:</strong> ''BTC'' ' )
                     sg = SendGridAPIClient('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')
