@@ -3,16 +3,16 @@ from app.util import serialize_doc
 from app import mongo
 from datetime import datetime
 import mysql.connector
-from datetime import datetime
 import datetime
 from dateutil.relativedelta import relativedelta
+from datetime import datetime
 from app.config import ETH_SCAM_URL,ETH_TRANSACTION_URL,BTC_TRANSACTION_URL,BTC_TRANSACTION
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 #mydb = mysql.connector.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
-mydb = mysql.connector.connect(host='198.38.93.150',user='cguser',password='cafe@wales1',database='db_safename',auth_plugin='mysql_native_password')
+mydb = mysql.connector.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename',auth_plugin='mysql_native_password')
 mycursor=mydb.cursor()
-
+#dexter
 #-------Scheduler for find ETHERNUM heist addresses-------
 
 def auto_fetch():
@@ -175,71 +175,120 @@ def heist_associated_fetch():
 
 def tx_two_yearold():
     print("runnnnnn")
-    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),tx_calculated TINYINT(1) NULL,risk_score_by_tx float(3) NULL,tx_cal_by_safename TINYINT(1) NULL,riskscore_by_safename float(3) NULL,tx_cal_by_knownheist TINYINT(1) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
-    mycursor.execute('SELECT address FROM sws_address WHERE type_id=1')
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),tx_calculated TINYINT(1) NULL,risk_score_by_tx float(3) NULL,tx_cal_by_safename TINYINT(1) NULL,type_id int(3) NULL,riskscore_by_safename float(3) NULL,tx_cal_by_knownheist TINYINT(1) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
+    mycursor.execute('SELECT address,type_id FROM sws_address')
     check = mycursor.fetchall()
     print("line 150")
     for a in check:
         address=a[0]
+        type_id=a[1]
         print("line 153")
         mycursor.execute('SELECT * FROM sws_risk_score WHERE address="'+str(address)+'"')
         check = mycursor.fetchall()
         if not check:
-            mycursor.execute('INSERT INTO `sws_risk_score`(address) VALUES ("'+str(address)+'")')
+            mycursor.execute('INSERT INTO `sws_risk_score`(address,type_id) VALUES ("'+str(address)+'","'+str(type_id)+'")')
             mydb.commit()
             print("line 155")
-    mycursor.execute('SELECT address FROM sws_risk_score WHERE (tx_calculated <> 1 OR tx_calculated is null)')
+    mycursor.execute('SELECT address,type_id FROM sws_risk_score WHERE (tx_calculated <> 1 OR tx_calculated is null)')
     check = mycursor.fetchall()
+    print(check)
     for addrr in check:
         address=addrr[0]
-        Url = ETH_TRANSACTION_URL
-        ret=Url.replace("{{address}}",''+address+'')
-        response_user = requests.get(url=ret)
-        res = response_user.json()       
-        transactions=res['result']
-        count =0
-        for transaction in transactions:
-            if not transaction:
-                tx_formula = ((50*5)/100)
-                mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(tx_formula)+'" WHERE address = "'+str(address)+'"')
-                mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
-                print("updated_minus")
-                mydb.commit()
-            else:
-                timestamp = transaction['timeStamp']
-                first_date=int(timestamp)
-                dt_object = datetime.datetime.fromtimestamp(first_date)
-                month = dt_object.strftime("%m/%d/%Y")
-                two_year_back = datetime.datetime.today() + relativedelta(months=-24)
-                back = two_year_back.strftime("%m/%d/%Y")
-                if month<back:
-                    count=count+1
-                    if count == 4:
-                        formula = (50*10)/100
-                        mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(formula)+'" WHERE address = "'+str(address)+'"')
-                        mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
-                        print("updated_plus")
-                        mydb.commit()
+        type_ids=addrr[1]
+        print(type_ids)
+        if type_ids == 1:
+            print("asdddddddddddddddddddddddddddddddddddddddddddddddddd")
+            Url = ETH_TRANSACTION_URL
+            ret=Url.replace("{{address}}",''+address+'')
+            response_user = requests.get(url=ret)
+            res = response_user.json()       
+            transactions=res['result']
+            count =0
+            for transaction in transactions:
+                if not transaction:
+                    tx_formula = ((50*5)/100)
+                    mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(tx_formula)+'" WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
+                    print("updated_minus")
+                    mydb.commit()
+                else:
+                    timestamp = transaction['timeStamp']
+                    first_date=int(timestamp)
+                    dt_object = datetime.datetime.fromtimestamp(first_date)
+                    month = dt_object.strftime("%m/%d/%Y")
+                    two_year_back = datetime.datetime.today() + relativedelta(months=-24)
+                    back = two_year_back.strftime("%m/%d/%Y")
+                    if month<back:
+                        count=count+1
+                        if count == 4:
+                            formula = (50*10)/100
+                            mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(formula)+'" WHERE address = "'+str(address)+'"')
+                            mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
+                            print("updated_plus")
+                            mydb.commit()
+                        else:
+                            pass
                     else:
                         pass
-                else:
-                    pass
 
+        if type_ids == 2:
+            print("BTCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
+            Url =BTC_TRANSACTION
+            ret=Url.replace("{{address}}",''+address+'')
+            response_user = requests.get(url=ret)
+            res = response_user.json()    
+            transactions = res['txs']
+            count =0
+            for transaction in transactions:
+                if not transaction:
+                    tx_formula = ((50*5)/100)
+                    mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(tx_formula)+'" WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
+                    print("updated_minus")
+                    mydb.commit()
+                else:
+                    timestamp = transaction['timestamp']
+                    first_date=int(timestamp)
+                    dt_object = datetime.datetime.fromtimestamp(first_date)
+                    month = dt_object.strftime("%m/%d/%Y")
+                    two_year_back = datetime.datetime.today() + relativedelta(months=-24)
+                    back = two_year_back.strftime("%m/%d/%Y")
+                    print(back)
+                    print(month)
+                    if month<back:
+                        count=count+1
+                        if count == 4:
+                            formula = (50*10)/100
+                            mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(formula)+'" WHERE address = "'+str(address)+'"')
+                            mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
+                            print("updated_plus")
+                            mydb.commit()
+                        else:
+                            pass
+                    else:
+                        pass
+    
+    
+    
+    
+    
 
 #-------Scheduler for calculating risk score by if receive fund from safename or kyc swsuser heist addresses-------
 
 def risk_score_by_safename():
-    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),tx_calculated TINYINT(1) NULL,risk_score_by_tx float(3) NULL,tx_cal_by_safename TINYINT(1) NULL,riskscore_by_safename float(3) NULL,tx_cal_by_knownheist TINYINT(1) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
-    mycursor.execute('SELECT address FROM sws_address WHERE type_id=1')
+    print("runnnnnn")
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),tx_calculated TINYINT(1) NULL,risk_score_by_tx float(3) NULL,tx_cal_by_safename TINYINT(1) NULL,type_id int(3) NULL,riskscore_by_safename float(3) NULL,tx_cal_by_knownheist TINYINT(1) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
+    mycursor.execute('SELECT address,type_id FROM sws_address')
     check = mycursor.fetchall()
     print("line 150")
-    for addr in check:
-        address=addr[0]
+    for a in check:
+        address=a[0]
+        type_id=a[1]
         print("line 153")
         mycursor.execute('SELECT * FROM sws_risk_score WHERE address="'+str(address)+'"')
         check = mycursor.fetchall()
         if not check:
-            mycursor.execute('INSERT INTO `sws_risk_score`(address) VALUES ("'+str(address)+'")')
+            mycursor.execute('INSERT INTO `sws_risk_score`(address,type_id) VALUES ("'+str(address)+'","'+str(type_id)+'")')
             mydb.commit()
             print("line 155")
 
@@ -316,17 +365,19 @@ def risk_score_by_safename():
 
                         
 def risk_score_by_heist():
-    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),tx_calculated TINYINT(1) NULL,risk_score_by_tx float(3) NULL,tx_cal_by_safename TINYINT(1) NULL,riskscore_by_safename float(3) NULL,tx_cal_by_knownheist TINYINT(1) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
-    mycursor.execute('SELECT address FROM sws_address WHERE type_id=1')
+    print("runnnnnn")
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),tx_calculated TINYINT(1) NULL,risk_score_by_tx float(3) NULL,tx_cal_by_safename TINYINT(1) NULL,type_id int(3) NULL,riskscore_by_safename float(3) NULL,tx_cal_by_knownheist TINYINT(1) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
+    mycursor.execute('SELECT address,type_id FROM sws_address')
     check = mycursor.fetchall()
     print("line 150")
     for a in check:
         address=a[0]
+        type_id=a[1]
         print("line 153")
         mycursor.execute('SELECT * FROM sws_risk_score WHERE address="'+str(address)+'"')
         check = mycursor.fetchall()
         if not check:
-            mycursor.execute('INSERT INTO `sws_risk_score`(address) VALUES ("'+str(address)+'")')
+            mycursor.execute('INSERT INTO `sws_risk_score`(address,type_id) VALUES ("'+str(address)+'","'+str(type_id)+'")')
             mydb.commit()
             print("line 155")
 
@@ -354,7 +405,8 @@ def risk_score_by_heist():
         Url = ETH_TRANSACTION_URL
         ret=Url.replace("{{address}}",''+address+'')
         response_user = requests.get(url=ret)
-        res = response_user.json()       
+        res = response_user.json() 
+        print(res)      
         transactions=res['result']
         addresses=[]
         for transaction in transactions:
@@ -389,9 +441,8 @@ def tx_notification():
     print("asdasndas,na")
     mycursor.execute('SELECT address FROM sws_address WHERE (tx_notification_preferred = 1)')
     sws_addresses = mycursor.fetchall()
-    print(len(sws_addresses))
     for addres in sws_addresses:
-        address=addres[0]
+        address=addres
         mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
         current_tx = mycursor.fetchall()
         transactions_count=current_tx[0]
@@ -406,15 +457,21 @@ def tx_notification():
             response_user = requests.get(url=ret)
             res = response_user.json()
             transactions=res['result']
-            for transaction in transactions:                       
-                fro =transaction['from']
-                too=transaction['to']
-                total_current_tx.append(too)
-                total_current_tx.append(fro)
+            total_current_tx=len(transactions)
+            new_transaction = transactions[-1]
+            print(new_transaction)       
+            fro =new_transaction['from']
+            too=new_transaction['to']
+            timestamp = new_transaction['timeStamp']
+            first_date=int(timestamp)
+            dt_object = datetime.fromtimestamp(first_date)
+            value = new_transaction['value']
+            converted_value = (int(value)/1000000000000000000)
+            
             tx_count=transactions_count[0]
             print(tx_count)
-            if tx_count is None or len(total_current_tx) > tx_count:
-                mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(len(total_current_tx))+'"  WHERE address = "'+str(address)+'"')
+            if tx_count is None or total_current_tx > tx_count:
+                mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
                 mycursor.execute('SELECT cms_login_name FROM sws_address WHERE address="'+str(address)+'"')
                 cms_login = mycursor.fetchone()
                 cms_name=cms_login[0]
@@ -423,58 +480,62 @@ def tx_notification():
                 email_id=email[0]
                 print(email_id)
                 if email_id is not None:
+                    print("sendinnnnnngggggggg")
                     message = Mail(
                         from_email='notifications@safename.io',
                         to_emails=email_id,
                         subject='SafeName - New Transaction Notification In Your Account',
-                        html_content='you got new transaction')
+                        html_content= '<h3> You got a new transaction </h3><strong>Date:</strong> ' + str(dt_object) +' <div><strong>From:</strong> ' + str(fro) + ' </div><strong>To:</strong> ' + str(too) + ' </div><strong>Amount:</strong> ' + str(converted_value) + ' </div><strong>Coin Type:</strong> ''ETH'' ' )
                     sg = SendGridAPIClient('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')
                     response = sg.send(message)
                     print(response.status_code, response.body, response.headers)
             else:
                 print("no new transaction")
 
-        if type_id == 2:
-            total_current_tx = [] 
+        if type_id == 2: 
             Url = BTC_TRANSACTION
             ret=Url.replace("{{address}}",''+address+'')
-            print(ret)
             response_user = requests.get(url=ret)
             res = response_user.json()
-            print(res)
             transactions = res['txs']
+            total_current_tx = len(transactions)
             for transaction in transactions:                       
+                fr = []
+                to = []
+                timestamp = transaction['timestamp']
+                first_date=int(timestamp)
+                dt_object = datetime.fromtimestamp(first_date)
                 frmm=transaction['inputs']
                 for trans in frmm:
                     fro=trans['address']
-                    total_current_tx.append(fro)
+                    fr.append(fro)
                 transac=transaction['outputs']
                 for too in transac:
                     t = too['address'] 
-                    total_current_tx.append(t)
+                    to.append(t)
             tx_count=transactions_count[0]
             print(tx_count)
-            if tx_count is None or len(total_current_tx) > tx_count:
-                mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(len(total_current_tx))+'"  WHERE address = "'+str(address)+'"')
+            print(total_current_tx)
+            if tx_count is None or total_current_tx > tx_count:
+                mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
                 mycursor.execute('SELECT cms_login_name FROM sws_address WHERE address="'+str(address)+'"')
                 cms_login = mycursor.fetchone()
                 cms_name=cms_login[0]
                 mycursor.execute('SELECT email FROM sws_user WHERE username="'+str(cms_name)+'"')
                 email = mycursor.fetchone()
                 email_id=email[0]
-                print(email_id)
                 if email_id is not None:
+                    print("sending")
                     message = Mail(
                         from_email='notifications@safename.io',
-                        to_emails=email_id,
+                        to_emails='aayushsaini000000@gmail.com',
                         subject='SafeName - New Transaction Notification In Your Account',
-                        html_content='you got new transaction')
+                        html_content= '<h3> You got a new transaction </h3><strong>Date:</strong> ' + str(dt_object) +' <div><strong>From:</strong> ' + str(fr) + ' </div><strong>To:</strong> ' + str(to) + ' </div><div><strong>Amount:</strong> ' + 'No Data' + ' </div><strong>Coin Type:</strong> ''BTC'' ' )
                     sg = SendGridAPIClient('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')
                     response = sg.send(message)
                     print(response.status_code, response.body, response.headers)
             else:
                 print("no new transaction")
-
 
 
 

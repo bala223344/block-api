@@ -42,17 +42,18 @@ def create_app(test_config=None):
 
     '''
     tx_two_yearold_scheduler = BackgroundScheduler()
-    tx_two_yearold_scheduler.add_job(tx_two_yearold, trigger='cron', day_of_week='mon-sat', hour=15,minute=8)
+    tx_two_yearold_scheduler.add_job(tx_two_yearold, trigger='cron', day_of_week='mon-sat', hour=19,minute=2)
     tx_two_yearold_scheduler.start()
     
     risk_score_by_safename_scheduler = BackgroundScheduler()
     risk_score_by_safename_scheduler.add_job(risk_score_by_safename, trigger='cron', day_of_week='mon-sat', hour=15,minute=21)
     risk_score_by_safename_scheduler.start()
-
+    
     risk_score_by_heist_scheduler = BackgroundScheduler()
-    risk_score_by_heist_scheduler.add_job(risk_score_by_heist, trigger='cron', day_of_week='mon-sat', hour=15,minute=41)
+    risk_score_by_heist_scheduler.add_job(risk_score_by_heist, trigger='cron', day_of_week='mon-sat', hour=19,minute=38)
     risk_score_by_heist_scheduler.start()
     '''
+
     tx_notification_scheduler = BackgroundScheduler()
     #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=11,minute=24)
     tx_notification_scheduler.add_job(tx_notification, trigger='interval', seconds=300)
