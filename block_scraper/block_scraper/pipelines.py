@@ -26,7 +26,7 @@ class BlockScraperPipeline(object):
     def create_connection(self):
         self.conn = mysql.connector.connect(
             host='198.38.93.150',#remotemysql.com
-            user='cguser',#VsaqpBhCxL
+            user='dexter',#VsaqpBhCxL
             password='cafe@wales1',#sW9BgYhqmG
             database='db_safename',#VsaqpBhCxL
             auth_plugin='mysql_native_password'

@@ -1,11 +1,9 @@
 import requests
 from app.util import serialize_doc
 from app import mongo
-from datetime import datetime
 import mysql.connector
-import datetime
 from dateutil.relativedelta import relativedelta
-from datetime import datetime
+import datetime
 from app.config import ETH_SCAM_URL,ETH_TRANSACTION_URL,BTC_TRANSACTION_URL,BTC_TRANSACTION
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -191,7 +189,6 @@ def tx_two_yearold():
             print("line 155")
     mycursor.execute('SELECT address,type_id FROM sws_risk_score WHERE (tx_calculated <> 1 OR tx_calculated is null)')
     check = mycursor.fetchall()
-    print(check)
     for addrr in check:
         address=addrr[0]
         type_ids=addrr[1]
@@ -248,8 +245,11 @@ def tx_two_yearold():
                     mydb.commit()
                 else:
                     timestamp = transaction['timestamp']
+                    print(timestamp)
                     first_date=int(timestamp)
+                    print(first_date)
                     dt_object = datetime.datetime.fromtimestamp(first_date)
+                    print(dt_object)
                     month = dt_object.strftime("%m/%d/%Y")
                     two_year_back = datetime.datetime.today() + relativedelta(months=-24)
                     back = two_year_back.strftime("%m/%d/%Y")
@@ -497,9 +497,33 @@ def risk_score_by_heist():
                 else:
                     pass
 
+#-------scheduler for calculating overall riskscore from sws_risk_score table and update in sws_address table------- 
+def risk_score():
+    mycursor.execute('SELECT address FROM sws_risk_score')
+    check = mycursor.fetchall()
+    for addr in check:
+        address=addr[0]
+        mycursor.execute('SELECT risk_score_by_tx,riskscore_by_safename,riskscore_by_knownheist FROM sws_risk_score WHERE address="'+str(address)+'"')
+        check = mycursor.fetchall()
+        for record in check:
+            print(record)
+            score = 0
+            for lst in record:
+                if lst is not None:
+                    score = lst+score
+            risk_score = 50+score
+            mycursor.execute('UPDATE sws_address SET address_risk_score="'+str(risk_score)+'" WHERE address = "'+str(address)+'"')
+            print("updated")
+            mydb.commit()
+
+
+
+
+
+
 
 #--------Scheduler for send new transactions notifications---------
-
+from datetime import datetime
 def tx_notification():
     print("asdasndas,na")
     mycursor.execute('SELECT address FROM sws_address WHERE (tx_notification_preferred = 1)')
@@ -601,87 +625,6 @@ def tx_notification():
             else:
                 print("no new transaction")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#-------scheduler for calculating overall riskscore from sws_risk_score table and update in sws_address table------- 
-'''
-def risk_score():
-    mycursor.execute('SELECT address FROM sws_risk_score')
-    check = mycursor.fetchall()
-    for addr in check:
-        address=addr[0]
-        mycursor.execute('SELECT risk_score_by_tx,riskscore_by_safename,riskscore_by_knownheist FROM sws_risk_score WHERE address="'+str(address)+'"')
-        check = mycursor.fetchall()
-        for record in check:
-            print(record)
-            score = 0
-            for lst in record:
-                if lst is not None:
-                    score = lst+score
-            risk_score = 50+score
-            mycursor.execute('UPDATE sws_address SET address_risk_score="'+str(risk_score)+'" WHERE address = "'+str(address)+'"')
-            print("updated")
-            mydb.commit()
-'''
 
 
 

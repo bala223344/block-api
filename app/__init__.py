@@ -4,7 +4,7 @@ from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
 from app import db
 mongo = db.init_db()
-from app.scheduler import auto_fetch,heist_associated_fetch,tx_two_yearold,risk_score_by_safename,risk_score_by_heist,tx_notification#,risk_score
+from app.scheduler import auto_fetch,heist_associated_fetch,tx_two_yearold,risk_score_by_safename,risk_score_by_heist,tx_notification,risk_score
 
 
 def create_app(test_config=None):
@@ -33,38 +33,34 @@ def create_app(test_config=None):
     
 
     auto_fetch_scheduler = BackgroundScheduler()
-    auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon', hour=16,minute=31)
+    auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon', hour=11,minute=00)
     auto_fetch_scheduler.start()
         
     heist_associated_fetch_scheduler = BackgroundScheduler()
-    heist_associated_fetch_scheduler.add_job(heist_associated_fetch, trigger='cron', day_of_week='mon', hour=12,minute=41)
+    heist_associated_fetch_scheduler.add_job(heist_associated_fetch, trigger='cron', day_of_week='mon', hour=12,minute=23)
     heist_associated_fetch_scheduler.start()
 
-    
     tx_two_yearold_scheduler = BackgroundScheduler()
-    tx_two_yearold_scheduler.add_job(tx_two_yearold, trigger='cron', day_of_week='mon-sat', hour=19,minute=2)
+    tx_two_yearold_scheduler.add_job(tx_two_yearold, trigger='cron', day_of_week='mon-sat', hour=13,minute=28)
     tx_two_yearold_scheduler.start()
     
     risk_score_by_safename_scheduler = BackgroundScheduler()
-    risk_score_by_safename_scheduler.add_job(risk_score_by_safename, trigger='cron', day_of_week='mon-sat', hour=14,minute=7)
+    risk_score_by_safename_scheduler.add_job(risk_score_by_safename, trigger='cron', day_of_week='mon-sat', hour=14,minute=39)
     risk_score_by_safename_scheduler.start()
     
     risk_score_by_heist_scheduler = BackgroundScheduler()
-    risk_score_by_heist_scheduler.add_job(risk_score_by_heist, trigger='cron', day_of_week='mon-sat', hour=15,minute=38)
+    risk_score_by_heist_scheduler.add_job(risk_score_by_heist, trigger='cron', day_of_week='mon-sat', hour=15,minute=50)
     risk_score_by_heist_scheduler.start()
     
-
     tx_notification_scheduler = BackgroundScheduler()
     #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=11,minute=24)
-    tx_notification_scheduler.add_job(tx_notification, trigger='interval', seconds=300)
+    tx_notification_scheduler.add_job(tx_notification, trigger='interval', seconds=3000000)
     tx_notification_scheduler.start()
 
-
-    '''
     risk_score_scheduler = BackgroundScheduler()
-    risk_score_scheduler.add_job(risk_score, trigger='cron', day_of_week='mon-sat', hour=16,minute=00)
+    risk_score_scheduler.add_job(risk_score, trigger='cron', day_of_week='mon-sat', hour=16,minute=1)
     risk_score_scheduler.start()
-    '''
+    
 
     try:
         return app
@@ -75,4 +71,4 @@ def create_app(test_config=None):
         risk_score_by_safename_scheduler.shutdown()
         risk_score_by_heist_scheduler.shutdown()
         tx_notification_scheduler.shutdown()
-        # risk_score_scheduler.shutdown()
+        risk_score_scheduler.shutdown()
