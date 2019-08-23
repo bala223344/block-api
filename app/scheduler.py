@@ -552,11 +552,11 @@ def tx_notification():
     for addres in sws_addresses:
         address=addres[0]
         type_id = addres[1] 
-        '''
+        
         if type_id == 1:
             symbol = 'ETH'
             currency = eth_data(address,symbol,type_id)        
-        '''
+        
         if type_id == 2:
             symbol = 'BTC'
             currency = btc_data(address,symbol,type_id)
