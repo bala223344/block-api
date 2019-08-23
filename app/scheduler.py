@@ -1,16 +1,33 @@
 import requests
 from app.util import serialize_doc
 from app import mongo
+from flask import (
+    Blueprint,request,jsonify,abort
+)
 import mysql.connector
 from dateutil.relativedelta import relativedelta
 import datetime
-from app.config import ETH_SCAM_URL,ETH_TRANSACTION_URL,BTC_TRANSACTION_URL,BTC_TRANSACTION
+from app.config import ETH_SCAM_URL,ETH_TRANSACTION_URL,BTC_TRANSACTION_URL,BTC_TRANSACTION,SendGridAPIClient_key,Sendgrid_default_mail
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+import numpy as np
+
+
+#-----calling functions from app----
+from app.eth import eth_data
+from app.btc import btc_data
+
+
+
+#-------Sql connection informations----------
+
 #mydb = mysql.connector.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
 mydb = mysql.connector.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename',auth_plugin='mysql_native_password')
 mycursor=mydb.cursor()
 #dexter
+
+
+
 #-------Scheduler for find ETHERNUM heist addresses-------
 
 def auto_fetch():
@@ -53,7 +70,8 @@ def auto_fetch():
                         conversion =description.replace('"','')
                         mycursor.execute('INSERT INTO sws_heist_address (id,coin,tag_name,status,address,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(addresses)+'","https://etherscamdb.info/api/scams","'+str(subcategory)+'","'+str(conversion)+'","'+str(url)+'")')
                         mydb.commit()
-    
+                    else:
+                        print("already_exist")
 
 
 #-------Scheduler for find ETHERNUM heist assosiated addresses-------
@@ -169,6 +187,7 @@ def heist_associated_fetch():
                     print("already_exist")
             
 
+
 #-------Scheduler for calculating risk score by two year old tx or no transactions heist addresses-------
 
 def tx_two_yearold():
@@ -204,8 +223,7 @@ def tx_two_yearold():
             for transaction in transactions:
                 if not transaction:
                     tx_formula = ((50*5)/100)
-                    mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(tx_formula)+'" WHERE address = "'+str(address)+'"')
-                    mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(tx_formula)+'",tx_calculated =1 WHERE address = "'+str(address)+'"')
                     print("updated_minus")
                     mydb.commit()
                 else:
@@ -219,8 +237,7 @@ def tx_two_yearold():
                         count=count+1
                         if count == 4:
                             formula = (50*10)/100
-                            mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(formula)+'" WHERE address = "'+str(address)+'"')
-                            mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
+                            mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(formula)+'",tx_calculated =1 WHERE address = "'+str(address)+'"')
                             print("updated_plus")
                             mydb.commit()
                         else:
@@ -239,8 +256,8 @@ def tx_two_yearold():
             for transaction in transactions:
                 if not transaction:
                     tx_formula = ((50*5)/100)
-                    mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(tx_formula)+'" WHERE address = "'+str(address)+'"')
-                    mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(tx_formula)+'",tx_calculated =1 WHERE address = "'+str(address)+'"')
+                    #mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
                     print("updated_minus")
                     mydb.commit()
                 else:
@@ -259,8 +276,8 @@ def tx_two_yearold():
                         count=count+1
                         if count == 4:
                             formula = (50*10)/100
-                            mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(formula)+'" WHERE address = "'+str(address)+'"')
-                            mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
+                            mycursor.execute('UPDATE sws_risk_score SET risk_score_by_tx ="'+str(formula)+'",tx_calculated =1 WHERE address = "'+str(address)+'"')
+                            #mycursor.execute('UPDATE sws_risk_score SET tx_calculated =1 WHERE address = "'+str(address)+'"')
                             print("updated_plus")
                             mydb.commit()
                         else:
@@ -269,10 +286,6 @@ def tx_two_yearold():
                         pass
     
     
-    
-    
-    
-
 #-------Scheduler for calculating risk score by if receive fund from safename or kyc swsuser heist addresses-------
 
 def risk_score_by_safename():
@@ -291,40 +304,27 @@ def risk_score_by_safename():
             mycursor.execute('INSERT INTO `sws_risk_score`(address,type_id) VALUES ("'+str(address)+'","'+str(type_id)+'")')
             mydb.commit()
             print("line 155")    
-    kyc_secure_users=[]
-    mycursor.execute('SELECT username FROM sws_user WHERE (kyc_verified = 1 AND profile_status = "secure")')
+    kyc_and_secure_addresses=[]
+    mycursor.execute('SELECT u.address FROM db_safename.sws_user as a left join db_safename.sws_address as u on a.username = u.cms_login_name where (kyc_verified = 1 AND profile_status = "secure")')
+    #SELECT u.address FROM db_safename.sws_user as a left join db_safename.sws_address as u on a.username = u.cms_login_name where (kyc_verified = 1 AND profile_status = "secure"); 
     che = mycursor.fetchall()
     for addr in che:
         cms_name=addr[0]
-        kyc_secure_users.append(cms_name)
+        kyc_and_secure_addresses.append(cms_name)
     print("300")
-    kyc_and_secure_addresses=[]
-    for cms_user in kyc_secure_users:
-        mycursor.execute('SELECT address FROM sws_address WHERE (cms_login_name = "'+str(cms_user)+'")')
-        che = mycursor.fetchall()
-        for addr in che:
-            addres=addr[0]
-            kyc_and_secure_addresses.append(addres)
     print("308")
-    secure_users=[]
-    mycursor.execute('SELECT username FROM sws_user WHERE profile_status = "secure" AND (kyc_verified <> 1 OR kyc_verified is null )')
+    secure_addresses=[]
+    mycursor.execute('SELECT u.address FROM db_safename.sws_user as a left join db_safename.sws_address as u on a.username = u.cms_login_name where profile_status = "secure" AND (kyc_verified <> 1 OR kyc_verified is null )')
+    #SELECT u.address FROM db_safename.sws_user as a left join db_safename.sws_address as u on a.username = u.cms_login_name where profile_status = "secure" AND (kyc_verified <> 1 OR kyc_verified is null ); 
     chek = mycursor.fetchall()
     for addr in chek:
         cms_name=addr[0]
-        secure_users.append(cms_name)
+        secure_addresses.append(cms_name)
     print("315")
-    secure_addresses=[]
-    for cms_user in secure_users:
-        mycursor.execute('SELECT address FROM sws_address WHERE (cms_login_name = "'+str(cms_user)+'")')
-        che = mycursor.fetchall()
-        for addr in che:
-            addres=addr[0]
-            secure_addresses.append(addres)
     print("323")
     print(secure_addresses)
     mycursor.execute('SELECT address,type_id FROM sws_risk_score WHERE (tx_cal_by_safename <> 1 OR tx_cal_by_safename is null)')
     check = mycursor.fetchall()
-    
     for addr in check:
         address=addr[0]
         type_id=addr[1]
@@ -347,15 +347,15 @@ def risk_score_by_safename():
                 if checkk in kyc_and_secure_addresses:
                     print("adasda")
                     tx_safe_name_formula = (50*10)/100
-                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
-                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'",tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                   # mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
                     print(checkk)
                     print("updated_10%")
                     mydb.commit()
                 if checkk in secure_addresses:
                     tx_safe_name_formula = (50*5)/100
-                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
-                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'",tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                  #  mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
                     print(checkk)
                     print("updated_5%")
                     mydb.commit()
@@ -378,15 +378,15 @@ def risk_score_by_safename():
             for checkk in addresses:
                 if checkk in kyc_and_secure_addresses:
                     tx_safe_name_formula = (50*10)/100
-                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
-                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'",tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                    #mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
                     print(checkk)
                     print("updated_10%")
                     mydb.commit()
                 if checkk in secure_addresses:
                     tx_safe_name_formula = (50*5)/100
-                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
-                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'",tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
+                    #mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_safename =1 WHERE address = "'+str(address)+'"')
                     print(checkk)
                     print("updated_5%")
                     mydb.commit()
@@ -394,8 +394,8 @@ def risk_score_by_safename():
                     pass
 
 
-#-------Scheduler for calculating risk score by if receive fund from heist or heist associated address-------
 
+#-------Scheduler for calculating risk score by if receive fund from heist or heist associated address-------
                         
 def risk_score_by_heist():
     print("runnnnnn")
@@ -452,14 +452,14 @@ def risk_score_by_heist():
                 print("checkkkk")
                 if checkk in heist_addresses:
                     tx_knownheist_formula =-((50*50)/100)
-                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_knownheist_formula)+'" WHERE address = "'+str(address)+'"')
-                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_knownheist_formula)+'",tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                    #mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
                     print("updated_50%")
                     mydb.commit()
                 if checkk in heist_associated_addresses:
                     tx_heistassosiated_formula = -((50*30)/100)
-                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_heistassosiated_formula)+'" WHERE address = "'+str(address)+'"')
-                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_heistassosiated_formula)+'",tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                    #mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
                     print("updated_30%")
                     mydb.commit()
                 else:
@@ -482,22 +482,25 @@ def risk_score_by_heist():
                 print("checkkkk")
                 if checkk in heist_addresses:
                     tx_knownheist_formula =-((50*50)/100)
-                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_knownheist_formula)+'" WHERE address = "'+str(address)+'"')
-                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_knownheist_formula)+'",tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                #    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
                     print(checkk)
                     print("updated_50%")
                     mydb.commit()
                 if checkk in heist_associated_addresses:
                     tx_heistassosiated_formula = -((50*30)/100)
-                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_heistassosiated_formula)+'" WHERE address = "'+str(address)+'"')
-                    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                    mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_heistassosiated_formula)+'",tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
+                #    mycursor.execute('UPDATE sws_risk_score SET tx_cal_by_knownheist =1 WHERE address = "'+str(address)+'"')
                     print(checkk)
                     print("updated_30%")
                     mydb.commit()
                 else:
                     pass
 
+
+
 #-------scheduler for calculating overall riskscore from sws_risk_score table and update in sws_address table------- 
+
 def risk_score():
     mycursor.execute('SELECT address FROM sws_risk_score')
     check = mycursor.fetchall()
@@ -518,11 +521,86 @@ def risk_score():
 
 
 
+#-------scheduler for calculating overall profile riskscore------- 
+
+def profile_risk_score():
+    print("asdasndas,na")
+    mycursor.execute('SELECT username FROM sws_user')
+    sws_users = mycursor.fetchall()
+    for user in sws_users:
+        user_name=user[0]
+        mycursor.execute('SELECT address_risk_score FROM sws_address WHERE cms_login_name="'+str(user_name)+'"')
+        risk_scores = mycursor.fetchall()
+        list_of_scores=[]
+        for risk_score in risk_scores:
+            score = risk_score[0]
+            list_of_scores.append(score)
+        if list_of_scores:
+            avrage = np.mean(list_of_scores)
+            print(avrage)
+            print(user_name)
+            mycursor.execute('UPDATE sws_user SET profile_risk_score="'+str(avrage)+'" WHERE username = "'+str(user_name)+'"')
+
+
+
+#--------Scheduler for fthcing tx_history and update db and send msg notification if got a new one--------
+
+def tx_notification():
+    print("asdasndas,na")
+    mycursor.execute('SELECT address,type_id FROM sws_address WHERE (address_status = "verified" OR address_status = "secure")')
+    sws_addresses = mycursor.fetchall()
+    for addres in sws_addresses:
+        address=addres[0]
+        type_id = addres[1] 
+        '''
+        if type_id == 1:
+            symbol = 'ETH'
+            currency = eth_data(address,symbol,type_id)        
+        '''
+        if type_id == 2:
+            symbol = 'BTC'
+            currency = btc_data(address,symbol,type_id)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 #--------Scheduler for send new transactions notifications---------
+
+'''
 from datetime import datetime
 def tx_notification():
     print("asdasndas,na")
@@ -538,6 +616,7 @@ def tx_notification():
         address_type_id = mycursor.fetchall()
         typ=address_type_id[0]
         type_id = typ[0]
+        print(type_id)
         if type_id == 1:
             total_current_tx = [] 
             Url = ETH_TRANSACTION_URL
@@ -570,11 +649,11 @@ def tx_notification():
                 if email_id is not None:
                     print("sendinnnnnngggggggg")
                     message = Mail(
-                        from_email='notifications@safename.io',
+                        from_email=Sendgrid_default_mail,
                         to_emails='rasealex000000@gmail.com',
                         subject='SafeName - New Transaction Notification In Your Account',
                         html_content= '<h3> You got a new transaction </h3><strong>Date:</strong> ' + str(dt_object) +' <div><strong>From:</strong> ' + str(fro) + ' </div><strong>To:</strong> ' + str(too) + ' </div><strong>Amount:</strong> ' + str(converted_value) + ' </div><strong>Coin Type:</strong> ''ETH'' ' )
-                    sg = SendGridAPIClient('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')
+                    sg = SendGridAPIClient(SendGridAPIClient_key)
                     response = sg.send(message)
                     print(response.status_code, response.body, response.headers)
             else:
@@ -615,21 +694,18 @@ def tx_notification():
                 if email_id is not None:
                     print("sending")
                     message = Mail(
-                        from_email='notifications@safename.io',
+                        from_email=Sendgrid_default_mail,
                         to_emails='rasealex000000@gmail.com',
                         subject='SafeName - New Transaction Notification In Your Account',
                         html_content= '<h3> You got a new transaction </h3><strong>Date:</strong> ' + str(dt_object) +' <div><strong>From:</strong> ' + str(fr) + ' </div><strong>To:</strong> ' + str(to) + ' </div><div><strong>Amount:</strong> ' + 'No Data' + ' </div><strong>Coin Type:</strong> ''BTC'' ' )
-                    sg = SendGridAPIClient('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')
+                    sg = SendGridAPIClient(SendGridAPIClient_key)
                     response = sg.send(message)
                     print(response.status_code, response.body, response.headers)
             else:
                 print("no new transaction")
+'''
 
-
-
-
-
-
+        
 
 
 
@@ -835,3 +911,21 @@ def auto_fetch():
 '''
 
 
+'''
+    kyc_and_secure_addresses=[]
+    for cms_user in kyc_secure_users:
+        mycursor.execute('SELECT address FROM sws_address WHERE (cms_login_name = "'+str(cms_user)+'")')
+        che = mycursor.fetchall()
+        for addr in che:
+            addres=addr[0]
+            kyc_and_secure_addresses.append(addres)
+'''
+'''
+    secure_addresses=[]
+    for cms_user in secure_users:
+        mycursor.execute('SELECT address FROM sws_address WHERE (cms_login_name = "'+str(cms_user)+'")')
+        che = mycursor.fetchall()
+        for addr in che:
+            addres=addr[0]
+            secure_addresses.append(addres)
+'''

@@ -43,182 +43,181 @@ def main():
         abort(500)
     address=request.json.get("address", None)    
     symbol=request.json.get("symbol", None)
-    Preferred_Safename=request.json.get("Preferred_Safename", None)
-    Email=request.json.get("Email","")
     type_id=request.json.get("type_id","")
 #    mycursor.execute('SELECT * FROM sws_whitelist WHERE requested="'+str(Preferred_Safename)+'"')
 #    result = mycursor.fetchall()
 #    if result:
     if symbol == "BTC":
-        currency = btc_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = btc_data(address,symbol,type_id)
         return currency
     if symbol == "ETH":
-        currency = eth_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = eth_data(address,symbol,type_id)
         return currency
-    
+    '''
     if symbol == "LTC":
-        currency = ltc_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = ltc_data(address,symbol,type_id)
         return currency
     if symbol == "BTC_CASH":
-        currency = btc_cash_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = btc_cash_data(address,symbol,type_id)
         return currency
     if symbol == "BNB":
-        currency = bnb_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = bnb_data(address,symbol,type_id)
         return currency
     if symbol == "BTC_SV":
-        currency = bitcoin_svs_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = bitcoin_svs_data(address,symbol,type_id)
         return currency
     if symbol == "TETHER":
-        currency = tether_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = tether_data(address,symbol,type_id)
         return currency
 
     if symbol == "TRON":
-        currency = tron_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = tron_data(address,symbol,type_id)
         return currency
 
     if symbol == "UNUS_SED_LEO":
-        currency = unus_sed_leo_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = unus_sed_leo_data(address,symbol,type_id)
         return currency
 
     if symbol == "IOTA":
-        currency = iota_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = iota_data(address,symbol,type_id)
         return currency
 
     if symbol == "Z_CASH":
-        currency = zcash_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = zcash_data(address,symbol,type_id)
         return currency
     
     if symbol == "ONT":
-        currency = ont_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = ont_data(address,symbol,type_id)
         return currency
 
     if symbol == "XTZ":
-        currency = xtz_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = xtz_data(address,symbol,type_id)
         return currency
 
     if symbol == "BTC_GOLD":
-        currency = btc_gold_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = btc_gold_data(address,symbol,type_id)
         return currency
 
     if symbol == "QTUM":
-        currency = qtum_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = qtum_data(address,symbol,type_id)
         return currency
 
     if symbol == "MKR":
-        currency = mkr_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = mkr_data(address,symbol,type_id)
         return currency
 
     if symbol == "VET":
-        currency = vet_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = vet_data(address,symbol,type_id)
         return currency
 
     if symbol == "CRO":
-        currency = cro_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = cro_data(address,symbol,type_id)
         return currency
 
     if symbol == "BAT":
-        currency = bat_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = bat_data(address,symbol,type_id)
         return currency
 
     if symbol == "USDC":
-        currency = usdc_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = usdc_data(address,symbol,type_id)
         return currency
 
     if symbol == "BTT":
-        currency = btt_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = btt_data(address,symbol,type_id)
         return currency
 
     if symbol == "XRP":
-        currency = xrp_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = xrp_data(address,symbol,type_id)
         return currency
 
     if symbol == "DASH":
-        currency = dash_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = dash_data(address,symbol,type_id)
         return currency
 
     if symbol == "EOS":
-        currency = eos_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = eos_data(address,symbol,type_id)
         return currency
 
     if symbol == "ZRX":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "ELF":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "REP":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "AOA":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "BAT":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "LINK":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "CCCX":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "MCO":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "CRO":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "DAI":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "EKT":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "EGT":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "ENJ":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "GNT":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "HT":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "ICX":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "INB":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "IOST":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "KCS":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
 
     if symbol == "LAMB":
-        currency = erc_coin_data(address,symbol,Preferred_Safename,Email,type_id)
+        currency = erc_coin_data(address,symbol,type_id)
         return currency
+    '''
  #   else:
  #       return jsonify({"msg": "You are not a registered user"}),203
 
