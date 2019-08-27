@@ -4,6 +4,12 @@ from flask import (
 import requests
 from datetime import datetime
 from app.util import serialize_doc
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from app.config import Sendgrid_default_mail,SendGridAPIClient_key
+
+#-----Calling functions at the call of Transaction Api
+
 from app.btc import btc_data
 from app.eth import eth_data
 from app.bnb import bnb_data
@@ -25,18 +31,22 @@ from app.dash import dash_data
 from app.usdc import usdc_data
 from app.ont import ont_data
 from app.bat  import bat_data
-#import mysql.connector
 from app.zcash import zcash_data
 from app.btcgold import btc_gold_data
 from app.iota import iota_data
 from app.unus_s_leo import unus_sed_leo_data
+#import mysql.connector
+
+
 bp = Blueprint('fetch', __name__, url_prefix='/')
 from app import mongo
+
 
 #mydb = mysql.connector.connect( user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
 #mycursor=mydb.cursor()
     
-#Main Api which is using a function for return details by post address and symbol
+#------Main Api which is using a function for return details by post address and symbol------
+
 @bp.route("/transaction",methods=["POST"])
 def main():
     if not request.json:
@@ -53,7 +63,6 @@ def main():
     if symbol == "ETH":
         currency = eth_data(address,symbol,type_id)
         return currency
-    '''
     if symbol == "LTC":
         currency = ltc_data(address,symbol,type_id)
         return currency
@@ -217,10 +226,12 @@ def main():
     if symbol == "LAMB":
         currency = erc_coin_data(address,symbol,type_id)
         return currency
-    '''
+
  #   else:
  #       return jsonify({"msg": "You are not a registered user"}),203
 
+
+#-----Api for return currency symbols and urls--------
 
 @bp.route("/currency_symbol",methods=['GET'])
 def currency_symbol():
@@ -229,6 +240,9 @@ def currency_symbol():
     return jsonify(urls), 200
 
 
+
+#-----Api for return tx_history and balance by address--------
+
 @bp.route("/local_transaction/<string:address>",methods=['GET'])
 def local_transaction(address):
     docs = mongo.db.sws_history.find({"address":address})
@@ -236,4 +250,3 @@ def local_transaction(address):
     return jsonify(docs), 200
 
     
-

@@ -18,7 +18,6 @@ def tether_data(address,symbol,Preferred_Safename,Email,type_id):
     array=[]
     
     
-
     for transaction in transactions:
         fee =transaction['fee']
         timestamp = transaction['blocktime']
@@ -39,9 +38,7 @@ def tether_data(address,symbol,Preferred_Safename,Email,type_id):
         "$set":{
                 "address":address,
                 "symbol":symbol,
-                "type_id":type_id,
-                "Preferred_Safename":Preferred_Safename,
-                "Email":Email
+                "type_id":type_id
             }},upsert=True)
 
     ret = mongo.db.address.find_one({
@@ -63,7 +60,6 @@ def tether_data(address,symbol,Preferred_Safename,Email,type_id):
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,
-                "Preferred_Safename":Preferred_Safename,
                 "balance":(int(value)/100000000),
                 "transactions":array,
                 "amountReceived":amount_recived,

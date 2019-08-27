@@ -1,6 +1,9 @@
 import scrapy
 from .. items import HeistScraperItem
 
+
+#----------Class for scraping BTC heist addresses----------
+
 class QuotesSpider(scrapy.Spider):
     name = "btc_heistlist"
     custom_settings = {

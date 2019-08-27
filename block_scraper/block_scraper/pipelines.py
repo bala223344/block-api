@@ -8,11 +8,16 @@
 #import sqlite3
 import mysql.connector
 
+
+
 class BlockScraperPipeline(object):
 
     def __init__(self):
         self.create_connection()
         self.create_table()
+    
+#----------Function of sql connection----------  
+    
     '''
     def create_connection(self):
         self.conn = mysql.connector.connect(
@@ -33,12 +38,21 @@ class BlockScraperPipeline(object):
         )
         self.curr = self.conn.cursor()
     
+    
+#----------Function of create table if already not exists----------
+
     def create_table(self): 
         self.curr.execute("""CREATE TABLE IF NOT EXISTS `sws_known_address` (address_id INT,address varchar(1000),type_id varchar(50),address_risk_score INT, coin varchar(100),tag_name varchar(1000),source varchar(1000),tx_count varchar(1000))""")
+
+
+#----------Function which calling a function for store data----------
 
     def process_item(self, item, spider):
         self.store_db(item)
         return item
+
+
+#----------Function for store data in database----------
 
     def store_db(self,item):
         address=item['address']
@@ -62,14 +76,18 @@ class BlockScraperPipeline(object):
             self.conn.commit()
         else:
             print("already_exist")
-     
-                    
+
+
+#----------Another class for heist addresses pipeline----------  
 
 class HeistBlockPipeline(object):
     def __init__(self):
         self.create_connection()
         self.create_table()
     
+
+#----------Function of sql connection----------
+    '''
     def create_connection(self):
         self.conn = mysql.connector.connect(
             host='remotemysql.com',#remotemysql.com
@@ -88,13 +106,22 @@ class HeistBlockPipeline(object):
             auth_plugin='mysql_native_password'
         )
         self.curr = self.conn.cursor()
-    '''
+    
+
+#----------Function of create table if already not exists----------
+
     def create_table(self): 
-        self.curr.execute("""CREATE TABLE IF NOT EXISTS `sws_heist_address` ( id INT,coin text,tag_name text,status text,address text,source text,subcategory text,description text,also_known_as text)""")
+        self.curr.execute("""CREATE TABLE IF NOT EXISTS `sws_heist_address` ( id INT,coin varchar(100),tag_name varchar(100),status varchar(100),address varchar(100),source varchar(1000),subcategory varchar(100),description varchar(1500),also_known_as varchar(1000))""")
+
+
+#----------Function which calling a function for store data----------
 
     def process_item(self, item, spider):
         self.store_db(item)
         return item
+
+
+#----------Function for store data in database----------
 
     def store_db(self,item):
         address=item['address']

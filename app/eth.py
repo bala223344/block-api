@@ -7,14 +7,19 @@ from app.util import serialize_doc
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from app import mongo
-from app.config import SendGridAPIClient_key,Sendgrid_default_mail
+from app.config import SendGridAPIClient_key,Sendgrid_default_mail,host,user,password,database,auth_plugin
+
+
+
+#----------My sql connection-----------
 
 import mysql.connector
-mydb = mysql.connector.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename',auth_plugin='mysql_native_password')
+mydb = mysql.connector.connect(host=host,user=user,password=password,database=database,auth_plugin=auth_plugin)
 mycursor=mydb.cursor()
 
 
 
+#----------Function for fetching tx_history and balance for ETH storing in mongodb also send notification if got new one----------
 
 def eth_data(address,symbol,type_id):
     print("asdsadsadasdadaasd")
@@ -50,26 +55,10 @@ def eth_data(address,symbol,type_id):
     balance = response['result']
     amount_recived =""
     amount_sent =""
-    '''
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
-
-    ret = mongo.db.address.find_one({
-        "address":address
-    })
-    _id=ret['_id']
-    '''
     ret = mongo.db.sws_history.update({
         "address":address            
     },{
-        "$set":{
-                #"record_id":str(_id),    
+        "$set":{    
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,
@@ -101,7 +90,7 @@ def eth_data(address,symbol,type_id):
             for to_address in to:
                 to_addr = to_address['to']
             print(send_amou)
-            if send_amou != 0:  
+            if send_amou != 0:
                 print("105")
                 mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
                 print(address)
@@ -111,22 +100,36 @@ def eth_data(address,symbol,type_id):
                 print(email_id) 
                 if email_id is not None:
                     print("sendinnnnnngggggggg")
+                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(from_addr)+'"')
+                    from_safename_tx = mycursor.fetchall()
+                    if from_safename_tx:
+                        frm_safenames=from_safename_tx[0]
+                        frm = frm_safenames[0]
+                        frm_safename=from_addr+'(safename:'+frm+')'
+                    else:
+                        frm_safename=from_addr
+                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(to_addr)+'"')
+                    too_safenames_tx = mycursor.fetchall()
+                    if too_safenames_tx:
+                        too_safenames=too_safenames_tx[0]
+                        to = too_safenames[0]
+                        to_safename=to_addr+'(safename:'+to+')'
+                    else:
+                        to_safename=to_addr
                     message = Mail(
-                        from_email=Sendgrid_default_mail,
-                        to_emails='rasealex000000@gmail.com',
-                        subject='SafeName - New Transaction Notification In Your Account',
-                        html_content= '<h3> You got a new transaction </h3><strong>Date:</strong> ' + str(date) +' <div><strong>From:</strong> ' + str(from_addr) + ' </div><strong>To:</strong> ' + str(to_addr) + ' </div><div><strong>Amount:</strong> ' + str(send_amou) + ' </div><div><strong>Tx_id:</strong> ' + str(transaction_id) + ' </div><div><strong>Coin Type:</strong> ''ETH''  </div>' )
+                            from_email=Sendgrid_default_mail,
+                            to_emails='rasealex000000@gmail.com',
+                            subject='SafeName - New Transaction Notification In Your Account',
+                            html_content= '<h3> You got a new transaction </h3><strong>Date:</strong> ' + str(date) +' <div><strong>From:</strong> ' + str(frm_safename) + ' </div><strong>To:</strong> ' + str(to_safename) + ' </div><div><strong>Amount:</strong> ' + str(send_amou) + ' </div><div><strong>Tx_id:</strong> ' + str(transaction_id) + ' </div><div><strong>Coin Type:</strong> ''ETH''  </div>' )
                     sg = SendGridAPIClient(SendGridAPIClient_key)
                     response = sg.send(message)
                     print(response.status_code, response.body, response.headers)
                 else:
-                    print("email is none")
+                    print("email is not none")
             else:
                 print("amount is 0")
         else:
             print("no new transaction")
 
 
-            
-    #SELECT a.cms_login_name, u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address=''; 
-                #SELECT a.cms_login_name, u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address='0xa6fe83Dcf28Cc982818656ba680e03416824D5E4';
+

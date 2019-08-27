@@ -45,11 +45,8 @@ def b_chain_data(address,symbol,Preferred_Safename,Email,type_id):
         "$set":{
                 "address":address,
                 "symbol":symbol,
-                "type_id":type_id,
-                "Preferred_Safename":Preferred_Safename,
-                "Email":Email
+                "type_id":type_id
             }},upsert=True)
-
     ret = mongo.db.address.find_one({
         "address":address
     })
@@ -68,7 +65,6 @@ def b_chain_data(address,symbol,Preferred_Safename,Email,type_id):
                     "address":address,
                     "symbol":symbol,
                     "type_id":type_id,
-                    "Preferred_Safename":Preferred_Safename,
                     "balance":balance,
                     "transactions":array,
                     "amountReceived":amount_recived,

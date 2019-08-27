@@ -5,7 +5,10 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from app.config import heist_addresses_fetch_scheduler_minute,heist_addresses_fetch_scheduler_seconds,heist_associated_fetch_scheduler_minute,heist_associated_fetch_scheduler_seconds,riskscore_by_tx_two_yearold_scheduler_minute,riskscore_by_tx_two_yearold_scheduler_seconds,risk_score_by_safename_scheduler_minute,risk_score_by_safename_scheduler_seconds,risk_score_by_heist_scheduler_minute,risk_score_by_heist_scheduler_seconds,tx_notification_scheduler_minute,risk_score_update_scheduler_minute,risk_score_update_scheduler_seconds,profile_risk_score_scheduler_minute,profile_risk_score_scheduler_seconds
 from app import db
 mongo = db.init_db()
-from app.scheduler import auto_fetch,heist_associated_fetch,tx_two_yearold,risk_score_by_safename,risk_score_by_heist,tx_notification,risk_score,profile_risk_score
+
+
+#-----calling schedulers run time from config.py----------
+from app.scheduler import auto_fetch,heist_associated_fetch,tx_two_yearold,risk_score_by_safename,risk_score_by_heist,tx_notification,risk_score,profile_risk_score,invoice_notification
 
 
 def create_app(test_config=None):
@@ -33,6 +36,9 @@ def create_app(test_config=None):
     app.register_blueprint(fetch.bp)
     
 
+
+#--------Schedulers timing and days functionality----------------------
+
     auto_fetch_scheduler = BackgroundScheduler()
     auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon', hour=heist_addresses_fetch_scheduler_minute,minute=heist_addresses_fetch_scheduler_seconds)
     auto_fetch_scheduler.start()
@@ -54,8 +60,8 @@ def create_app(test_config=None):
     risk_score_by_heist_scheduler.start()
     
     tx_notification_scheduler = BackgroundScheduler()
-    tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=17,minute=44)
-    #tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=tx_notification_scheduler_minute)
+    #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=17,minute=54)
+    tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=tx_notification_scheduler_minute)
     tx_notification_scheduler.start()
 
     risk_score_scheduler = BackgroundScheduler()
@@ -65,8 +71,13 @@ def create_app(test_config=None):
     profile_risk_score_scheduler = BackgroundScheduler()
     profile_risk_score_scheduler.add_job(profile_risk_score, trigger='cron', day_of_week='mon-sat', hour=profile_risk_score_scheduler_minute,minute=profile_risk_score_scheduler_seconds)
     profile_risk_score_scheduler.start()
-
     
+    
+    invoice_notification_scheduler = BackgroundScheduler()
+    invoice_notification_scheduler.add_job(invoice_notification, trigger='cron', day_of_week='mon-sat', hour=19,minute=45)
+    invoice_notification_scheduler.start()
+    
+
 
     try:
         return app
@@ -78,3 +89,4 @@ def create_app(test_config=None):
         risk_score_by_heist_scheduler.shutdown()
         tx_notification_scheduler.shutdown()
         risk_score_scheduler.shutdown()
+        invoice_notification_scheduler.shutdown()

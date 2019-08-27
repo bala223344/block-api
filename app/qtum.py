@@ -7,7 +7,7 @@ from app.util import serialize_doc
 from app import mongo
 
 
-def qtum_data(address,symbol,Preferred_Safename,Email,type_id):
+def qtum_data(address,symbol,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']
     url_hash=records['url_hash']
@@ -58,9 +58,7 @@ def qtum_data(address,symbol,Preferred_Safename,Email,type_id):
         "$set":{
                 "address":address,
                 "symbol":symbol,
-                "type_id":type_id,
-                "Preferred_Safename":Preferred_Safename,
-                "Email":Email
+                "type_id":type_id
             }},upsert=True)
 
     ret = mongo.db.address.find_one({
@@ -76,7 +74,6 @@ def qtum_data(address,symbol,Preferred_Safename,Email,type_id):
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,
-                "Preferred_Safename":Preferred_Safename,
                 "balance":(int(balance)/100000000),
                 "transactions":array,
                 "amountReceived":(int(amount_recived)/100000000),

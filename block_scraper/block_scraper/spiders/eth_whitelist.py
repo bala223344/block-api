@@ -2,6 +2,8 @@ import scrapy
 from .. items import BlockScraperItem
 
 
+#----------Class for scraping ETH wallets and cloud addresses----------
+
 class EthSpider(scrapy.Spider):
     name = "eth_whitelist"
     custom_settings = {

@@ -33,7 +33,7 @@ mycursor=mydb.cursor()
 def auto_fetch():
     print("runing")
     response_user_token = requests.get(url=ETH_SCAM_URL)
-    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_heist_address` ( id INT,coin text,tag_name text,status text,address text,source text,subcategory text,description text,also_known_as text)""")
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_heist_address` ( id INT,coin varchar(100),tag_name varchar(100),status varchar(100),address varchar(100),source varchar(1000),subcategory varchar(100),description varchar(1500),also_known_as varchar(1000))""")
     response = response_user_token.json()
     result = response['result']
     if result:
@@ -151,7 +151,7 @@ def heist_associated_fetch():
                         print("already_exist")
         if coin == 'BTC':
             print("btc")
-            url1=BTC_TRANSACTION_URL
+            url1=BTC_TRANSACTION
             doc=url1.replace("{{address}}",''+address+'')
             response_user = requests.get(url=doc)
             res = response_user.json()       
@@ -196,9 +196,9 @@ def tx_two_yearold():
     mycursor.execute('SELECT address,type_id FROM sws_address')
     check = mycursor.fetchall()
     print("line 150")
-    for a in check:
-        address=a[0]
-        type_id=a[1]
+    for details in check:
+        address=details[0]
+        type_id=details[1]
         print("line 153")
         mycursor.execute('SELECT * FROM sws_risk_score WHERE address="'+str(address)+'"')
         check = mycursor.fetchall()
@@ -403,9 +403,9 @@ def risk_score_by_heist():
     mycursor.execute('SELECT address,type_id FROM sws_address')
     check = mycursor.fetchall()
     print("line 150")
-    for a in check:
-        address=a[0]
-        type_id=a[1]
+    for check in check:
+        address=check[0]
+        type_id=check[1]
         print("line 153")
         mycursor.execute('SELECT * FROM sws_risk_score WHERE address="'+str(address)+'"')
         check = mycursor.fetchall()
@@ -547,25 +547,78 @@ def profile_risk_score():
 
 def tx_notification():
     print("asdasndas,na")
-    mycursor.execute('SELECT address,type_id FROM sws_address WHERE (address_status = "verified" OR address_status = "secure")')
+    mycursor.execute('SELECT address,type_id FROM sws_address WHERE(address_status = "verified" OR address_status = "secure")')
     sws_addresses = mycursor.fetchall()
     for addres in sws_addresses:
         address=addres[0]
         type_id = addres[1] 
-        
+        '''
         if type_id == 1:
             symbol = 'ETH'
             currency = eth_data(address,symbol,type_id)        
-        
+        '''        
         if type_id == 2:
             symbol = 'BTC'
             currency = btc_data(address,symbol,type_id)
+        
 
 
 
 
 
 
+
+
+#-----------scheduler for send email notification------------
+
+def invoice_notification():
+    print("asdasndas,na")
+    dab = mongo.db.sws_pending_txs_from_app.find({
+        "type":"invoice"})
+    dab = [serialize_doc(doc) for doc in dab]
+    for data in dab:
+        frm=data['from']
+        to = data['to']
+        symbol = data['symbol']
+        amount=data['amount']
+        notes = data['notes']
+        
+        dabb = mongo.db.sws_history.find({
+            "address": to,
+            "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":to,"send_amount":amount}}, "to":{'$elemMatch':{"to":frm}}}}
+        },{"transactions.$": 1 })
+        dabb=[serialize_doc(doc) for doc in dabb]
+
+        if dabb:
+            for data in dabb:
+                trans = data['transactions']
+                for tx_id in trans:
+                    transaction_id = tx_id['Tx_id']
+            docs = mongo.db.sws_pending_txs_from_app.remove({
+                "from": frm,
+                "to": to,
+                "amount": amount,
+                "type":"invoice"
+            })            
+            report = mongo.db.sws_notes.insert_one({
+                "tx_id": transaction_id,
+                "notes": notes
+            }).inserted_id
+        else:
+            mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(to)+'"')
+            email = mycursor.fetchone()
+            print(email)
+            if email is not None:
+                email_id=email[0]
+                print(email_id)
+                message = Mail(
+                        from_email=Sendgrid_default_mail,
+                        to_emails='rasealex000000@gmail.com',
+                        subject='SafeName - Invoice Notification In Your Account',
+                        html_content= '<h3> You got a new transaction </h3>' )
+                sg = SendGridAPIClient(SendGridAPIClient_key)
+                response = sg.send(message)
+                print(response.status_code, response.body, response.headers)
 
 
 

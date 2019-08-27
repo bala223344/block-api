@@ -8,7 +8,7 @@ from app.util import serialize_doc
 from app import mongo
 
 
-def iota_data(address,symbol,Preferred_Safename,Email,type_id):
+def iota_data(address,symbol,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']
     ret=url.replace("{{address}}",''+address+'')
@@ -42,9 +42,7 @@ def iota_data(address,symbol,Preferred_Safename,Email,type_id):
         "$set":{
                 "address":address,
                 "symbol":symbol,
-                "type_id":type_id,
-                "Preferred_Safename":Preferred_Safename,
-                "Email":Email
+                "type_id":type_id
             }},upsert=True)
 
     ret = mongo.db.address.find_one({
@@ -60,7 +58,6 @@ def iota_data(address,symbol,Preferred_Safename,Email,type_id):
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,
-                "Preferred_Safename":Preferred_Safename,
                 "balance":bal,
                 "transactions":array,
                 "amountReceived":amount_recived,

@@ -8,6 +8,8 @@
 import scrapy
 
 
+#----------Class of blockitemscraper where items define-----------------
+
 class BlockScraperItem(scrapy.Item):
     address = scrapy.Field()
     coin = scrapy.Field()
@@ -19,8 +21,9 @@ class BlockScraperItem(scrapy.Item):
     pass
 
 
+#----------Class of HeistScraperItem where items define-----------------
+
 class HeistScraperItem(scrapy.Item):
-    print("asdasdasfdasfsdfdsfdsfdfdsfdsfdasfad")
     address = scrapy.Field()
     coin = scrapy.Field()
     url_coming_from = scrapy.Field()

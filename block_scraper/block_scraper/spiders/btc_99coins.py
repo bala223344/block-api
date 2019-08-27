@@ -1,6 +1,9 @@
 import scrapy
 from .. items import BlockScraperItem
 
+
+#----------Class for scraping btc popular addresses----------
+
 class BtcSpider(scrapy.Spider):
     name = "btc_99coins"
     custom_settings = {

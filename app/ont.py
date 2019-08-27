@@ -7,7 +7,7 @@ from app.util import serialize_doc
 from app import mongo
 
 
-def ont_data(address,symbol,Preferred_Safename,Email,type_id):
+def ont_data(address,symbol,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']
     if "url_transaction" in records:
@@ -44,9 +44,7 @@ def ont_data(address,symbol,Preferred_Safename,Email,type_id):
         "$set":{
                 "address":address,
                 "symbol":symbol,
-                "type_id":type_id,
-                "Preferred_Safename":Preferred_Safename,
-                "Email":Email
+                "type_id":type_id
             }},upsert=True)
 
     ret = mongo.db.address.find_one({
@@ -72,7 +70,6 @@ def ont_data(address,symbol,Preferred_Safename,Email,type_id):
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,
-                "Preferred_Safename":Preferred_Safename,
                 "balance":balance,
                 "transactions":array,
                 "amountReceived":amount_recived,
