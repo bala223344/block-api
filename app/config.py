@@ -52,3 +52,19 @@ user = 'dexter'
 password = 'cafe@wales1'
 database = 'db_safename'
 auth_plugin = 'mysql_native_password'
+
+
+#---------Urls for baance saprate apis----------
+
+ETH_url="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+BTC_url="https://blockchain.coinmarketcap.com/api/address?address={{address}}&symbol=BTC&start=1&limit=100"
+ERC_url="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+LTC_url="https://explorer.viabtc.com/res/ltc/addresses/{{address}}"
+BCH_url="https://api.blockchair.com/bitcoin-cash/dashboards/address/{{address}}?limit=10,0"
+BNB_url="https://explorer.binance.org/api/v1/balances/{{address}}"
+BSV_url="https://explorer.viabtc.com/res/bsv/addresses/{{address}}"
+TRX_url="https://apilist.tronscan.org/api/account?address={{address}}"
+LEO_url="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+MIOTA_url="https://api.thetangle.org/addresses/{{address}}"
+ZEC_url="https://api.zcha.in/v2/mainnet/accounts/{{address}}"
+ONT_url="https://explorer.ont.io/v2/addresses/{{address}}/native/balances"

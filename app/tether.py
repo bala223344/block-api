@@ -7,7 +7,7 @@ from app.util import serialize_doc
 from app import mongo
 
 
-def tether_data(address,symbol,Preferred_Safename,Email,type_id):
+def tether_data(address,symbol,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']
     response_user_token = requests.post(url ,data={"account_name":address})

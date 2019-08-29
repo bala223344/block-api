@@ -14,8 +14,10 @@ import numpy as np
 
 
 #-----calling functions from app----
-from app.eth import eth_data
-from app.btc import btc_data
+#from app.eth import eth_data
+#from app.btc import btc_data
+#from app.erc_coins import erc_coin_data
+
 
 
 
@@ -544,7 +546,7 @@ def profile_risk_score():
 
 
 #--------Scheduler for fthcing tx_history and update db and send msg notification if got a new one--------
-
+'''
 def tx_notification():
     print("asdasndas,na")
     mycursor.execute('SELECT address,type_id FROM sws_address WHERE(address_status = "verified" OR address_status = "secure")')
@@ -552,22 +554,107 @@ def tx_notification():
     for addres in sws_addresses:
         address=addres[0]
         type_id = addres[1] 
-        '''
+        
         if type_id == 1:
             symbol = 'ETH'
             currency = eth_data(address,symbol,type_id)        
-        '''        
+                
         if type_id == 2:
             symbol = 'BTC'
             currency = btc_data(address,symbol,type_id)
         
+        if type_id == 3:
+            symbol = 'ZRX'
+            currency = erc_coin_data(address,symbol,type_id)
+        
+        if type_id == 5:
+            symbol = 'ELF'
+            currency = erc_coin_data(address,symbol,type_id)
 
+        if type_id == 8:
+            symbol = 'REP'
+            currency = erc_coin_data(address,symbol,type_id)
+           
+        if type_id == 9:
+            symbol = 'AOA'
+            currency = erc_coin_data(address,symbol,type_id)
 
+        if type_id == 10:
+            symbol = 'BAT'
+            currency = erc_coin_data(address,symbol,type_id)
+        
+        if type_id == 21:
+            symbol = 'LINK'
+            currency = erc_coin_data(address,symbol,type_id)
 
+        if type_id == 22:
+            symbol = 'CCCX'
+            currency = erc_coin_data(address,symbol,type_id)
 
+        if type_id == 24:
+            symbol = 'MCO'
+            currency = erc_coin_data(address,symbol,type_id)
 
+        if type_id == 25:
+            symbol = 'CRO'
+            currency = erc_coin_data(address,symbol,type_id)
 
+        if type_id == 26:
+            symbol = 'DAI'
+            currency = erc_coin_data(address,symbol,type_id)
 
+        if type_id == 31:
+            symbol = 'EKT'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 32:
+            symbol = 'EGT'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 34:
+            symbol = 'ENJ'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 38:
+            symbol = 'GNT'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 42:
+            symbol = 'HT'
+            currency = erc_coin_data(address,symbol,type_id)
+        
+        if type_id == 45:
+            symbol = 'INB'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 50:
+            symbol = 'KCS'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 51:
+            symbol = 'LAMB'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 11:
+            symbol = 'BNB'
+            currency = erc_coin_data(address,symbol,type_id)
+    
+        
+        if type_id == 46:
+            symbol = 'IOST'
+            currency = erc_coin_data(address,symbol,type_id)
+        
+    
+        if type_id == 44:
+            symbol = 'ICX'
+            currency = erc_coin_data(address,symbol,type_id)
+        
+        
+        if type_id == 41:
+            symbol = 'HOT'
+            currency = erc_coin_data(address,symbol,type_id)
+        
+'''
 
 #-----------scheduler for send email notification------------
 
@@ -615,7 +702,7 @@ def invoice_notification():
                         from_email=Sendgrid_default_mail,
                         to_emails='rasealex000000@gmail.com',
                         subject='SafeName - Invoice Notification In Your Account',
-                        html_content= '<h3> You got a new transaction </h3>' )
+                        html_content= '<h3> Your invoice is not clear please accept the request</h3>' )
                 sg = SendGridAPIClient(SendGridAPIClient_key)
                 response = sg.send(message)
                 print(response.status_code, response.body, response.headers)

@@ -54,27 +54,35 @@ def main():
     address=request.json.get("address", None)    
     symbol=request.json.get("symbol", None)
     type_id=request.json.get("type_id","")
+    Email=request.json.get("Email","")
+    Preferred_Safename=request.json.get("Preferred_Safename", None)
 #    mycursor.execute('SELECT * FROM sws_whitelist WHERE requested="'+str(Preferred_Safename)+'"')
 #    result = mycursor.fetchall()
 #    if result:
     if symbol == "BTC":
-        currency = btc_data(address,symbol,type_id)
+        currency = btc_data(address,symbol,type_id,Email,Preferred_Safename)
         return currency
+
     if symbol == "ETH":
-        currency = eth_data(address,symbol,type_id)
+        currency = eth_data(address,symbol,type_id,Email,Preferred_Safename)
         return currency
+'''
     if symbol == "LTC":
         currency = ltc_data(address,symbol,type_id)
         return currency
+
     if symbol == "BTC_CASH":
         currency = btc_cash_data(address,symbol,type_id)
         return currency
+
     if symbol == "BNB":
         currency = bnb_data(address,symbol,type_id)
         return currency
+
     if symbol == "BTC_SV":
         currency = bitcoin_svs_data(address,symbol,type_id)
         return currency
+
     if symbol == "TETHER":
         currency = tether_data(address,symbol,type_id)
         return currency
@@ -214,7 +222,7 @@ def main():
     if symbol == "INB":
         currency = erc_coin_data(address,symbol,type_id)
         return currency
-
+    
     if symbol == "IOST":
         currency = erc_coin_data(address,symbol,type_id)
         return currency
@@ -229,6 +237,8 @@ def main():
 
  #   else:
  #       return jsonify({"msg": "You are not a registered user"}),203
+'''
+
 
 
 #-----Api for return currency symbols and urls--------
@@ -248,5 +258,3 @@ def local_transaction(address):
     docs = mongo.db.sws_history.find({"address":address})
     docs = [serialize_doc(doc) for doc in docs]
     return jsonify(docs), 200
-
-    
