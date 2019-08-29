@@ -2,13 +2,13 @@ import os
 from flask import Flask,jsonify,make_response
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
-from app.config import heist_addresses_fetch_scheduler_minute,heist_addresses_fetch_scheduler_seconds,heist_associated_fetch_scheduler_minute,heist_associated_fetch_scheduler_seconds,riskscore_by_tx_two_yearold_scheduler_minute,riskscore_by_tx_two_yearold_scheduler_seconds,risk_score_by_safename_scheduler_minute,risk_score_by_safename_scheduler_seconds,risk_score_by_heist_scheduler_minute,risk_score_by_heist_scheduler_seconds,tx_notification_scheduler_minute,risk_score_update_scheduler_minute,risk_score_update_scheduler_seconds,profile_risk_score_scheduler_minute,profile_risk_score_scheduler_seconds
+from app.config import heist_addresses_fetch_scheduler_minute,heist_addresses_fetch_scheduler_seconds#,heist_associated_fetch_scheduler_minute,heist_associated_fetch_scheduler_seconds,riskscore_by_tx_two_yearold_scheduler_minute,riskscore_by_tx_two_yearold_scheduler_seconds,risk_score_by_safename_scheduler_minute,risk_score_by_safename_scheduler_seconds,risk_score_by_heist_scheduler_minute,risk_score_by_heist_scheduler_seconds,tx_notification_scheduler_minute,risk_score_update_scheduler_minute,risk_score_update_scheduler_seconds,profile_risk_score_scheduler_minute,profile_risk_score_scheduler_seconds
 from app import db
 mongo = db.init_db()
 
 
 #-----calling schedulers run time from config.py----------
-from app.scheduler import auto_fetch,heist_associated_fetch,tx_two_yearold,risk_score_by_safename,risk_score_by_heist,tx_notification,risk_score,profile_risk_score,invoice_notification
+from app.scheduler import auto_fetch#,heist_associated_fetch,tx_two_yearold,risk_score_by_safename,risk_score_by_heist,tx_notification,risk_score,profile_risk_score,invoice_notification
 
 
 def create_app(test_config=None):
@@ -32,8 +32,10 @@ def create_app(test_config=None):
     db.get_db(mongo=mongo, app=app)
 
     from app.api import fetch
-    
+    from app.api import balance
+
     app.register_blueprint(fetch.bp)
+    app.register_blueprint(balance.bp)
     
 
 
@@ -42,7 +44,7 @@ def create_app(test_config=None):
     auto_fetch_scheduler = BackgroundScheduler()
     auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon', hour=heist_addresses_fetch_scheduler_minute,minute=heist_addresses_fetch_scheduler_seconds)
     auto_fetch_scheduler.start()
-        
+    '''        
     heist_associated_fetch_scheduler = BackgroundScheduler()
     heist_associated_fetch_scheduler.add_job(heist_associated_fetch, trigger='cron', day_of_week='mon-sat', hour=heist_associated_fetch_scheduler_minute,minute=heist_associated_fetch_scheduler_seconds)
     heist_associated_fetch_scheduler.start()
@@ -76,13 +78,14 @@ def create_app(test_config=None):
     invoice_notification_scheduler = BackgroundScheduler()
     invoice_notification_scheduler.add_job(invoice_notification, trigger='cron', day_of_week='mon-sat', hour=19,minute=45)
     invoice_notification_scheduler.start()
-    
+    ''' 
 
 
     try:
         return app
     except:
         auto_fetch_scheduler.shutdown()
+        '''
         heist_associated_fetch_scheduler.shutdown()
         tx_two_yearold_scheduler.shutdown()
         risk_score_by_safename_scheduler.shutdown()
@@ -90,3 +93,4 @@ def create_app(test_config=None):
         tx_notification_scheduler.shutdown()
         risk_score_scheduler.shutdown()
         invoice_notification_scheduler.shutdown()
+        '''
