@@ -68,7 +68,7 @@ def create_app(test_config=None):
     tx_notification_scheduler = BackgroundScheduler()
     #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=16,minute=38)
     #tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=tx_notification_scheduler_minute)
-    tx_notification_scheduler.add_job(tx_notification, trigger='interval', hours=1)
+    tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=10)
     #tx_notification_scheduler.add_job(tx_notification, trigger='interval', seconds=60)
     tx_notification_scheduler.start()
     
@@ -79,6 +79,7 @@ def create_app(test_config=None):
     profile_risk_score_scheduler = BackgroundScheduler()
     profile_risk_score_scheduler.add_job(profile_risk_score, trigger='cron', day_of_week='sat', hour=profile_risk_score_scheduler_minute,minute=profile_risk_score_scheduler_seconds)
     profile_risk_score_scheduler.start()
+    
     '''
     invoice_notification_scheduler = BackgroundScheduler()
     invoice_notification_scheduler.add_job(invoice_notification, trigger='cron', day_of_week='mon-sat', hour=19,minute=45)
