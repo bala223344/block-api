@@ -154,4 +154,4 @@ def bnb_data(address,symbol,type_id):
                 print("amount is 0")
         else:
             print("no new transaction")
-        return jsonify({"success"})
+        return "success"

@@ -82,4 +82,4 @@ def qtum_data(address,symbol,type_id):
                 "amountSent":(int(amount_sent)/100000000)
             }},upsert=True)
 
-    return jsonify(res1)
+    return "success"

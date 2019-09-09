@@ -78,4 +78,4 @@ def dash_data(address,symbol,type_id):
                 "amountSent":amount_sent
             }},upsert=True)
     
-    return jsonify(response)
+    return "success"

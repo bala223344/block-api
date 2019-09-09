@@ -57,4 +57,4 @@ def icx_data(address,symbol,type_id):
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent
             }},upsert=True)
-    return jsonify(transactions)
+    return "success"

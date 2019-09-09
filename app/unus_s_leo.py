@@ -69,4 +69,4 @@ def unus_sed_leo_data(address,symbol,type_id):
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent
             }},upsert=True)
-    return jsonify(res)
+    return "success"

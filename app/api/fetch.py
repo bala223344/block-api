@@ -52,17 +52,7 @@ def main():
     address=request.json.get("address", None)    
     symbol=request.json.get("symbol", None)
     type_id=request.json.get("type_id","")
-#    Email=request.json.get("Email","")
-#    Preferred_Safename=request.json.get("Preferred_Safename", None)
-    '''
-    if symbol == "BTC":
-        currency = btc_data(address,symbol,type_id,Email,Preferred_Safename)
-        return currency
 
-    if symbol == "ETH":
-        currency = eth_data(address,symbol,type_id,Email,Preferred_Safename)
-        return currency
-    '''
     if symbol == "BTC":
         currency = btc_data(address,symbol,type_id)
         return currency
@@ -235,6 +225,14 @@ def main():
         currency = erc_coin_data(address,symbol,type_id)
         return currency
 
+    if symbol == "HOT":
+        currency = erc_coin_data(address,symbol,type_id)
+        return currency
+
+    if symbol == "IOST":
+        currency = erc_coin_data(address,symbol,type_id)
+        return currency
+    
     if symbol == "AE":
         currency = ae_data(address,symbol,type_id)
         return currency
@@ -242,8 +240,8 @@ def main():
     if symbol == "BTM":     #Not done completely
         currency = btm_data(address,symbol,type_id)
         return currency
-#HOT
-#IOST
+
+
 
 #-----Api for return currency symbols and urls--------
 
