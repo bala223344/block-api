@@ -4,11 +4,10 @@ from flask import (
 import requests
 from datetime import datetime
 from app.util import serialize_doc
-from app.balance_util import ETH_balance,BTC_balance,ERC_balance,LTC_balance,BCH_balance,BNB_balance,BSV_balance,TRX_balance,LEO_balance,MIOTA_balance,ZEC_balance#,ONT_balance
+from app.balance_util import ETH_balance,BTC_balance,ERC_balance,LTC_balance,BCH_balance,BNB_balance,BSV_balance,TRX_balance,LEO_balance,MIOTA_balance,ZEC_balance,ONT_balance,XTZ_balance,BTG_balance
 
 bp = Blueprint('balance', __name__, url_prefix='/')
 from app import mongo
-
 
 
 #---------Api only for balance for speed optimization direct hit apis end points---------
@@ -25,7 +24,7 @@ def balance():
         return balance
     
     if type_id == "2":
-        balance = BTC_balance(address,cointype,type_id) #---Not done
+        balance = BTC_balance(address,cointype,type_id) 
         return balance
     
     if type_id == "3":
@@ -63,12 +62,21 @@ def balance():
     if type_id == "98":
         balance = ZEC_balance(address,cointype,type_id)
         return balance
-    '''
+
     if type_id == "67":
         balance = ONT_balance(address,cointype,type_id)
         return balance
-
     
+    if type_id == "84":
+        balance = XTZ_balance(address,cointype,type_id)
+        return balance
+        
+    if type_id == "14":
+        balance = BTG_balance(address,cointype,type_id)
+        return balance
+
+
+    '''
     if type_id == "4":
         balance = ABBC_balance(address,cointype,type_id)
         return balance
@@ -97,14 +105,10 @@ def balance():
         balance = BAT_balance(address,cointype,type_id)
         return balance
 
-
     if type_id == "13":
         balance = BCD_balance(address,cointype,type_id)
         return balance
 
-    if type_id == "14":
-        balance = BTG_balance(address,cointype,type_id)
-        return balance
 
     if type_id == "15":
         balance = BSV_balance(address,cointype,type_id)

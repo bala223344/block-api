@@ -6,6 +6,9 @@ from datetime import datetime
 from app.util import serialize_doc
 from app import mongo
 
+
+#----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
+
 def vet_data(address,symbol,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']

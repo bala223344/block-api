@@ -8,7 +8,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from app.config import Sendgrid_default_mail,SendGridAPIClient_key
 
-#-----Calling functions at the call of Transaction Api
+#-----Calling functions at the call of Transaction Api------
 
 from app.btc import btc_data
 from app.eth import eth_data
@@ -35,15 +35,13 @@ from app.zcash import zcash_data
 from app.btcgold import btc_gold_data
 from app.iota import iota_data
 from app.unus_s_leo import unus_sed_leo_data
-#import mysql.connector
-
+from app.icx import icx_data
+from app.ae import ae_data
+from app.btm import btm_data
 
 bp = Blueprint('fetch', __name__, url_prefix='/')
 from app import mongo
 
-
-#mydb = mysql.connector.connect( user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
-#mycursor=mydb.cursor()
     
 #------Main Api which is using a function for return details by post address and symbol------
 
@@ -54,11 +52,9 @@ def main():
     address=request.json.get("address", None)    
     symbol=request.json.get("symbol", None)
     type_id=request.json.get("type_id","")
-    Email=request.json.get("Email","")
-    Preferred_Safename=request.json.get("Preferred_Safename", None)
-#    mycursor.execute('SELECT * FROM sws_whitelist WHERE requested="'+str(Preferred_Safename)+'"')
-#    result = mycursor.fetchall()
-#    if result:
+#    Email=request.json.get("Email","")
+#    Preferred_Safename=request.json.get("Preferred_Safename", None)
+    '''
     if symbol == "BTC":
         currency = btc_data(address,symbol,type_id,Email,Preferred_Safename)
         return currency
@@ -66,7 +62,15 @@ def main():
     if symbol == "ETH":
         currency = eth_data(address,symbol,type_id,Email,Preferred_Safename)
         return currency
-'''
+    '''
+    if symbol == "BTC":
+        currency = btc_data(address,symbol,type_id)
+        return currency
+
+    if symbol == "ETH":
+        currency = eth_data(address,symbol,type_id)
+        return currency
+
     if symbol == "LTC":
         currency = ltc_data(address,symbol,type_id)
         return currency
@@ -151,10 +155,10 @@ def main():
         currency = dash_data(address,symbol,type_id)
         return currency
 
-    if symbol == "EOS":
+    if symbol == "EOS":  
         currency = eos_data(address,symbol,type_id)
         return currency
-
+    
     if symbol == "ZRX":
         currency = erc_coin_data(address,symbol,type_id)
         return currency
@@ -216,17 +220,13 @@ def main():
         return currency
 
     if symbol == "ICX":
-        currency = erc_coin_data(address,symbol,type_id)
+        currency = icx_data(address,symbol,type_id)
         return currency
 
     if symbol == "INB":
         currency = erc_coin_data(address,symbol,type_id)
         return currency
     
-    if symbol == "IOST":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
     if symbol == "KCS":
         currency = erc_coin_data(address,symbol,type_id)
         return currency
@@ -235,11 +235,15 @@ def main():
         currency = erc_coin_data(address,symbol,type_id)
         return currency
 
- #   else:
- #       return jsonify({"msg": "You are not a registered user"}),203
-'''
+    if symbol == "AE":
+        currency = ae_data(address,symbol,type_id)
+        return currency
 
-
+    if symbol == "BTM":     #Not done completely
+        currency = btm_data(address,symbol,type_id)
+        return currency
+#HOT
+#IOST
 
 #-----Api for return currency symbols and urls--------
 
@@ -258,3 +262,7 @@ def local_transaction(address):
     docs = mongo.db.sws_history.find({"address":address})
     docs = [serialize_doc(doc) for doc in docs]
     return jsonify(docs), 200
+
+
+
+

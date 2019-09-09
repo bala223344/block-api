@@ -1,3 +1,9 @@
+#----------Database MongoUri-----------
+
+MongoUri="mongodb+srv://xmage:xmage@cluster0-xooqb.mongodb.net/crypto_app?retryWrites=true"
+
+
+
 
 #----Urls which are using in Schedulers---------
 
@@ -10,7 +16,7 @@ BTC_TRANSACTION="https://blockchain.coinmarketcap.com/api/address?address={{addr
 #---------Schedulers running timings-------------
 
 heist_addresses_fetch_scheduler_minute=11
-heist_addresses_fetch_scheduler_seconds=30
+heist_addresses_fetch_scheduler_seconds=15
 
 
 heist_associated_fetch_scheduler_minute=12
@@ -29,13 +35,13 @@ risk_score_by_heist_scheduler_minute=16
 risk_score_by_heist_scheduler_seconds=30
 
 
-tx_notification_scheduler_minute=30
+tx_notification_scheduler_minute=20
 
 risk_score_update_scheduler_minute=17
 risk_score_update_scheduler_seconds=30
 
-profile_risk_score_scheduler_minute=18
-profile_risk_score_scheduler_seconds=30
+profile_risk_score_scheduler_minute=16
+profile_risk_score_scheduler_seconds=42
 
 
 #------Apis keys------
@@ -54,6 +60,52 @@ database = 'db_safename'
 auth_plugin = 'mysql_native_password'
 
 
+#--------PGP verificaion template----------
+
+ 
+template='''
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512 
+
+
+Login
+Signup
+Help
+Coin
+Auto-detects: BTC address / ETH address / Safe Name
+Pay idon
+Report User
+Public Profile
+Need Help? (Live Chat)
+{{safename}}
+SAFENAME IDENTITY
+KYC VERIFIED
+Fair
+All public and private addresses associated with this identity have no known reported risks, login to get notifications if this changes.
+
+PAYMENTS
+You can send payments to idon through the following:
+{{cointype}}
+{{addresses}}
+REFERRALS
+Whitelist for SafeName (Beta) 
+Available Now
+Get me a page just like this one!
+KEYBASE VERIFY
+Want to verify the validity of this page?
+Select All content + Copy + Visit keybase.io/verify + Paste All Content into the Modal + Click Verify.
+{{PGP_sign_key}}
+Copyright © 2019 safename.io
+'''
+
+
+
+
+
+
+
+
+
 #---------Urls for baance saprate apis----------
 
 ETH_url="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
@@ -68,3 +120,5 @@ LEO_url="https://api.etherscan.io/api?module=account&action=balance&address={{ad
 MIOTA_url="https://api.thetangle.org/addresses/{{address}}"
 ZEC_url="https://api.zcha.in/v2/mainnet/accounts/{{address}}"
 ONT_url="https://explorer.ont.io/v2/addresses/{{address}}/native/balances"
+XTZ_url="https://api2.tzscan.io/v1/node_account/{{address}}"
+BTG_url="https://explorer.bitcoingold.org/insight-api/addr/{{address}}/?noTxList=1"

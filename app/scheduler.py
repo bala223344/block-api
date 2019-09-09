@@ -4,19 +4,20 @@ from app import mongo
 from flask import (
     Blueprint,request,jsonify,abort
 )
+import time
 import mysql.connector
 from dateutil.relativedelta import relativedelta
 import datetime
-from app.config import ETH_SCAM_URL,ETH_TRANSACTION_URL,BTC_TRANSACTION_URL,BTC_TRANSACTION,SendGridAPIClient_key,Sendgrid_default_mail
+from app.config import ETH_SCAM_URL,ETH_TRANSACTION_URL,BTC_TRANSACTION_URL,BTC_TRANSACTION,SendGridAPIClient_key,Sendgrid_default_mail,template
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import numpy as np
 
 
 #-----calling functions from app----
-#from app.eth import eth_data
-#from app.btc import btc_data
-#from app.erc_coins import erc_coin_data
+from app.eth import eth_data
+from app.btc import btc_data
+from app.erc_coins import erc_coin_data
 
 
 
@@ -539,14 +540,142 @@ def profile_risk_score():
             list_of_scores.append(score)
         if list_of_scores:
             avrage = np.mean(list_of_scores)
-            print(avrage)
-            print(user_name)
-            mycursor.execute('UPDATE sws_user SET profile_risk_score="'+str(avrage)+'" WHERE username = "'+str(user_name)+'"')
+            mycursor.execute('SELECT profile_risk_score_by_kyc_options FROM sws_user WHERE username="'+str(user_name)+'"')
+            risk_scores = mycursor.fetchone()
+            risk_score_kyc = risk_scores[0]
+            final_profile_riskscore=risk_score_kyc+avrage
+            mycursor.execute('UPDATE sws_user SET profile_risk_score="'+str(final_profile_riskscore)+'" WHERE username = "'+str(user_name)+'"')
+
+
+#-----------scheduler for send email notification------------
+
+def invoice_notification():
+    print("asdasndas,na")
+    dab = mongo.db.sws_pending_txs_from_app.find({
+        "type":"invoice"})
+    dab = [serialize_doc(doc) for doc in dab]
+    for data in dab:
+        frm=data['from']
+        to = data['to']
+        symbol = data['symbol']
+        amount=data['amount']
+        notes = data['notes']
+        
+        dabb = mongo.db.sws_history.find({
+            "address": to,
+            "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":to,"send_amount":amount}}, "to":{'$elemMatch':{"to":frm}}}}
+        },{"transactions.$": 1 })
+        dabb=[serialize_doc(doc) for doc in dabb]
+
+        if dabb:
+            for data in dabb:
+                trans = data['transactions']
+                for tx_id in trans:
+                    transaction_id = tx_id['Tx_id']
+            docs = mongo.db.sws_pending_txs_from_app.remove({
+                "from": frm,
+                "to": to,
+                "amount": amount,
+                "type":"invoice"
+            })            
+            report = mongo.db.sws_notes.insert_one({
+                "tx_id": transaction_id,
+                "notes": notes
+            }).inserted_id
+        else:
+            mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(to)+'"')
+            email = mycursor.fetchone()
+            print(email)
+            if email is not None:
+                email_id=email[0]
+                print(email_id)
+                message = Mail(
+                        from_email=Sendgrid_default_mail,
+                        to_emails='rasealex000000@gmail.com',
+                        subject='SafeName - Invoice Notification In Your Account',
+                        html_content= '<h3> Your invoice is not clear please accept the request</h3>' )
+                sg = SendGridAPIClient(SendGridAPIClient_key)
+                response = sg.send(message)
+                print(response.status_code, response.body, response.headers)
+
+
+
+#-----------scheduler for Pages PGP Verification------------
+
+def pgp_verification():
+    mycursor.execute('SELECT username FROM sws_user')
+    usernames = mycursor.fetchall()
+    for username in usernames:
+        user=username[0]
+        mycursor.execute('SELECT public_profile_safename,keybase_string FROM sws_user where username=''"' + str(user) + '"''')
+        check = mycursor.fetchall()
+        details = check[0]
+        public_safename = details[0]
+        keybase = details[1]
+        if not None in (public_safename,keybase):
+            changes=template.replace('{{safename}}',''+public_safename+'')
+            keybase_changes =changes.replace('{{PGP_sign_key}}',''+keybase+'')
+            mycursor.execute('SELECT address,type_id FROM sws_address where cms_login_name=''"' + str(user) + '"''')
+            check = mycursor.fetchall()
+            no_of_addresses=len(check)
+            print(no_of_addresses)
+            template_array=[]
+            for addr in range(0,no_of_addresses):
+                address_details=check[addr]
+                addres = address_details[0]
+                type_id = address_details[1]
+                if type_id == 1:
+                    typee = 'Ethereum'
+                if type_id == 2:
+                    typee = 'Bitcoin'
+                if no_of_addresses !=1:
+                    if addr == 0:
+                        print("if")            
+                        change=keybase_changes.replace('{{cointype}}',''+typee+'')
+                        final_template=change.replace('{{addresses}}',''+addres+'\n' + '{{cointype}}'+'\n' + '{{addresses}}')
+                        template_array.append(final_template)
+                    elif addr == no_of_addresses-1:
+                        print("elif")
+                        tempp=template_array[0]
+                        del template_array[0]
+                        chan=tempp.replace('{{cointype}}',''+typee+'')
+                        template_used=chan.replace('{{addresses}}',''+addres+'')        
+                        template_array.append(template_used)
+                    else:
+                        print("else")
+                        temp=template_array[0]
+                        del template_array[0]
+                        changed=temp.replace('{{cointype}}',''+typee+'')
+                        final_template=changed.replace('{{addresses}}',''+addres+'\n' + '{{cointype}}'+'\n' + '{{addresses}}')
+                        template_array.append(final_template)
+                else:
+                    change=keybase_changes.replace('{{cointype}}',''+typee+'')
+                    final_template=change.replace('{{addresses}}',''+addres+'')
+                    template_array.append(final_template)
+            template_for_used=template_array[0]
+            text=open(r'C:\Users\etech\Desktop\guru99.txt', 'r+')
+            text.write(template_for_used)
+            text.truncate()
+            erification_cammand=os.system(r'''keybase pgp verify -i C:\Users\etech\Desktop\guru99.txt ''')
+            print(erification_cammand)
+            split_string = str(erification_cammand).split()
+            checking_response = str(split_string)
+            if "['0']" in checking_response:
+                print("success")
+            else:
+                message = Mail(
+                        from_email=Sendgrid_default_mail,
+                        to_emails='rasealex000000@gmail.com',
+                        subject='SafeName - Invoice Notification In Your Account',
+                        html_content= '<h3> Your invoice is not clear please accept the request</h3>' )
+                sg = SendGridAPIClient(SendGridAPIClient_key)
+                response = sg.send(message)
+                print(response.status_code, response.body, response.headers)            
 
 
 
 #--------Scheduler for fthcing tx_history and update db and send msg notification if got a new one--------
-'''
+
 def tx_notification():
     print("asdasndas,na")
     mycursor.execute('SELECT address,type_id FROM sws_address WHERE(address_status = "verified" OR address_status = "secure")')
@@ -654,58 +783,19 @@ def tx_notification():
             symbol = 'HOT'
             currency = erc_coin_data(address,symbol,type_id)
         
-'''
 
-#-----------scheduler for send email notification------------
 
-def invoice_notification():
-    print("asdasndas,na")
-    dab = mongo.db.sws_pending_txs_from_app.find({
-        "type":"invoice"})
-    dab = [serialize_doc(doc) for doc in dab]
-    for data in dab:
-        frm=data['from']
-        to = data['to']
-        symbol = data['symbol']
-        amount=data['amount']
-        notes = data['notes']
-        
-        dabb = mongo.db.sws_history.find({
-            "address": to,
-            "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":to,"send_amount":amount}}, "to":{'$elemMatch':{"to":frm}}}}
-        },{"transactions.$": 1 })
-        dabb=[serialize_doc(doc) for doc in dabb]
-
-        if dabb:
-            for data in dabb:
-                trans = data['transactions']
-                for tx_id in trans:
-                    transaction_id = tx_id['Tx_id']
-            docs = mongo.db.sws_pending_txs_from_app.remove({
-                "from": frm,
-                "to": to,
-                "amount": amount,
-                "type":"invoice"
-            })            
-            report = mongo.db.sws_notes.insert_one({
-                "tx_id": transaction_id,
-                "notes": notes
-            }).inserted_id
-        else:
-            mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(to)+'"')
-            email = mycursor.fetchone()
-            print(email)
-            if email is not None:
-                email_id=email[0]
-                print(email_id)
-                message = Mail(
-                        from_email=Sendgrid_default_mail,
-                        to_emails='rasealex000000@gmail.com',
-                        subject='SafeName - Invoice Notification In Your Account',
-                        html_content= '<h3> Your invoice is not clear please accept the request</h3>' )
-                sg = SendGridAPIClient(SendGridAPIClient_key)
-                response = sg.send(message)
-                print(response.status_code, response.body, response.headers)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
 
@@ -729,12 +819,7 @@ def invoice_notification():
 
 
 
-
-
-
-
-
-
+#-----------------Dummy code But not trash----------------------------
 
 
 
