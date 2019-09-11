@@ -784,9 +784,20 @@ def tx_notification():
             currency = erc_coin_data(address,symbol,type_id)
         
 
-
+        if type_id == 75:
+            symbol = 'XRP'
+            currency = xrp_data(address,symbol,type_id)
+        
+        '''
+        if type_id == 12:
+            symbol = 'BCH'
+            currency = bch_data(address,symbol,type_id)
+        '''
     
-    
+        if type_id == 53:
+            symbol = 'LTC'
+            currency = ltc_data(address,symbol,type_id)
+            
     
     
     

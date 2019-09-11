@@ -56,8 +56,6 @@ def xrp_data(address,symbol,type_id):
     amount_recived =""
     amount_sent =""
     
-                
-    
     ret = mongo.db.sws_history.update({
         "address":address            
     },{

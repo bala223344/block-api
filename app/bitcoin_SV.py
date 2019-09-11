@@ -80,4 +80,4 @@ def bitcoin_svs_data(address,symbol,type_id):
                 "transactions":array
             }},upsert=True)
 
-    return jsonify(transactions)
+    return "success"

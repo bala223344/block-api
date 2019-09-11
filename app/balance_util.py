@@ -7,7 +7,7 @@ from app.util import serialize_doc
 from app import mongo
 #----------Import balance Apis End points from Config file----------
 
-from app.config import ETH_url,BTC_url,ERC_url,LTC_url,BCH_url,BNB_url,BSV_url,TRX_url,LEO_url,MIOTA_url,ZEC_url,ONT_url,BTG_url,XTZ_url
+from app.config import ETH_url,BTC_url,ERC_url,LTC_url,BCH_url,BNB_url,BSV_url,TRX_url,LEO_url,MIOTA_url,ZEC_url,ONT_url,BTG_url,XTZ_url,XRP_url
 
 
 #----------Function for return ETH balance----------
@@ -178,3 +178,10 @@ def BTG_balance(address,cointype,type_id):
     balance = response['balance']
     return str(balance)
     
+
+def XRP_balance(address,cointype,type_id):
+    ret=XRP_url.replace("{{address}}",''+address+'')
+    response_user_token = requests.get(url=ret)
+    response = response_user_token.json()       
+    balance=response['initial_balance']
+    return str(balance)

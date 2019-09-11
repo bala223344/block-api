@@ -15,6 +15,7 @@ def btc_cash_data(address,symbol,type_id):
     if "url_transaction" in records:
         url1=records['url_transaction']
     ret=url.replace("{{address}}",''+address+'')
+    print(ret)
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
 
@@ -77,4 +78,4 @@ def btc_cash_data(address,symbol,type_id):
                 "amountReceived":(receive_amount/100000000),
                 "amountSent":(send_amount/100000000)
             }},upsert=True)
-    return jsonify(trs)
+    return "success"

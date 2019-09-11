@@ -65,7 +65,7 @@ def main():
         currency = ltc_data(address,symbol,type_id)
         return currency
 
-    if symbol == "BTC_CASH":
+    if symbol == "BCH":
         currency = btc_cash_data(address,symbol,type_id)
         return currency
 
@@ -73,11 +73,11 @@ def main():
         currency = bnb_data(address,symbol,type_id)
         return currency
 
-    if symbol == "BTC_SV":
+    if symbol == "BSV":
         currency = bitcoin_svs_data(address,symbol,type_id)
         return currency
 
-    if symbol == "TETHER":
+    if symbol == "USDT":#Not working properly
         currency = tether_data(address,symbol,type_id)
         return currency
 
@@ -241,7 +241,7 @@ def main():
         currency = btm_data(address,symbol,type_id)
         return currency
 
-
+#Not done for XMR,BTM,THerether
 
 #-----Api for return currency symbols and urls--------
 

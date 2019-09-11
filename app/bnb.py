@@ -90,7 +90,9 @@ def bnb_data(address,symbol,type_id):
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent
             }},upsert=True)
+    return "success"
     
+    '''
     mycursor.execute('SELECT tx_notification_preferred FROM sws_address WHERE address="'+str(address)+'"')
     sws_addresses = mycursor.fetchall()
     preffered_value = sws_addresses[0]
@@ -155,3 +157,4 @@ def bnb_data(address,symbol,type_id):
         else:
             print("no new transaction")
         return "success"
+    '''
