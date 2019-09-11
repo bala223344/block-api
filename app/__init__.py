@@ -73,7 +73,6 @@ def create_app(test_config=None):
     #tx_notification_scheduler.add_job(tx_notification, trigger='interval', hours=20)
     #tx_notification_scheduler.add_job(tx_notification, trigger='interval', seconds=60)
     
-    
     risk_score_scheduler = BackgroundScheduler()
     risk_score_scheduler.add_job(risk_score, trigger='cron', day_of_week='sat', hour=risk_score_update_scheduler_minute,minute=risk_score_update_scheduler_seconds)
     risk_score_scheduler.start()

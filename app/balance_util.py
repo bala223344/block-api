@@ -7,7 +7,7 @@ from app.util import serialize_doc
 from app import mongo
 #----------Import balance Apis End points from Config file----------
 
-from app.config import ETH_url,BTC_url,ERC_url,LTC_url,BCH_url,BNB_url,BSV_url,TRX_url,LEO_url,MIOTA_url,ZEC_url,ONT_url,BTG_url,XTZ_url,XRP_url
+from app.config import ETH_url,BTC_url,ERC_url,LTC_url,BCH_url,BNB_url,BSV_url,TRX_url,LEO_url,MIOTA_url,ZEC_url,ONT_url,BTG_url,XTZ_url,XRP_url,USDT_url,EOS_url,DASH_url
 
 
 #----------Function for return ETH balance----------
@@ -184,4 +184,30 @@ def XRP_balance(address,cointype,type_id):
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
     balance=response['initial_balance']
+    return str(balance)
+
+
+def USDT_balance(address,cointype,type_id):
+    print("running")
+    print(USDT_url)
+    response_user_token = requests.post(USDT_url ,data={"account_name":address})
+    response = response_user_token.json()          
+    print(response)
+    balances = response['balance']
+    return str(balance)
+
+
+def EOS_balance(address,cointype,type_id):
+    acouunt={"account_name":address}
+    response_user_token = requests.post(url=EOS_url,json=acouunt)
+    response = response_user_token.json()       
+    balance=response['core_liquid_balance']
+    return str(balance)
+
+
+def DASH_balance(address,cointype,type_id):
+    ret=DASH_url.replace("{{address}}",''+address+'')
+    response_user_token = requests.get(url=ret)
+    response = response_user_token.json() 
+    balance=response['balance']
     return str(balance)
