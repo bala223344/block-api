@@ -131,5 +131,5 @@ def eth_data(address,symbol,type_id):
         else:
             print("no new transaction")
         return ("success")
-
+    return ("success")
 
