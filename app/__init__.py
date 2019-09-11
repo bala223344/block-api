@@ -66,11 +66,12 @@ def create_app(test_config=None):
     risk_score_by_heist_scheduler.start()
     
     tx_notification_scheduler = BackgroundScheduler()
-    tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=7,minute=40)
+    tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=8, minute=1)
+    tx_notification_scheduler.start()
     #tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=tx_notification_scheduler_minute)
     #tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=20)
     #tx_notification_scheduler.add_job(tx_notification, trigger='interval', seconds=60)
-    tx_notification_scheduler.start()
+    
     
     risk_score_scheduler = BackgroundScheduler()
     risk_score_scheduler.add_job(risk_score, trigger='cron', day_of_week='sat', hour=risk_score_update_scheduler_minute,minute=risk_score_update_scheduler_seconds)
