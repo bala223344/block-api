@@ -15,7 +15,7 @@ import numpy as np
 
 
 #-----calling functions from app----
-from app.eth import eth_data
+from app.eth_notification import eth_notification
 from app.btc import btc_data
 from app.erc_coins import erc_coin_data
 
@@ -678,16 +678,17 @@ def pgp_verification():
 
 def tx_notification():
     print("asdasndas,na")
-    mycursor.execute('SELECT address,type_id FROM sws_address WHERE(address_status = "verified" OR address_status = "secure")')
+    mycursor.execute('SELECT address,type_id FROM sws_address WHERE tx_notification_preferred = "1" AND (address_status = "verified" OR address_status = "secure")')
     sws_addresses = mycursor.fetchall()
+    print(sws_addresses)
     for addres in sws_addresses:
         address=addres[0]
         type_id = addres[1] 
         
         if type_id == 1:
             symbol = 'ETH'
-            currency = eth_data(address,symbol,type_id)        
-                
+            currency = eth_notification(address,symbol,type_id)        
+        '''
         if type_id == 2:
             symbol = 'BTC'
             currency = btc_data(address,symbol,type_id)
@@ -788,17 +789,17 @@ def tx_notification():
             symbol = 'XRP'
             currency = xrp_data(address,symbol,type_id)
         
-        '''
+        
         if type_id == 12:
             symbol = 'BCH'
             currency = bch_data(address,symbol,type_id)
-        '''
+    
     
         if type_id == 53:
             symbol = 'LTC'
             currency = ltc_data(address,symbol,type_id)
-            
-    
+
+        '''
     
     
     
