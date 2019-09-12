@@ -7,7 +7,7 @@ from app.util import serialize_doc
 from app import mongo
 #----------Import balance Apis End points from Config file----------
 
-from app.config import ETH_url,BTC_url,ERC_url,LTC_url,BCH_url,BNB_url,BSV_url,TRX_url,LEO_url,MIOTA_url,ZEC_url,ONT_url,BTG_url,XTZ_url,XRP_url,USDT_url,EOS_url,DASH_url
+from app.config import ETH_url,BTC_url,ERC_url,LTC_url,BCH_url,BNB_url,BSV_url,TRX_url,LEO_url,MIOTA_url,ZEC_url,ONT_url,BTG_url,XTZ_url,XRP_url,USDT_url,EOS_url,DASH_url,XLM_url,MKR_url,LINK_url
 
 
 #----------Function for return ETH balance----------
@@ -179,6 +179,8 @@ def BTG_balance(address,cointype,type_id):
     return str(balance)
     
 
+#----------Function for return XRP balance----------
+
 def XRP_balance(address,cointype,type_id):
     ret=XRP_url.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
@@ -186,6 +188,8 @@ def XRP_balance(address,cointype,type_id):
     balance=response['initial_balance']
     return str(balance)
 
+
+#----------Function for return USDT balance----------
 
 def USDT_balance(address,cointype,type_id):
     print("running")
@@ -197,6 +201,8 @@ def USDT_balance(address,cointype,type_id):
     return str(balance)
 
 
+#----------Function for return EOS balance----------
+
 def EOS_balance(address,cointype,type_id):
     acouunt={"account_name":address}
     response_user_token = requests.post(url=EOS_url,json=acouunt)
@@ -205,9 +211,47 @@ def EOS_balance(address,cointype,type_id):
     return str(balance)
 
 
+
+#----------Function for return EOS balance----------
+
 def DASH_balance(address,cointype,type_id):
     ret=DASH_url.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json() 
     balance=response['balance']
     return str(balance)
+
+
+#----------Function for return XLM balance----------
+
+def XLM_balance(address,cointype,type_id):
+    print("running XLM")
+    ret=XLM_url.replace("{{address}}",''+address+'')
+    print(ret)
+    response_user_token = requests.get(url=ret)
+    response = response_user_token.json() 
+    balance=response['balances']
+    xlm_balance=balance[0]
+    response = xlm_balance['balance']
+    return str(response)
+
+
+
+def MKR_balance(address,cointype,type_id):
+    ret=MKR_url.replace("{{address}}",''+address+'')
+    response_user_token = requests.get(url=ret)
+    response = response_user_token.json()       
+    balance = response['result']
+    ret=(int(balance)/1000000000000000000)
+    return str(ret)
+
+
+def LINK_balance(address,cointype,type_id):
+    print("linkeeeeeeee")
+    ret=LINK_url.replace("{{address}}",''+address+'')
+    print(ret)
+    response_user_token = requests.get(url=ret)
+    response = response_user_token.json()       
+    balance = response['result']
+    ret=(int(balance)/1000000000000000000)
+    return str(ret)
