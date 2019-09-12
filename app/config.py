@@ -129,3 +129,13 @@ DASH_url="https://dashradar.com/insight-api/addr/{{address}}?from=0&to=1000"
 XLM_url = "https://horizon.stellar.org/accounts/{{address}}"
 MKR_url = "https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 LINK_url = "https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+
+#---------Api endpoint for tx_history and notification apis----------
+
+symbol="ETH"
+ETH_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+ETH_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+ 
+

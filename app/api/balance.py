@@ -88,11 +88,9 @@ def balance():
         balance = EOS_balance(address,cointype,type_id)
         return balance
 
-
     if type_id == "27":
         balance = DASH_balance(address,cointype,type_id)
         return balance
-
 
     if type_id == "82":
         balance = XLM_balance(address,cointype,type_id)

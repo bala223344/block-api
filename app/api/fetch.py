@@ -53,11 +53,11 @@ def main():
     symbol=request.json.get("symbol", None)
     type_id=request.json.get("type_id","")
 
-    if symbol == "BTC":
+    if type_id == "2":
         currency = btc_data(address,symbol,type_id)
         return currency
 
-    if symbol == "ETH":
+    if type_id == "1":
         currency = eth_data(address,symbol,type_id)
         return currency
 
