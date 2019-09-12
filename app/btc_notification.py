@@ -33,12 +33,12 @@ def btc_notification(address,symbol,type_id):
     
     array=[]
     total_current_tx=len(transactions)
-    
+    '''
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchall()
     transactions_count=current_tx[0]
     tx_count=transactions_count[0]
-    '''
+    
     if tx_count is None or total_current_tx > tx_count:
         mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
