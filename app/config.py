@@ -141,3 +141,23 @@ ETH_transactions="http://api.etherscan.io/api?module=account&action=txlist&addre
 
 symbol="BTC"
 BTC_balance="https://blockchain.coinmarketcap.com/api/address?address={{address}}&symbol=BTC&start=1&limit=100"
+
+
+symbol="DASH"
+DASH_balance="https://dashradar.com/insight-api/addr/{{address}}?from=0&to=1000"
+DASH_transactions="https://dashradar.com/insight-api/txs?address={{address}}&pageNum=0"
+
+
+symbol="ZEC"
+ZEC_balance="https://api.zcha.in/v2/mainnet/accounts/{{address}}"
+ZEC_transactions="https://api.zcha.in/v2/mainnet/accounts/{{address}}/sent?limit=5&offset=0&sort=timestamp&direction=descending"
+
+
+symbol="BCH"
+BCH_balance="https://api.blockchair.com/bitcoin-cash/dashboards/address/{{address}}?limit=10,0"
+BCH_transactions="https://api.blockchair.com/bitcoin-cash/dashboards/transactions/{{address}}"
+
+
+symbol="MKR"
+MKR_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+MKR_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"

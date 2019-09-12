@@ -61,6 +61,22 @@ def main():
         currency = eth_data(address,symbol,type_id)
         return currency
 
+    if type_id == "27":
+        currency = dash_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "98":
+        currency = zcash_data(address,symbol,type_id)
+        return currency
+ 
+    if symbol == "55":
+        currency = mkr_data(address,symbol,type_id)
+        return currency
+
+    if symbol == "21":
+        currency = erc_coin_data(address,symbol,type_id)
+        return currency
+
     if symbol == "LTC":
         currency = ltc_data(address,symbol,type_id)
         return currency
@@ -93,9 +109,6 @@ def main():
         currency = iota_data(address,symbol,type_id)
         return currency
 
-    if symbol == "Z_CASH":
-        currency = zcash_data(address,symbol,type_id)
-        return currency
     
     if symbol == "ONT":
         currency = ont_data(address,symbol,type_id)
@@ -111,10 +124,6 @@ def main():
 
     if symbol == "QTUM":
         currency = qtum_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "MKR":
-        currency = mkr_data(address,symbol,type_id)
         return currency
 
     if symbol == "VET":
@@ -139,10 +148,6 @@ def main():
 
     if symbol == "XRP":
         currency = xrp_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "DASH":
-        currency = dash_data(address,symbol,type_id)
         return currency
 
     if symbol == "EOS":  

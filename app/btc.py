@@ -25,7 +25,6 @@ def btc_data(address,symbol,type_id):
     amountSent =transaction['amount_sent']
     transactions = transaction['txs']
     array=[]
-    total_current_tx=len(transactions)
     for transaction in transactions:
         fee=transaction['fee']
         tx_id = transaction['hash']

@@ -16,7 +16,7 @@ import numpy as np
 
 #-----calling functions from app----
 from app.eth_notification import eth_notification
-from app.btc import btc_data
+from app.btc_notification import btc_notification
 from app.erc_coins import erc_coin_data
 
 
@@ -688,11 +688,12 @@ def tx_notification():
         if type_id == 1:
             symbol = 'ETH'
             currency = eth_notification(address,symbol,type_id)        
-        '''
+    
         if type_id == 2:
             symbol = 'BTC'
-            currency = btc_data(address,symbol,type_id)
+            currency = btc_notification(address,symbol,type_id)
         
+        '''
         if type_id == 3:
             symbol = 'ZRX'
             currency = erc_coin_data(address,symbol,type_id)

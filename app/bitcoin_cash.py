@@ -5,16 +5,12 @@ import requests
 from datetime import datetime
 from app.util import serialize_doc
 from app import mongo
-
+from app.config import BCH_balance,BCH_transactions
 
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
 
 def btc_cash_data(address,symbol,type_id):
-    records = mongo.db.symbol_url.find_one({"symbol":symbol})
-    url=records['url_balance']
-    if "url_transaction" in records:
-        url1=records['url_transaction']
-    ret=url.replace("{{address}}",''+address+'')
+    ret=BCH_balance.replace("{{address}}",''+address+'')
     print(ret)
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
@@ -29,7 +25,7 @@ def btc_cash_data(address,symbol,type_id):
     transactions=addr['transactions']
     array=[]
     for tran in transactions:
-        doc=url1.replace("{{address}}",''+tran+'')
+        doc=BCH_transactions.replace("{{address}}",''+tran+'')
         response_user = requests.get(url=doc)
         res = response_user.json()       
         trs =res['data'][''+tran+'']
@@ -51,25 +47,10 @@ def btc_cash_data(address,symbol,type_id):
             to.append({"to":recipient1,"receive_amount":(value1/100000000)})
         array.append({"fee":fee,"from":frm,"to":to,"date":time})
 
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
-
-    ret = mongo.db.address.find_one({
-        "address":address
-    })
-    _id=ret['_id']
-
     ret = mongo.db.sws_history.update({
         "address":address            
     },{
-        "$set":{
-                "record_id":str(_id),    
+        "$set":{  
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,
@@ -78,4 +59,4 @@ def btc_cash_data(address,symbol,type_id):
                 "amountReceived":(receive_amount/100000000),
                 "amountSent":(send_amount/100000000)
             }},upsert=True)
-    return "success"
+    return jsonify({"status":"success"})

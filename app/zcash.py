@@ -5,25 +5,21 @@ import requests
 from datetime import datetime
 from app.util import serialize_doc
 from app import mongo
-
+from app.config import ZEC_balance,ZEC_transactions
 
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
 
 def zcash_data(address,symbol,type_id):
-    records = mongo.db.symbol_url.find_one({"symbol":symbol})
-    url=records['url_balance']
-    if "url_transaction" in records:
-        url1=records['url_transaction']
-    ret=url.replace("{{address}}",''+address+'')
+    print("zcash") 
+    ret=ZEC_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
     
-    doc=url1.replace("{{address}}",''+address+'')
+    doc=ZEC_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
     
     array=[]
-    
     for transaction in res:
         fee =transaction['fee']
         timestamp = transaction['timestamp']
@@ -52,25 +48,10 @@ def zcash_data(address,symbol,type_id):
     amount_recived =response['totalRecv']
     amount_sent =response['totalSent']
 
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
-
-    ret = mongo.db.address.find_one({
-        "address":address
-    })
-    _id=ret['_id']
-
     ret = mongo.db.sws_history.update({
         "address":address            
     },{
-        "$set":{
-                "record_id":str(_id),    
+        "$set":{  
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,
@@ -79,5 +60,4 @@ def zcash_data(address,symbol,type_id):
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent
             }},upsert=True)
-    
-    return "success"
+    return jsonify({"status":"success"})

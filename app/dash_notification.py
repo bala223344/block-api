@@ -5,17 +5,20 @@ import requests
 from datetime import datetime
 from app.util import serialize_doc
 from app import mongo
-from app.config import DASH_balance,DASH_transactions
+
 
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
 
 def dash_data(address,symbol,type_id):
-    
-    ret=DASH_balance.replace("{{address}}",''+address+'')
+    records = mongo.db.symbol_url.find_one({"symbol":symbol})
+    url=records['url_balance']
+    if "url_transaction" in records:
+        url1=records['url_transaction']
+    ret=url.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
 
-    doc=DASH_transactions.replace("{{address}}",''+address+'')
+    doc=url1.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
     transactions=res['txs'] 
@@ -43,6 +46,20 @@ def dash_data(address,symbol,type_id):
                     to.append({"to":addd,"receive_amount":val})
         array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
     
+    ret = mongo.db.address.update({
+            "address":address            
+        },{
+        "$set":{
+                "address":address,
+                "symbol":symbol,
+                "type_id":type_id
+            }},upsert=True)
+
+    ret = mongo.db.address.find_one({
+        "address":address
+    })
+    _id=ret['_id']
+
     balance=response['balance']
     amount_recived =response['totalReceived']
     amount_sent =response['totalSent']
@@ -50,7 +67,8 @@ def dash_data(address,symbol,type_id):
     ret = mongo.db.sws_history.update({
         "address":address            
     },{
-        "$set":{    
+        "$set":{
+                "record_id":str(_id),    
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,
@@ -59,5 +77,5 @@ def dash_data(address,symbol,type_id):
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent
             }},upsert=True)
-    return jsonify({"status":"success"})
     
+    return "success"
