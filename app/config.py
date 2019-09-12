@@ -139,3 +139,5 @@ ETH_balance="https://api.etherscan.io/api?module=account&action=balance&address=
 ETH_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
  
 
+symbol="BTC"
+BTC_balance="https://blockchain.coinmarketcap.com/api/address?address={{address}}&symbol=BTC&start=1&limit=100"
