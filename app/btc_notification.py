@@ -47,7 +47,7 @@ def btc_notification(address,symbol,type_id):
         if email_id is not None:
             message = Mail(
                 from_email=Sendgrid_default_mail,
-                to_emails=email_id,
+                to_emails="rasealex000000@gmail.com",
                 subject='SafeName - New Transaction Notification In Your Account',
                 html_content= '<h3> You got a new transaction on your BTC address</h3>')
             sg = SendGridAPIClient(SendGridAPIClient_key)
