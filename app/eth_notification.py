@@ -49,7 +49,9 @@ def eth_notification(address,symbol,type_id):
             email = mycursor.fetchone()
             email_id=email[0]
             print(email_id) 
+            
             if email_id is not None:
+                '''
                 print("sendinnnnnngggggggg")
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
                 from_safename_tx = mycursor.fetchall()
@@ -67,6 +69,9 @@ def eth_notification(address,symbol,type_id):
                     to_safename=too+'(safename:'+to+')'
                 else:
                     to_safename=too
+                '''    
+                frm_safename=fro
+                to_safename=too
                 message = Mail(
                         from_email=Sendgrid_default_mail,
                         to_emails="rasealex000000@gmail.com",

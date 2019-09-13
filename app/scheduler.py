@@ -678,7 +678,7 @@ def pgp_verification():
 
 def tx_notification():
     print("asdasndas,na")
-    mycursor.execute('SELECT address,type_id FROM sws_address WHERE tx_notification_preferred = "1" AND (address_status = "verified" OR address_status = "secure")')
+    mycursor.execute('SELECT address,type_id FROM sws_address WHERE tx_notification_preferred = "1"')
     sws_addresses = mycursor.fetchall()
     print(sws_addresses)
     for addres in sws_addresses:

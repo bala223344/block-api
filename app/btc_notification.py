@@ -24,20 +24,13 @@ def btc_notification(address,symbol,type_id):
     print("ashgajhghgggggggggggggggggggggggggggggggggggggggggggggggggggggggg")
     ret=BTC_balance.replace("{{address}}",''+address+'')
     ret1=ret.replace("{{symbol}}",''+symbol+'')
-    print(ret1)
     response_user_token = requests.get(url=ret1)
     transaction = response_user_token.json()  
     total_current_tx=transaction['transaction_count']
-    '''
-    transactions = transaction['txs']
     
-    array=[]
-    total_current_tx=len(transactions)
-    '''
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
-    current_tx = mycursor.fetchall()
-    transactions_count=current_tx[0]
-    tx_count=transactions_count[0]
+    current_tx = mycursor.fetchone()
+    tx_count=current_tx[0]
     
     if tx_count is None or total_current_tx > tx_count:
         mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
@@ -57,6 +50,13 @@ def btc_notification(address,symbol,type_id):
             print("email is none")
     else:
         print("no new transaction")
+
+    '''
+    transactions = transaction['txs']
+    
+    array=[]
+    total_current_tx=len(transactions)
+    '''
 
 
 
