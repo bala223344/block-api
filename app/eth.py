@@ -1,13 +1,10 @@
-from flask import (
-    Blueprint,request,jsonify,abort
-)
+from flask import jsonify
 import requests
 from datetime import datetime
-from app.util import serialize_doc
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from app import mongo
-from app.config import SendGridAPIClient_key,Sendgrid_default_mail,host,user,password,database,auth_plugin,ETH_transactions,ETH_balance
+from app.config import SendGridAPIClient_key,Sendgrid_default_mail,ETH_transactions,ETH_balance
 
 
 

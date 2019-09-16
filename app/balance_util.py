@@ -1,10 +1,6 @@
-from flask import (
-    Blueprint,request,jsonify,abort
-)
 import requests
-from datetime import datetime
-from app.util import serialize_doc
-from app import mongo
+
+
 #----------Import balance Apis End points from Config file----------
 
 from app.config import ETH_url,BTC_url,ERC_url,LTC_url,BCH_url,BNB_url,BSV_url,TRX_url,LEO_url,MIOTA_url,ZEC_url,ONT_url,BTG_url,XTZ_url,XRP_url,USDT_url,EOS_url,DASH_url,XLM_url,MKR_url,LINK_url

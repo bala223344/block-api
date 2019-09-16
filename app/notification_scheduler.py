@@ -1,0 +1,131 @@
+from app.config import mydb,mycursor
+from app.eth_notification import eth_notification
+from app.btc_notification import btc_notification
+
+
+
+def tx_notification():
+    print("asdasndas,na")
+    mycursor.execute('SELECT address,type_id FROM sws_address WHERE tx_notification_preferred = "1"')
+    sws_addresses = mycursor.fetchall()
+    print(sws_addresses)
+    for addres in sws_addresses:
+        address=addres[0]
+        type_id = addres[1] 
+        '''
+        if type_id == 1:
+            symbol = 'ETH'
+            currency = eth_notification(address,symbol,type_id)        
+        '''
+        if type_id == 2:
+            symbol = 'BTC'
+            currency = btc_notification(address,symbol,type_id)
+    
+        
+        '''
+        if type_id == 3:
+            symbol = 'ZRX'
+            currency = erc_coin_data(address,symbol,type_id)
+        
+        if type_id == 5:
+            symbol = 'ELF'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 8:
+            symbol = 'REP'
+            currency = erc_coin_data(address,symbol,type_id)
+           
+        if type_id == 9:
+            symbol = 'AOA'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 10:
+            symbol = 'BAT'
+            currency = erc_coin_data(address,symbol,type_id)
+        
+        if type_id == 21:
+            symbol = 'LINK'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 22:
+            symbol = 'CCCX'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 24:
+            symbol = 'MCO'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 25:
+            symbol = 'CRO'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 26:
+            symbol = 'DAI'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 31:
+            symbol = 'EKT'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 32:
+            symbol = 'EGT'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 34:
+            symbol = 'ENJ'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 38:
+            symbol = 'GNT'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 42:
+            symbol = 'HT'
+            currency = erc_coin_data(address,symbol,type_id)
+        
+        if type_id == 45:
+            symbol = 'INB'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 50:
+            symbol = 'KCS'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 51:
+            symbol = 'LAMB'
+            currency = erc_coin_data(address,symbol,type_id)
+
+        if type_id == 11:
+            symbol = 'BNB'
+            currency = erc_coin_data(address,symbol,type_id)
+    
+        
+        if type_id == 46:
+            symbol = 'IOST'
+            currency = erc_coin_data(address,symbol,type_id)
+        
+    
+        if type_id == 44:
+            symbol = 'ICX'
+            currency = erc_coin_data(address,symbol,type_id)
+        
+        
+        if type_id == 41:
+            symbol = 'HOT'
+            currency = erc_coin_data(address,symbol,type_id)
+        
+
+        if type_id == 75:
+            symbol = 'XRP'
+            currency = xrp_data(address,symbol,type_id)
+        
+        
+        if type_id == 12:
+            symbol = 'BCH'
+            currency = bch_data(address,symbol,type_id)
+    
+    
+        if type_id == 53:
+            symbol = 'LTC'
+            currency = ltc_data(address,symbol,type_id)
+        '''

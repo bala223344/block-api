@@ -4,9 +4,6 @@ from flask import (
 import requests
 from datetime import datetime
 from app.util import serialize_doc
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-from app.config import Sendgrid_default_mail,SendGridAPIClient_key
 
 #-----Calling functions at the call of Transaction Api------
 

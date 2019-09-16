@@ -1,9 +1,5 @@
-from flask import (
-    Blueprint,request,jsonify,abort
-)
 import requests
-from datetime import datetime
-from app.util import serialize_doc
+from flask import jsonify
 from app import mongo
 
 
@@ -48,11 +44,6 @@ def xtz_data(address,symbol,type_id):
                 "type_id":type_id
             }},upsert=True)
 
-    ret = mongo.db.address.find_one({
-        "address":address
-    })
-    _id=ret['_id']
-
     balance=response['balance']
     amount_recived =""
     amount_sent =""
@@ -60,8 +51,7 @@ def xtz_data(address,symbol,type_id):
     ret = mongo.db.sws_history.update({
         "address":address            
     },{
-        "$set":{
-                "record_id":str(_id),    
+        "$set":{  
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,
@@ -71,4 +61,4 @@ def xtz_data(address,symbol,type_id):
                 "amountSent":amount_sent
             }},upsert=True)
 
-    return "success"
+    return jsonify({"status":"success"})

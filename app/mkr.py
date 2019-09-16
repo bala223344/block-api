@@ -1,9 +1,6 @@
-from flask import (
-    Blueprint,request,jsonify,abort
-)
+from flask import jsonify
 import requests
 from datetime import datetime
-from app.util import serialize_doc
 from app import mongo
 from app.config import MKR_balance,MKR_transactions
 

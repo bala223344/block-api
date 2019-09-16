@@ -1,9 +1,6 @@
-from flask import (
-    Blueprint,request,jsonify,abort
-)
+from flask import jsonify
 import requests
 from datetime import datetime
-from app.util import serialize_doc
 from app import mongo
 
 
@@ -82,4 +79,4 @@ def qtum_data(address,symbol,type_id):
                 "amountSent":(int(amount_sent)/100000000)
             }},upsert=True)
 
-    return "success"
+    return jsonify({"status":"success"})

@@ -1,13 +1,10 @@
 from flask import (
-    Blueprint,request,jsonify,abort
+    request,jsonify
 )
 import requests
 from datetime import datetime
-from app.util import serialize_doc
 from app import mongo
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-from app.config import SendGridAPIClient_key,Sendgrid_default_mail,host,user,password,database,auth_plugin
+
 
 
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------

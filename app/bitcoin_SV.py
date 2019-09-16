@@ -1,10 +1,6 @@
-from flask import (
-    Blueprint,request,jsonify,abort
-)
+from flask import jsonify
 import requests
 from datetime import datetime
-import dateutil.parser as parser
-from app.util import serialize_doc
 from app import mongo
 
 
@@ -80,4 +76,4 @@ def bitcoin_svs_data(address,symbol,type_id):
                 "transactions":array
             }},upsert=True)
 
-    return "success"
+    return jsonify({"status":"success"})

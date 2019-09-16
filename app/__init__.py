@@ -2,13 +2,20 @@ import os
 from flask import Flask,jsonify,make_response
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
-from app.config import heist_addresses_fetch_scheduler_minute,heist_addresses_fetch_scheduler_seconds,riskscore_by_tx_two_yearold_scheduler_minute,riskscore_by_tx_two_yearold_scheduler_seconds,risk_score_by_safename_scheduler_minute,risk_score_by_safename_scheduler_seconds,risk_score_by_heist_scheduler_minute,risk_score_by_heist_scheduler_seconds,tx_notification_scheduler_minute,risk_score_update_scheduler_minute,risk_score_update_scheduler_seconds,profile_risk_score_scheduler_minute,profile_risk_score_scheduler_seconds#,heist_associated_fetch_scheduler_minute,heist_associated_fetch_scheduler_seconds
 from app import db
 mongo = db.init_db()
 
 
 #---------calling schedulers run time from config.py----------
-from app.scheduler import auto_fetch,profile_risk_score,tx_notification,heist_associated_fetch,tx_two_yearold,risk_score_by_safename,risk_score_by_heist,risk_score,profile_risk_score,invoice_notification,pgp_verification,pgp_verification
+from app.scheduler import auto_fetch
+from app.notification_scheduler import tx_notification
+from app.pgpverification_scheduler import pgp_verification
+from app.invoice_scheduler import invoice_notification
+from app.riskscore_scheduler import risk_score,profile_risk_score
+from app.heist_riskscore_scheduler import risk_score_by_heist
+from app.riskscore_safename_scheduler import risk_score_by_safename
+from app.riskscore_oldtx_scheduler import tx_two_yearold
+from app.heist_associated_scheduler import heist_associated_fetch
 
 
 def create_app(test_config=None):
@@ -42,43 +49,44 @@ def create_app(test_config=None):
 #--------Schedulers timing and days functionality------------
 
     auto_fetch_scheduler = BackgroundScheduler()
-    auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='sat', hour=heist_addresses_fetch_scheduler_minute,minute=heist_addresses_fetch_scheduler_seconds)
+    auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon-sat', hour=12,minute=24)
     auto_fetch_scheduler.start()
     '''
     pgp_verification_scheduler = BackgroundScheduler()
-    pgp_verification_scheduler.add_job(pgp_verification, trigger='cron', day_of_week='mon-sat', hour=17,minute=20)
+    pgp_verification_scheduler.add_job(pgp_verification, trigger='cron', day_of_week='mon-sat', hour=13,minute=7)
     pgp_verification_scheduler.start()
-    
+    '''
+    '''
     heist_associated_fetch_scheduler = BackgroundScheduler()
-    heist_associated_fetch_scheduler.add_job(heist_associated_fetch, trigger='cron', day_of_week='mon-sat', hour=heist_associated_fetch_scheduler_minute,minute=heist_associated_fetch_scheduler_seconds)
+    heist_associated_fetch_scheduler.add_job(heist_associated_fetch, trigger='cron', day_of_week='mon-sat', hour=12,minute=28)
     heist_associated_fetch_scheduler.start()
     '''
     tx_two_yearold_scheduler = BackgroundScheduler()
-    tx_two_yearold_scheduler.add_job(tx_two_yearold, trigger='cron', day_of_week='sat', hour=riskscore_by_tx_two_yearold_scheduler_minute,minute=riskscore_by_tx_two_yearold_scheduler_seconds)
+    tx_two_yearold_scheduler.add_job(tx_two_yearold, trigger='cron', day_of_week='sat', hour=14,minute=2)
     tx_two_yearold_scheduler.start()
     
     risk_score_by_safename_scheduler = BackgroundScheduler()
-    risk_score_by_safename_scheduler.add_job(risk_score_by_safename, trigger='cron', day_of_week='sat', hour=risk_score_by_safename_scheduler_minute,minute=risk_score_by_safename_scheduler_seconds)
+    risk_score_by_safename_scheduler.add_job(risk_score_by_safename, trigger='cron', day_of_week='sat', hour=15,minute=5)
     risk_score_by_safename_scheduler.start()
     
     risk_score_by_heist_scheduler = BackgroundScheduler()
-    risk_score_by_heist_scheduler.add_job(risk_score_by_heist, trigger='cron', day_of_week='sat', hour=risk_score_by_heist_scheduler_minute,minute=risk_score_by_heist_scheduler_seconds)
+    risk_score_by_heist_scheduler.add_job(risk_score_by_heist, trigger='cron', day_of_week='sat', hour=12,minute=59)
     risk_score_by_heist_scheduler.start()
     
     tx_notification_scheduler = BackgroundScheduler()
-    #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=17, minute=42)
-    tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=3)
+    #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=14, minute=22)
+    tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=10)
     tx_notification_scheduler.start()
     #tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=tx_notification_scheduler_minute)
     #tx_notification_scheduler.add_job(tx_notification, trigger='interval', hours=20)
     #tx_notification_scheduler.add_job(tx_notification, trigger='interval', seconds=60)
     
     risk_score_scheduler = BackgroundScheduler()
-    risk_score_scheduler.add_job(risk_score, trigger='cron', day_of_week='sat', hour=risk_score_update_scheduler_minute,minute=risk_score_update_scheduler_seconds)
+    risk_score_scheduler.add_job(risk_score, trigger='cron', day_of_week='sat', hour=12,minute=9)
     risk_score_scheduler.start()
 
     profile_risk_score_scheduler = BackgroundScheduler()
-    profile_risk_score_scheduler.add_job(profile_risk_score, trigger='cron', day_of_week='sat', hour=profile_risk_score_scheduler_minute,minute=profile_risk_score_scheduler_seconds)
+    profile_risk_score_scheduler.add_job(profile_risk_score, trigger='cron', day_of_week='sat', hour=15,minute=17)
     profile_risk_score_scheduler.start()
     
     '''
@@ -92,11 +100,11 @@ def create_app(test_config=None):
     except:
         auto_fetch_scheduler.shutdown()
        # pgp_verification_scheduler.shutdown()
-       # heist_associated_fetch_scheduler.shutdown()
+        heist_associated_fetch_scheduler.shutdown()
         tx_two_yearold_scheduler.shutdown()
         risk_score_by_safename_scheduler.shutdown()
         risk_score_by_heist_scheduler.shutdown()
         tx_notification_scheduler.shutdown()
         risk_score_scheduler.shutdown()
-        #invoice_notification_scheduler.shutdown()
+        invoice_notification_scheduler.shutdown()
         profile_risk_score_scheduler.shutdown()

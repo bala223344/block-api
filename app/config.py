@@ -1,11 +1,19 @@
+import mysql.connector
 #----------Database MongoUri-----------
 
 MongoUri="mongodb+srv://xmage:xmage@cluster0-xooqb.mongodb.net/crypto_app?retryWrites=true"
 
 
+#----------MySql connection----------
+
+mydb = mysql.connector.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename',auth_plugin='mysql_native_password')
+#mydb = mysql.connector.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
+mycursor=mydb.cursor()
 
 
-#----Urls which are using in Schedulers---------
+
+
+#-------Urls which are using in Schedulers---------
 
 ETH_SCAM_URL = "https://etherscamdb.info/api/scams"
 ETH_TRANSACTION_URL = "http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
@@ -15,49 +23,39 @@ BTC_TRANSACTION="https://blockchain.coinmarketcap.com/api/address?address={{addr
 
 #---------Schedulers running timings-------------
 
-heist_addresses_fetch_scheduler_minute=11
-heist_addresses_fetch_scheduler_seconds=15
+heist_addresses_fetch_scheduler_minute=17
+heist_addresses_fetch_scheduler_seconds=51
 
 
 heist_associated_fetch_scheduler_minute=12
-heist_associated_fetch_scheduler_seconds=50
+heist_associated_fetch_scheduler_seconds=58
 
 
-riskscore_by_tx_two_yearold_scheduler_minute=14
-riskscore_by_tx_two_yearold_scheduler_seconds=30
+riskscore_by_tx_two_yearold_scheduler_minute=16
+riskscore_by_tx_two_yearold_scheduler_seconds=23
 
 
-risk_score_by_safename_scheduler_minute=15
-risk_score_by_safename_scheduler_seconds=35
+risk_score_by_safename_scheduler_minute=17
+risk_score_by_safename_scheduler_seconds=4
 
 
-risk_score_by_heist_scheduler_minute=16
-risk_score_by_heist_scheduler_seconds=30
+risk_score_by_heist_scheduler_minute=17
+risk_score_by_heist_scheduler_seconds=21
 
 
 tx_notification_scheduler_minute=20
 
-risk_score_update_scheduler_minute=17
-risk_score_update_scheduler_seconds=30
+risk_score_update_scheduler_minute=13
+risk_score_update_scheduler_seconds=21
 
-profile_risk_score_scheduler_minute=16
-profile_risk_score_scheduler_seconds=42
+profile_risk_score_scheduler_minute=13
+profile_risk_score_scheduler_seconds=57
 
 
 #------Apis keys------
 
 SendGridAPIClient_key='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'
 Sendgrid_default_mail='notifications@safename.io'
-
-
-
-#-------My sql connection details------
-
-host = '198.38.93.150'
-user = 'dexter'
-password = 'cafe@wales1'
-database = 'db_safename'
-auth_plugin = 'mysql_native_password'
 
 
 #--------PGP verificaion template----------

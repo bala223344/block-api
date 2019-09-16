@@ -3,11 +3,10 @@ from flask import (
 )
 import requests
 from datetime import datetime
-from app.util import serialize_doc
 from app.balance_util import ETH_balance,BTC_balance,ERC_balance,LTC_balance,BCH_balance,BNB_balance,BSV_balance,TRX_balance,LEO_balance,MIOTA_balance,ZEC_balance,ONT_balance,XTZ_balance,BTG_balance,XRP_balance,USDT_balance,EOS_balance,DASH_balance,XLM_balance,MKR_balance,LINK_balance
 
 bp = Blueprint('balance', __name__, url_prefix='/')
-from app import mongo
+
 
 
 #---------Api only for balance for speed optimization direct hit apis end points---------

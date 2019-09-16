@@ -1,13 +1,6 @@
-from flask import (
-    Blueprint,request,jsonify,abort
-)
+from flask import jsonify
 import requests
-from datetime import datetime
-from app.util import serialize_doc
 from app import mongo
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-from app.config import SendGridAPIClient_key,Sendgrid_default_mail,host,user,password,database,auth_plugin
 
 
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
@@ -57,4 +50,4 @@ def icx_data(address,symbol,type_id):
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent
             }},upsert=True)
-    return "success"
+    return jsonify({"status":"success"})

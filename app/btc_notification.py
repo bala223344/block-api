@@ -1,42 +1,35 @@
-from flask import (
-    Blueprint,request,jsonify,abort
-)
+
 import requests
 from datetime import datetime
-from app.util import serialize_doc
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from app import mongo
-from app.config import SendGridAPIClient_key,Sendgrid_default_mail,host,user,password,database,auth_plugin,BTC_balance
+from app.config import SendGridAPIClient_key,Sendgrid_default_mail,BTC_balance
+from app.config import mydb,mycursor
 
 
-#----------My sql connection-----------
 
-import mysql.connector
-mydb = mysql.connector.connect(host=host,user=user,password=password,database=database,auth_plugin=auth_plugin)
-mycursor=mydb.cursor()
-
-
-#----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
+#----------Function for send notification if got new one----------
 
 
 def btc_notification(address,symbol,type_id):
     print("ashgajhghgggggggggggggggggggggggggggggggggggggggggggggggggggggggg")
     ret=BTC_balance.replace("{{address}}",''+address+'')
     ret1=ret.replace("{{symbol}}",''+symbol+'')
+    print(ret1)
     response_user_token = requests.get(url=ret1)
     transaction = response_user_token.json()  
     total_current_tx=transaction['transaction_count']
-    
+    print('25')
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
     tx_count=current_tx[0]
-    
+    print('29')
     if tx_count is None or total_current_tx > tx_count:
         mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
         email = mycursor.fetchone()
         email_id=email[0]
+        print('35')
         if email_id is not None:
             message = Mail(
                 from_email=Sendgrid_default_mail,
@@ -50,6 +43,8 @@ def btc_notification(address,symbol,type_id):
             print("email is none")
     else:
         print("no new transaction")
+
+
 
     '''
     transactions = transaction['txs']

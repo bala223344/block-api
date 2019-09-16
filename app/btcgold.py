@@ -1,9 +1,6 @@
-from flask import (
-    Blueprint,request,jsonify,abort
-)
+from flask import jsonify
 import requests
 from datetime import datetime
-from app.util import serialize_doc
 from app import mongo
 
 
@@ -77,4 +74,4 @@ def btc_gold_data(address,symbol,type_id):
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent
             }},upsert=True)
-    return "success"
+    return jsonify({"status":"success"})

@@ -1,10 +1,6 @@
-from flask import (
-    Blueprint,request,jsonify,abort
-)
+from flask import jsonify
 import requests
 from datetime import datetime
-from app.util import serialize_doc
-import dateutil.parser as parser
 from app import mongo
 
 

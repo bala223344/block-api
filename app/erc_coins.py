@@ -1,20 +1,7 @@
-from flask import (
-    Blueprint,request,jsonify,abort
-)
+from flask import jsonify
 import requests
 from datetime import datetime
-from app.util import serialize_doc
 from app import mongo
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-from app.config import SendGridAPIClient_key,Sendgrid_default_mail,host,user,password,database,auth_plugin
-
-
-#----------My sql connection-----------
-
-import mysql.connector
-mydb = mysql.connector.connect(host=host,user=user,password=password,database=database,auth_plugin=auth_plugin)
-mycursor=mydb.cursor()
 
 
 
@@ -66,6 +53,10 @@ def erc_coin_data(address,symbol,type_id):
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent
             }},upsert=True)
+    return jsonify({"status":"success"})
+ 
+ 
+    '''
     mycursor.execute('SELECT tx_notification_preferred FROM sws_address WHERE address="'+str(address)+'"')
     sws_addresses = mycursor.fetchall()
     preffered_value = sws_addresses[0]
@@ -130,3 +121,4 @@ def erc_coin_data(address,symbol,type_id):
         else:
             print("no new transaction")
         return ("success")
+    '''

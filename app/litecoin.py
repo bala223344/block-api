@@ -1,9 +1,6 @@
-from flask import (
-    Blueprint,request,jsonify,abort
-)
+from flask import jsonify
 import requests
 from datetime import datetime
-from app.util import serialize_doc
 from app import mongo
 
 
@@ -64,16 +61,10 @@ def ltc_data(address,symbol,type_id):
                 "type_id":type_id
             }},upsert=True)
 
-    ret = mongo.db.address.find_one({
-        "address":address
-    })
-    _id=ret['_id']
-
     ret = mongo.db.sws_history.update({
         "address":address            
     },{
         "$set":{
-                "record_id":str(_id),    
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,
@@ -82,5 +73,5 @@ def ltc_data(address,symbol,type_id):
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent
             }},upsert=True)
-    return "success"
+    return jsonify({"status":"success"})
     

@@ -1,9 +1,6 @@
-from flask import (
-    Blueprint,request,jsonify,abort
-)
+from flask import jsonify
 import requests
 from datetime import datetime
-from app.util import serialize_doc
 from app import mongo
 
 
@@ -78,4 +75,4 @@ def dash_data(address,symbol,type_id):
                 "amountSent":amount_sent
             }},upsert=True)
     
-    return "success"
+    return jsonify({"status":"success"})
