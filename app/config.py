@@ -6,8 +6,9 @@ MongoUri="mongodb+srv://xmage:xmage@cluster0-xooqb.mongodb.net/crypto_app?retryW
 
 #----------MySql connection----------
 
-mydb = mysql.connector.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename',auth_plugin='mysql_native_password')
+#mydb = mysql.connector.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename',auth_plugin='mysql_native_password')
 #mydb = mysql.connector.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
+mydb = mysql.connector.connect(user="dexter" , password="cafe@wales1", host="localhost", port='3306', database="db_safename")
 mycursor=mydb.cursor()
 
 
@@ -101,10 +102,7 @@ Copyright © 2019 safename.io
 
 
 
-
-
-
-#---------Urls for baance saprate apis----------
+#---------Urls for balance saprate apis----------
 
 ETH_url="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 BTC_url="https://blockchain.coinmarketcap.com/api/address?address={{address}}&symbol=BTC&start=1&limit=100"
@@ -127,6 +125,10 @@ DASH_url="https://dashradar.com/insight-api/addr/{{address}}?from=0&to=1000"
 XLM_url = "https://horizon.stellar.org/accounts/{{address}}"
 MKR_url = "https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 LINK_url = "https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+
+
 
 
 
@@ -159,3 +161,183 @@ BCH_transactions="https://api.blockchair.com/bitcoin-cash/dashboards/transaction
 symbol="MKR"
 MKR_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 MKR_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="XRP"
+XRP_balance="https://api.xrpscan.com/api/v1/account/{{address}}"
+XRP_transactions="https://api.xrpscan.com/api/v1/account/{{address}}/transactions"
+
+
+symbol="LTC"
+LTC_balance="https://explorer.viabtc.com/res/ltc/addresses/{{address}}"
+LTC_transactions="https://explorer.viabtc.com/res/ltc/transactions/address?address={{address}}&page=1&limit=50"
+
+
+symbol="USDT"
+USDT_balance="https://api.omniexplorer.info/v1/address/addr/details/"
+USDT_transactions="https://api.xrpscan.com/api/v1/account/{{address}}/transactions"
+
+
+symbol="BNB"
+BNB_balance="https://explorer.binance.org/api/v1/balances/{{address}}"
+BNB_transactions="https://explorer.binance.org/api/v1/txs?page=1&rows=25&address={{address}}"
+
+
+symbol="BSV"
+BSV_balance="https://explorer.viabtc.com/res/bsv/addresses/{{address}}"
+BSV_transactions="https://explorer.viabtc.com/res/bsv/transactions/address?address={{address}}&page=1&limit=50"
+
+
+symbol="TRON"
+TRON_balance="https://apilist.tronscan.org/api/account?address={{address}}"
+TRON_transactions="https://apilist.tronscan.org/api/transaction?sort=-timestamp&count=true&limit=50&start=0&total=0&start_timestamp=1529865000000&end_timestamp=1561787527899&address={{address}}"
+
+
+symbol="UNUS_SED_LEO"
+UNUS_SED_LEO_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+UNUS_SED_LEO_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="IOTA"
+IOTA_balance="https://api.thetangle.org/addresses/{{address}}"
+
+
+
+symbol="ONT"
+ONT_balance="https://explorer.ont.io/v2/addresses/{{address}}/native/balances"
+ONT_transactions="https://explorer.ont.io/v2/addresses/{{address}}/transactions?page_size=20&page_number=1"
+
+
+
+symbol="BTC_GOLD"
+BTC_GOLD_balance="https://explorer.bitcoingold.org/insight-api/addr/{{address}}/?noTxList=1"
+BTC_GOLD_transactions="https://explorer.bitcoingold.org/insight-api/txs?address={{address}}&pageNum=0"
+
+
+
+symbol="XTZ"
+XTZ_balance="https://api2.tzscan.io/v1/node_account/{{address}}"
+XTZ_transactions="https://api2.tzscan.io/v1/operations/{{address}}?type=Transaction&p=0&number=20"
+
+
+symbol="EOS"
+EOS_balance="https://eos.greymass.com/v1/chain/get_account"
+EOS_transactions="https://eos.greymass.com/v1/history/get_actions"
+
+
+symbol="QTUM"
+QTUM_balance="https://qtum.info/api/address/{{address}}"
+QTUM_transactions="https://qtum.info/api/address/{{address}}/txs?page=0&pageSize=20"
+url_hash = "https://qtum.info/api/txs/{{hash}}"
+
+
+symbol="ZRX"
+ZRX_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+ZRX_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="ELF"
+ELF_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+ELF_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="BAT"
+BAT_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+BAT_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="MCO"
+MCO_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+MCO_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="REP"
+REP_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+REP_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="AOA"
+AOA_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+AOA_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="BTM"
+BTM_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+BTM_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="LINK"
+LINK_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+LINK_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="CRO"
+CRO_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+CRO_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="EKT"
+EKT_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+EKT_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="EGT"
+EGT_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+EGT_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="ENJ"
+ENJ_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+ENJ_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="GNT"
+GNT_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+GNT_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="HOT"
+HOT_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+HOT_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="HT"
+HT_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+HT_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="INB"
+INB_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+INB_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="IOST"
+IOST_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+IOST_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="KCS"
+KCS_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+KCS_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="LAMB"
+LAMB_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+LAMB_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="ICX"
+ICX_balance="https://tracker.icon.foundation/v3/address/info?address={{address}}"
+ICX_transactions="https://tracker.icon.foundation/v3/address/txList?address={{address}}&page=1&count=10"
+
+
+
+symbol="AE"
+AE_balance="https://roma-net.mdw.aepps.com/v2/accounts/{{address}}"
+AE_transactions="https://roma-net.mdw.aepps.com/middleware/transactions/account/{{address}}?limit=10&page=1"
+
+
+
+symbol="BTM"
+BTM_balance="https://blockmeta.com/api/v2/address-assets"
+BTM_transactions="https://blockmeta.com/api/v2/address-asset-transactions"

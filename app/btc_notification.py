@@ -10,7 +10,6 @@ from app.config import mydb,mycursor
 
 #----------Function for send notification if got new one----------
 
-
 def btc_notification(address,symbol,type_id):
     print("ashgajhghgggggggggggggggggggggggggggggggggggggggggggggggggggggggg")
     ret=BTC_balance.replace("{{address}}",''+address+'')

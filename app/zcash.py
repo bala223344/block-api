@@ -1,10 +1,11 @@
-from flask import jsonify
 import requests
+from flask import jsonify
 from datetime import datetime
-from app import mongo
 from app.config import ZEC_balance,ZEC_transactions
+from app import mongo
 
-#----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
+
+#----------Function for fetching tx_history and balance storing in mongodb----------
 
 def zcash_data(address,symbol,type_id):
     print("zcash") 

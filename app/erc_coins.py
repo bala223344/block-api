@@ -1,11 +1,11 @@
-from flask import jsonify
 import requests
+from flask import jsonify
 from datetime import datetime
 from app import mongo
 
 
 
-#----------Function for Erc 20 coins fetching Tx_history and balance and sending notification---------- 
+#----------Function for Erc 20 coins fetching Tx_history and balance ---------- 
 
 def erc_coin_data(address,symbol,type_id):
     print("asdsadsadasdadaasd")

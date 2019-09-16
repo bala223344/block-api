@@ -1,25 +1,18 @@
-from flask import jsonify
 import requests
+from flask import jsonify
 from datetime import datetime
 from app import mongo
-
-
-
-
+from app.config import BNB_balance,BNB_transactions
 
 
 #----------Function for fethcing tx_history and balance from api and send notification if got a new transaction---------- 
 
 def bnb_data(address,symbol,type_id):
-    records = mongo.db.symbol_url.find_one({"symbol":symbol})
-    url=records['url_balance']
-    if "url_transaction" in records:
-        url1=records['url_transaction']
-    ret=url.replace("{{address}}",''+address+'')
+    ret=BNB_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
     
-    doc=url1.replace("{{address}}",''+address+'')
+    doc=BNB_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()      
     transactions = res['txArray']

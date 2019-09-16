@@ -1,10 +1,10 @@
-from flask import jsonify
 import requests
+from flask import jsonify
 from datetime import datetime
 from app import mongo
 from app.config import MKR_balance,MKR_transactions
 
-#----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
+#----------Function for fetching tx_history and balance storing in mongodb----------
 
 def mkr_data(address,symbol,type_id):
     ret=MKR_balance.replace("{{address}}",''+address+'')

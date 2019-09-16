@@ -3,6 +3,9 @@ from app.config import template
 from app.config import mydb,mycursor,SendGridAPIClient_key,Sendgrid_default_mail
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+
+
+
 #-----------scheduler for Pages PGP Verification------------
 
 def pgp_verification():

@@ -1,21 +1,17 @@
-from flask import jsonify
 import requests
+from flask import jsonify
 from datetime import datetime
 from app import mongo
+from app.config import EOS_balance,EOS_transactions
 
-
-#----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
+#----------Function for fetching tx_history and balance storing in mongodb ----------
 
 def eos_data(address,symbol,type_id):
-    records = mongo.db.symbol_url.find_one({"symbol":symbol})
-    url=records['url_balance']
-    if "url_transaction" in records:
-        url1=records['url_transaction']
     acouunt={"account_name":address}
-    response_user_token = requests.post(url=url,json=acouunt)
+    response_user_token = requests.post(url=EOS_balance,json=acouunt)
     response = response_user_token.json()       
     pay={"account_name":address,"offset":"-20","pos":"-1"}
-    response_user = requests.post(url=url1,json=pay)
+    response_user = requests.post(url=EOS_transactions,json=pay)
     res = response_user.json()       
     transactions=res['actions'] 
     

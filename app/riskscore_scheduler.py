@@ -1,6 +1,8 @@
 from app.config import mydb,mycursor
 import numpy as np
 
+
+
 #-------scheduler for calculating overall riskscore from sws_risk_score table and update in sws_address table------- 
 
 def risk_score():

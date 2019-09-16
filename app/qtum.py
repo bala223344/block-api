@@ -1,22 +1,17 @@
-from flask import jsonify
 import requests
+from flask import jsonify
 from datetime import datetime
 from app import mongo
+from app.config import QTUM_balance,QTUM_transactions
 
-
-#----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
+#----------Function for fetching tx_history and balance storing in mongodb----------
 
 def qtum_data(address,symbol,type_id):
-    records = mongo.db.symbol_url.find_one({"symbol":symbol})
-    url=records['url_balance']
-    url_hash=records['url_hash']
-    if "url_transaction" in records:
-        url1=records['url_transaction']
-    ret=url.replace("{{address}}",''+address+'')
+    ret=QTUM_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
     
-    doc=url1.replace("{{address}}",''+address+'')
+    doc=QTUM_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
     transactions=res['transactions']

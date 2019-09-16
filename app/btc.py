@@ -1,12 +1,11 @@
-from flask import jsonify
 import requests
+from flask import jsonify
 from datetime import datetime
-from app import mongo
 from app.config import BTC_balance
+from app import mongo
 
 
-#----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
-
+#----------Function for fetching tx_history and balance storing in mongodb----------
 
 def btc_data(address,symbol,type_id):
     ret=BTC_balance.replace("{{address}}",''+address+'')

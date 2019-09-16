@@ -1,22 +1,18 @@
-from flask import jsonify
 import requests
+from flask import jsonify
 from datetime import datetime
 from app import mongo
-
+from app.config import BSV_balance,BSV_transactions
 
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
 
 def bitcoin_svs_data(address,symbol,type_id):
-    records = mongo.db.symbol_url.find_one({"symbol":symbol})
-    url=records['url_balance']
-    if "url_transaction" in records:
-        url1=records['url_transaction']
-    ret=url.replace("{{address}}",''+address+'')
+    ret=BSV_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     respon = response_user_token.json()  
     response = respon['data']
 
-    doc=url1.replace("{{address}}",''+address+'')
+    doc=BSV_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
 

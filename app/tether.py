@@ -1,10 +1,11 @@
-from flask import jsonify
 import requests
+from flask import jsonify
 from datetime import datetime
 from app import mongo
 
 
-#----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
+
+#----------Function for fetching tx_history and balance storing in mongodb----------
 
 def tether_data(address,symbol,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})

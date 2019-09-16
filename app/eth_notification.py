@@ -1,14 +1,14 @@
 
 import requests
+from app import mongo
 from datetime import datetime
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from app import mongo
 from app.config import ETH_transactions
 from app.config import mydb,mycursor,Sendgrid_default_mail,SendGridAPIClient_key
 
 
-#----------Function for fetching tx_history and balance for ETH storing in mongodb also send notification if got new one----------
+#----------Function for fetching tx_history and balance for ETH storing in mongodb----------
 
 def eth_notification(address,symbol,type_id):    
     doc=ETH_transactions.replace("{{address}}",''+address+'')

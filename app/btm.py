@@ -1,21 +1,17 @@
-from flask import jsonify
 import requests
+from flask import jsonify
 from datetime import datetime
 from app import mongo
+from app.config import BTM_balance,BTM_transactions
 
 
-
-#----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
+#----------Function for fetching tx_history and balance storing in mongodb----------
 
 def btm_data(address,symbol,type_id):
-    records = mongo.db.symbol_url.find_one({"symbol":symbol})
-    url=records['url_balance']
-    response_user_token = requests.post(url ,data={"account_name":address})
+    response_user_token = requests.post(BTM_balance ,data={"account_name":address})
     response = response_user_token.json()          
     
-    if "url_transaction" in records:
-        url1=records['url_transaction']
-    doc=url1.replace("{{address}}",''+address+'')
+    doc=BTM_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
     

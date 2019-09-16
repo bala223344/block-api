@@ -1,20 +1,16 @@
 import requests
 from flask import jsonify
 from app import mongo
+from app.config import XTZ_balance,XTZ_transactions
 
-
-#----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
+#----------Function for fetching tx_history and balance storing in mongodb----------
 
 def xtz_data(address,symbol,type_id):
-    records = mongo.db.symbol_url.find_one({"symbol":symbol})
-    url=records['url_balance']
-    if "url_transaction" in records:
-        url1=records['url_transaction']
-    ret=url.replace("{{address}}",''+address+'')
+    ret=XTZ_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
 
-    doc=url1.replace("{{address}}",''+address+'')
+    doc=XTZ_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
     array=[]

@@ -1,12 +1,12 @@
-
-from flask import jsonify
 import requests
+from flask import jsonify
 from datetime import datetime
 import dateutil.parser as parser
 from app import mongo
+from app.config import TRON_balance,TRON_transactions
 
 
-#----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
+#----------Function for fetching tx_history and balance storing in mongodb----------
 
 def tron_data(address,symbol,type_id):
     records = mongo.db.symbol_url.find_one({"symbol":symbol})

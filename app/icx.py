@@ -3,6 +3,7 @@ import requests
 from app import mongo
 
 
+
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
 
 def icx_data(address,symbol,type_id):

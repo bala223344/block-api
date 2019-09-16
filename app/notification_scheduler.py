@@ -3,6 +3,7 @@ from app.eth_notification import eth_notification
 from app.btc_notification import btc_notification
 
 
+#----------Function for new transaction notification----------
 
 def tx_notification():
     print("asdasndas,na")
