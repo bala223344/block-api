@@ -21,6 +21,7 @@ def btc_notification(address,symbol,type_id):
     print('25')
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
+    mycursor.close() 
     tx_count=current_tx[0]
     print('29')
     print("tx_count")
@@ -29,13 +30,15 @@ def btc_notification(address,symbol,type_id):
     print(total_current_tx)
     if tx_count is None or total_current_tx > tx_count:
         mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
+        mycursor.close()
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
+        mycursor.close()
         email = mycursor.fetchone()
         email_id=email[0]
         print('35')
         if email_id is not None:
             message = Mail(
-                from_email=Sendgrid_default_mail,
+                from_email="rasealex000000@gmail.com",
                 to_emails=email_id,
                 subject='SafeName - New Transaction Notification In Your Account',
                 html_content= '<h3> You got a new transaction on your BTC address</h3>')

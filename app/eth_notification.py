@@ -18,7 +18,6 @@ def eth_notification(address,symbol,type_id):
     if transactions:
         total_current_tx=len(transactions)
         transaction = transactions[-1]
-
         timestamp = transaction['timeStamp']
         first_date=int(timestamp)
         dt_object = datetime.fromtimestamp(first_date)
@@ -71,7 +70,7 @@ def eth_notification(address,symbol,type_id):
                     frm_safename=fro
                     to_safename=too
                     message = Mail(
-                            from_email=Sendgrid_default_mail,
+                            from_email="rasealex000000@gmail.com",
                             to_emails=email_id,
                             subject='SafeName - New Transaction Notification In Your Account',
                             html_content= '<h3> You got a new transaction </h3><strong>Date:</strong> ' + str(dt_object) +' <div><strong>From:</strong> ' + str(frm_safename) + ' </div><strong>To:</strong> ' + str(to_safename) + ' </div><div><strong>Amount:</strong> ' + str(send_amount) + ' </div><div><strong>Tx_id:</strong> ' + str(tx_id) + ' </div><div><strong>Coin Type:</strong> ''ETH''  </div>' )

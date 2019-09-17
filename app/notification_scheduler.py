@@ -17,11 +17,11 @@ def tx_notification():
         if type_id == 1:
             symbol = 'ETH'
             currency = eth_notification(address,symbol,type_id)        
-    
+        '''
         if type_id == 2:
             symbol = 'BTC'
             currency = btc_notification(address,symbol,type_id)
-    
+        '''
         
         '''
         if type_id == 3:
