@@ -1,4 +1,5 @@
-import mysql.connector
+#import mysql.connector
+import pymysql
 #----------Database MongoUri-----------
 
 MongoUri="mongodb+srv://xmage:xmage@cluster0-xooqb.mongodb.net/crypto_app?retryWrites=true"
@@ -7,7 +8,7 @@ MongoUri="mongodb+srv://xmage:xmage@cluster0-xooqb.mongodb.net/crypto_app?retryW
 #----------MySql connection----------
 
 #mydb = mysql.connector.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename',auth_plugin='mysql_native_password')
-mydb = mysql.connector.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
+mydb = pymysql.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
 #mydb = mysql.connector.connect(user="dexter" , password="cafe@wales1", host="165.22.33.14", port='3306', database="db_safename")
 mycursor=mydb.cursor()
 

@@ -50,7 +50,7 @@ def create_app(test_config=None):
 #--------Schedulers timing and days functionality------------
 
     auto_fetch_scheduler = BackgroundScheduler()
-    auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon-sat', hour=12,minute=24)
+    auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon-sat', hour=11,minute=41)
     auto_fetch_scheduler.start()
     '''
     pgp_verification_scheduler = BackgroundScheduler()
