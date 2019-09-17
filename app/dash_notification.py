@@ -16,6 +16,10 @@ def dash_data(address,symbol,type_id):
     current_tx = mycursor.fetchall()
     transactions_count=current_tx[0]
     tx_count=transactions_count[0]
+    print("tx_count")
+    print(tx_count)
+    print("total_current_tx")
+    print(total_current_tx)
     if tx_count is None or int(total_current_tx) > tx_count:
         print("93")
         mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')

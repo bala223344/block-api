@@ -31,6 +31,12 @@ def eth_notification(address,symbol,type_id):
         current_tx = mycursor.fetchall()
         transactions_count=current_tx[0]
         tx_count=transactions_count[0]
+        print("tx_count")
+        print(tx_count)
+        print("total_current_tx")
+        print(total_current_tx)
+        print("send_amount")
+        print(send_amount)
         if tx_count is None or total_current_tx > tx_count:
             print("93")
             if send_amount != 0:
