@@ -7,9 +7,9 @@ MongoUri="mongodb+srv://xmage:xmage@cluster0-xooqb.mongodb.net/crypto_app?retryW
 
 #----------MySql connection----------
 #,auth_plugin='mysql_native_password'
-#mydb = pymysql.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename')
+mydb = pymysql.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename')
 #mydb = pymysql.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
-mydb = pymysql.connect(user="dexter" , password="cafe@wales1", host='localhost', port=3306, database="db_safename")
+#mydb = pymysql.connect(user="dexter" , password="cafe@wales1", host='localhost', port=3306, database="db_safename")
 mycursor=mydb.cursor()
 
 
@@ -124,8 +124,8 @@ USDT_url="https://api.omniexplorer.info/v1/address/addr/details/"
 EOS_url="https://eos.greymass.com/v1/chain/get_account"
 DASH_url="https://dashradar.com/insight-api/addr/{{address}}?from=0&to=1000"
 XLM_url = "https://horizon.stellar.org/accounts/{{address}}"
-MKR_url = "https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-LINK_url = "https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+MKR_url = "https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+LINK_url ="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x514910771af9ca656af840dff83e8264ecf986ca&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
 
@@ -160,8 +160,55 @@ BCH_transactions="https://api.blockchair.com/bitcoin-cash/dashboards/transaction
 
 
 symbol="MKR"
-MKR_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-MKR_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+MKR_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+MKR_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+#"http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+#http://api.etherscan.io/api?module=account&action=tokentx&address=0x260c25f991171850f4c589eb9d8af11568d20c30&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ
+
+
+symbol="LINK"
+LINK_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x514910771af9ca656af840dff83e8264ecf986ca&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+LINK_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="ELF"
+ELF_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xbf2179859fc6D5BEE9Bf9158632Dc51678a4100e&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+ELF_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="ZRX"
+ZRX_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xe41d2489571d322189246dafa5ebde1f4699f498&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+ZRX_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="DAI"
+DAI_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+DAI_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="BAT"
+BAT_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x0d8775f648430679a709e98d2b0cb6250d2887ef&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+BAT_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+symbol="CCCX"
+CCCX_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x378903a03fb2c3ac76bb52773e3ce11340377a32&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+CCCX_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="MCO"
+MCO_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xb63b606ac810a52cca15e44bb630fd42d8d1d83d&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+MCO_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="REP"
+REP_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xe94327d07fc17907b4db788e5adf2ed424addff6&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+REP_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
+
+symbol="AOA"
+AOA_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x9ab165d795019b6d8b3e971dda91071421305e5a&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+AOA_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+
 
 
 symbol="XRP"
@@ -232,69 +279,36 @@ QTUM_transactions="https://qtum.info/api/address/{{address}}/txs?page=0&pageSize
 url_hash = "https://qtum.info/api/txs/{{hash}}"
 
 
-symbol="ZRX"
-ZRX_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-ZRX_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-
-
-symbol="ELF"
-ELF_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-ELF_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-
-
-symbol="BAT"
-BAT_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-BAT_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-
-
-symbol="MCO"
-MCO_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-MCO_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-
-
-symbol="REP"
-REP_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-REP_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-
-
-symbol="AOA"
-AOA_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-AOA_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-
 
 symbol="BTM"
 BTM_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 BTM_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
-symbol="LINK"
-LINK_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-LINK_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-
 
 symbol="CRO"
-CRO_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-CRO_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+CRO_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xa0b73e1ff0b80914ab6fe0444e65848c4c34450b&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+CRO_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
 symbol="EKT"
-EKT_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-EKT_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+EKT_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xbab165df9455aa0f2aed1f2565520b91ddadb4c8&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+EKT_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
 symbol="EGT"
-EGT_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-EGT_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+EGT_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x8e1b448ec7adfc7fa35fc2e885678bd323176e34&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+EGT_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
 symbol="ENJ"
-ENJ_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-ENJ_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+ENJ_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xf0ee6b27b759c9893ce4f094b49ad28fd15a23e4&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+ENJ_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
 symbol="GNT"
-GNT_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-GNT_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+GNT_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xa74476443119a942de498590fe1f2454d7d4ac0d&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+GNT_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
 symbol="HOT"
@@ -303,13 +317,13 @@ HOT_transactions="http://api.etherscan.io/api?module=account&action=txlist&addre
 
 
 symbol="HT"
-HT_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-HT_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+HT_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x6f259637dcd74c767781e37bc6133cd6a68aa161&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+HT_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
 symbol="INB"
-INB_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-INB_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+INB_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x17aa18a4b64a55abed7fa543f2ba4e91f2dce482&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+INB_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
 symbol="IOST"
@@ -318,19 +332,18 @@ IOST_transactions="http://api.etherscan.io/api?module=account&action=txlist&addr
 
 
 symbol="KCS"
-KCS_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-KCS_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+KCS_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x039b5649a59967e3e936d7471f9c3700100ee1ab&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+KCS_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
 symbol="LAMB"
-LAMB_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-LAMB_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+LAMB_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x8971f9fd7196e5cee2c1032b50f656855af7dd26&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+LAMB_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
 symbol="ICX"
 ICX_balance="https://tracker.icon.foundation/v3/address/info?address={{address}}"
 ICX_transactions="https://tracker.icon.foundation/v3/address/txList?address={{address}}&page=1&count=10"
-
 
 
 symbol="AE"

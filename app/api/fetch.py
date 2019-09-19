@@ -36,6 +36,25 @@ from app.unus_s_leo import unus_sed_leo_data
 from app.icx import icx_data
 from app.ae import ae_data
 from app.btm import btm_data
+from app.link import link_data
+from app.zrx import zrx_data
+from app.elf import elf_data
+from app.rep import rep_data
+from app.aoa import aoa_data
+from app.cccx import cccx_data
+from app.mco import mco_data
+from app.cro import cro_data
+from app.dai import dai_data
+from app.ekt import ekt_data
+from app.egt import egt_data
+from app.enj import enj_data
+from app.gnt import gnt_data
+from app.ht import ht_data
+from app.inb import inb_data
+from app.kcs import kcs_data
+from app.lamb import lamb_data
+
+
 
 bp = Blueprint('fetch', __name__, url_prefix='/')
 from app import mongo
@@ -67,13 +86,89 @@ def main():
         currency = zcash_data(address,symbol,type_id)
         return currency
  
-    if symbol == "55":
+    if type_id == "55":
         currency = mkr_data(address,symbol,type_id)
         return currency
 
-    if symbol == "21":
-        currency = erc_coin_data(address,symbol,type_id)
+    if type_id == "21":
+        currency = link_data(address,symbol,type_id)
         return currency
+
+#-------ERC20 coin-----------
+
+    if type_id == "3":
+        currency = zrx_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "5":
+        currency = elf_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "8":
+        currency = rep_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "9":
+        currency = aoa_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "10":
+        currency = bat_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "22":
+        currency = cccx_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "24":
+        currency = mco_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "25":
+        currency = cro_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "26":
+        currency = dai_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "31":
+        currency = ekt_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "32":
+        currency = egt_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "34":
+        currency = enj_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "38":
+        currency = gnt_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "42":
+        currency = ht_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "45":
+        currency = inb_data(address,symbol,type_id)
+        return currency
+
+
+    if type_id == "50":
+        currency = kcs_data(address,symbol,type_id)
+        return currency
+
+
+    if type_id == "51":
+        currency = lamb_data(address,symbol,type_id)
+        return currency
+
+
+#-------ERC20 coin-----------
+
 
     if symbol == "LTC":
         currency = ltc_data(address,symbol,type_id)
@@ -152,82 +247,11 @@ def main():
         currency = eos_data(address,symbol,type_id)
         return currency
     
-    if symbol == "ZRX":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "ELF":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "REP":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "AOA":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "BAT":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "LINK":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "CCCX":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "MCO":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "CRO":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "DAI":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "EKT":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "EGT":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "ENJ":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "GNT":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "HT":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
     if symbol == "ICX":
         currency = icx_data(address,symbol,type_id)
         return currency
 
-    if symbol == "INB":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
     
-    if symbol == "KCS":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "LAMB":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
     if symbol == "HOT":
         currency = erc_coin_data(address,symbol,type_id)
         return currency

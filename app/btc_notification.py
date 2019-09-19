@@ -53,7 +53,7 @@ def btc_notification(address,symbol,type_id):
     transactions = transaction['txs']
     
     array=[]
-    total_current_tx=len(transactions)
+    total_current_tx=len(transactions)s
     '''
 
 

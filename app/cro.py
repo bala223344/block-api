@@ -4,19 +4,21 @@ from datetime import datetime
 from app import mongo
 from app.config import CRO_balance,CRO_transactions
 
-#----------Function for fetching tx_history and balance storing in mongodb ----------
+#----------Function for fetching tx_history and balance storing in mongodb----------
 
 def cro_data(address,symbol,type_id):
+    print("011111")
     ret=CRO_balance.replace("{{address}}",''+address+'')
+    print(ret)
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
     
     doc=CRO_transactions.replace("{{address}}",''+address+'')
+    print(doc)
     response_user = requests.get(url=doc)
     res = response_user.json()       
     transactions=res['result']
-    
-
+    print("8888")
     array=[]
     for transaction in transactions:
         frm=[]
@@ -26,41 +28,29 @@ def cro_data(address,symbol,type_id):
         first_date=int(timestamp)
         dt_object = datetime.fromtimestamp(first_date)
         fro =transaction['from']
-        send_amount=transaction['value']
         too=transaction['to']
-        to.append({"to":too,"receive_amount":""})
-        frm.append({"from":fro,"send_amount":send_amount})
-        array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
-    
+        send_amount=transaction['value']
+        contractAddress = transaction['contractAddress']
+        if contractAddress == "0xa0b73e1ff0b80914ab6fe0444e65848c4c34450b":
+            to.append({"to":too,"receive_amount":""})
+            frm.append({"from":fro,"send_amount":(int(send_amount)/1000000000000000000)})
+            array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
+    print("333333")
     balance = response['result']
     amount_recived =""
     amount_sent =""
-
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
-
-    ret = mongo.db.address.find_one({
-        "address":address
-    })
-    _id=ret['_id']
-
+    print("377777")
     ret = mongo.db.sws_history.update({
         "address":address            
     },{
         "$set":{
-                "record_id":str(_id),    
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,
-                "balance":balance,
+                "balance":(int(balance)/1000000000000000000),
                 "transactions":array,
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent
             }},upsert=True)
+    print("50000000")
     return jsonify({"status":"success"})

@@ -2,18 +2,18 @@ import requests
 from flask import jsonify
 from datetime import datetime
 from app import mongo
-from app.config import BAT_balance,BAT_transactions
+from app.config import ZRX_balance,ZRX_transactions
 
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
-def bat_data(address,symbol,type_id):
+def zrx_data(address,symbol,type_id):
     print("011111")
-    ret=BAT_balance.replace("{{address}}",''+address+'')
+    ret=ZRX_balance.replace("{{address}}",''+address+'')
     print(ret)
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
     
-    doc=BAT_transactions.replace("{{address}}",''+address+'')
+    doc=ZRX_transactions.replace("{{address}}",''+address+'')
     print(doc)
     response_user = requests.get(url=doc)
     res = response_user.json()       
@@ -31,7 +31,7 @@ def bat_data(address,symbol,type_id):
         too=transaction['to']
         send_amount=transaction['value']
         contractAddress = transaction['contractAddress']
-        if contractAddress == "0x0d8775f648430679a709e98d2b0cb6250d2887ef":
+        if contractAddress == "0xe41d2489571d322189246dafa5ebde1f4699f498":
             to.append({"to":too,"receive_amount":""})
             frm.append({"from":fro,"send_amount":(int(send_amount)/1000000000000000000)})
             array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
