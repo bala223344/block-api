@@ -7,9 +7,9 @@ MongoUri="mongodb+srv://xmage:xmage@cluster0-xooqb.mongodb.net/crypto_app?retryW
 
 #----------MySql connection----------
 #,auth_plugin='mysql_native_password'
-#mydb = pymysql.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename')
+mydb = pymysql.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename')
 #mydb = pymysql.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
-mydb = pymysql.connect(user="dexter" , password="cafe@wales1", host='localhost', port=3306, database="db_safename")
+#mydb = pymysql.connect(user="dexter" , password="cafe@wales1", host='localhost', port=3306, database="db_safename")
 mycursor=mydb.cursor()
 
 
@@ -122,7 +122,7 @@ BTG_url="https://explorer.bitcoingold.org/insight-api/addr/{{address}}/?noTxList
 XRP_url="https://api.xrpscan.com/api/v1/account/{{address}}" 
 USDT_url="https://api.omniexplorer.info/v1/address/addr/details/"
 EOS_url="https://eos.greymass.com/v1/chain/get_account"
-DASH_url="https://dashradar.com/insight-api/addr/{{address}}?from=0&to=1000"
+DASH_url="https://api.blockchair.com/dash/dashboards/address/{{address}}?limit=10,0"
 XLM_url = "https://horizon.stellar.org/accounts/{{address}}"
 MKR_url = "https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 LINK_url ="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x514910771af9ca656af840dff83e8264ecf986ca&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
@@ -145,8 +145,8 @@ BTC_balance="https://blockchain.coinmarketcap.com/api/address?address={{address}
 
 
 symbol="DASH"
-DASH_balance="https://dashradar.com/insight-api/addr/{{address}}?from=0&to=1000"
-DASH_transactions="https://dashradar.com/insight-api/txs?address={{address}}&pageNum=0"
+DASH_balance="https://api.blockchair.com/dash/dashboards/address/{{address}}?limit=10,0"
+DASH_transactions="https://api.blockchair.com/dash/dashboards/transactions/{{address}}"
 
 
 symbol="ZEC"

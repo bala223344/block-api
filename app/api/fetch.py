@@ -166,6 +166,11 @@ def main():
         currency = lamb_data(address,symbol,type_id)
         return currency
 
+    if type_id == "35":  
+        currency = eos_data(address,symbol,type_id)
+        return currency
+    
+
 
 #-------ERC20 coin-----------
 
@@ -243,9 +248,6 @@ def main():
         currency = xrp_data(address,symbol,type_id)
         return currency
 
-    if symbol == "EOS":  
-        currency = eos_data(address,symbol,type_id)
-        return currency
     
     if symbol == "ICX":
         currency = icx_data(address,symbol,type_id)

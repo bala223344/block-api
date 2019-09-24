@@ -214,8 +214,12 @@ def DASH_balance(address,cointype,type_id):
     ret=DASH_url.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json() 
-    balance=response['balance']
-    return str(balance)
+    data = response['data']
+    addr =data[''+address+'']
+    add =addr['address']
+    balance =add['balance']
+    bal = (balance/100000000)
+    return str(bal)
 
 
 #----------Function for return XLM balance----------
