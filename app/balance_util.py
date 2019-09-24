@@ -205,7 +205,7 @@ def EOS_balance(address,cointype,type_id):
     response = response_user_token.json()       
     balance=response['core_liquid_balance']
     print(balance)
-    return
+    return "fghijihgkfjjfghgfhf"
 
 
 
