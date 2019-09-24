@@ -7,9 +7,9 @@ MongoUri="mongodb+srv://xmage:xmage@cluster0-xooqb.mongodb.net/crypto_app?retryW
 
 #----------MySql connection----------
 #,auth_plugin='mysql_native_password'
-mydb = pymysql.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename')
+#mydb = pymysql.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename')
 #mydb = pymysql.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
-#mydb = pymysql.connect(user="dexter" , password="cafe@wales1", host='localhost', port=3306, database="db_safename")
+mydb = pymysql.connect(user="dexter" , password="cafe@wales1", host='localhost', port=3306, database="db_safename")
 mycursor=mydb.cursor()
 
 
