@@ -8,6 +8,8 @@ from app.config import mydb,mycursor,Sendgrid_default_mail,SendGridAPIClient_key
 from app import mongo
 
 
+
+
 #-------Scheduler for invoice notifications-------
 
 def invoice_notification():

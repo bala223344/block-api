@@ -3,7 +3,7 @@ from flask import (
 )
 import requests
 from datetime import datetime
-from app.balance_util import ETH_balance,BTC_balance,ERC_balance,LTC_balance,BCH_balance,BNB_balance,BSV_balance,TRX_balance,LEO_balance,MIOTA_balance,ZEC_balance,ONT_balance,XTZ_balance,BTG_balance,XRP_balance,USDT_balance,EOS_balance,DASH_balance,XLM_balance,MKR_balance,LINK_balance
+from app.balance_util import ETH_balance,BTC_balance,ERC_balance,LTC_balance,BCH_balance,BNB_balance,BSV_balance,TRX_balance,LEO_balance,MIOTA_balance,ZEC_balance,ONT_balance,XTZ_balance,BTG_balance,XRP_balance,USDT_balance,EOS_balance,DASH_balance,XLM_balance,MKR_balance,LINK_balance,XMR_balance
 
 
 #------------Blueprint connection------------
@@ -85,7 +85,6 @@ def balance():
         balance = USDT_balance(address,cointype,type_id)
         return balance
 
-
     if type_id == "35":
         balance = EOS_balance(address,cointype,type_id)
         return balance
@@ -106,6 +105,9 @@ def balance():
         balance = LINK_balance(address,cointype,type_id)
         return balance
 
+    if type_id == "60":
+        balance = XMR_balance(address,cointype,type_id)
+        return balance
 
 
     '''

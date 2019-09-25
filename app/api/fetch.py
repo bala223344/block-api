@@ -253,7 +253,6 @@ def main():
         currency = icx_data(address,symbol,type_id)
         return currency
 
-    
     if symbol == "HOT":
         currency = erc_coin_data(address,symbol,type_id)
         return currency

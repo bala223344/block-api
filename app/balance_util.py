@@ -103,6 +103,9 @@ def TRX_balance(address,cointype,type_id):
     dat = ("{:f}".format(float(ret)))
     return str(dat)
 
+def XMR_balance(address,cointype,type_id):
+    return ("N/A")
+
 
 #----------Function for return LEO balance----------
 
