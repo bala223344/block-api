@@ -43,7 +43,8 @@ def invoice_notification():
                 "tx_id": transaction_id,
                 "notes": notes,
                 "from": frm,
-                "to": to
+                "to": to,
+                "type":"invoice"
             }).inserted_id
         else:
             mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(to)+'"')
