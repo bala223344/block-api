@@ -7,9 +7,9 @@ MongoUri="mongodb+srv://xmage:xmage@cluster0-xooqb.mongodb.net/crypto_app?retryW
 
 #----------MySql connection----------
 #,auth_plugin='mysql_native_password'
-mydb = pymysql.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename')
+#mydb = pymysql.connect(host='198.38.93.150',user='dexter',password='cafe@wales1',database='db_safename')
 #mydb = pymysql.connect(user="VsaqpBhCxL" , password="sW9BgYhqmG", host="remotemysql.com", database="VsaqpBhCxL")
-#mydb = pymysql.connect(user="dexter" , password="cafe@wales1", host='localhost', port=3306, database="db_safename")
+mydb = pymysql.connect(user="dexter" , password="cafe@wales1", host='localhost', port=3306, database="db_safename")
 mycursor=mydb.cursor()
 
 
@@ -359,6 +359,6 @@ BTT_balance = "https://apilist.tronscan.org/api/account?address={{address}}"
 BTT_transactions = "https://apilist.tronscan.org/api/transaction?sort=-timestamp&count=true&limit=20&start=0&address={{address}}"
 
 
-symbol == "VET":
+symbol == "VET"
 VET_balance="https://explore.veforge.com/api/accounts/{{address}}"
 VET_transactions="https://explore.veforge.com/api/transactions?address={{address}}&count=10&offset=0"
