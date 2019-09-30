@@ -1,7 +1,7 @@
 from flask import jsonify
 import requests
 from app import mongo
-from app.config ICX_balance,ICX_transactions
+from app.config import ICX_balance,ICX_transactions
 
 
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
