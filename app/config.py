@@ -14,8 +14,7 @@ mycursor=mydb.cursor()
 
 
 
-
-#-------Urls which are using in Schedulers---------
+#-------Urls which are using in Schedulers--------
 
 ETH_SCAM_URL = "https://etherscamdb.info/api/scams"
 ETH_TRANSACTION_URL = "http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
@@ -23,7 +22,10 @@ BTC_TRANSACTION_URL = "https://blockchain.coinmarketcap.com/api/addresses?addres
 BTC_TRANSACTION="https://blockchain.coinmarketcap.com/api/address?address={{address}}&symbol=BTC&start=1&limit=100"
 
 
+
+
 #---------Schedulers running timings-------------
+
 
 heist_addresses_fetch_scheduler_minute=17
 heist_addresses_fetch_scheduler_seconds=51
@@ -101,8 +103,6 @@ Copyright © 2019 safename.io
 
 
 
-
-
 #---------Urls for balance saprate apis----------
 
 ETH_url="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
@@ -131,17 +131,20 @@ LINK_url ="https://api.etherscan.io/api?module=account&action=tokenbalance&contr
 
 
 
-
-
 #---------Api endpoint for tx_history and notification apis----------
 
 symbol="ETH"
 ETH_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 ETH_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
  
-
+'''
 symbol="BTC"
 BTC_balance="https://blockchain.coinmarketcap.com/api/address?address={{address}}&symbol=BTC&start=1&limit=100"
+'''
+
+symbol="BTC"
+BTC_balance="https://api.blockchair.com/bitcoin/dashboards/address/{{address}}?limit=10,0" 
+BTC_transactions="https://api.blockchair.com/bitcoin/dashboards/transactions/{{address}}"
 
 
 symbol="DASH"
@@ -210,7 +213,6 @@ AOA_balance="https://api.etherscan.io/api?module=account&action=tokenbalance&con
 AOA_transactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock=0&endblock=999999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
-
 symbol="XRP"
 XRP_balance="https://api.xrpscan.com/api/v1/account/{{address}}"
 XRP_transactions="https://api.xrpscan.com/api/v1/account/{{address}}/transactions"
@@ -256,11 +258,9 @@ ONT_balance="https://explorer.ont.io/v2/addresses/{{address}}/native/balances"
 ONT_transactions="https://explorer.ont.io/v2/addresses/{{address}}/transactions?page_size=20&page_number=1"
 
 
-
 symbol="BTC_GOLD"
 BTC_GOLD_balance="https://explorer.bitcoingold.org/insight-api/addr/{{address}}/?noTxList=1"
 BTC_GOLD_transactions="https://explorer.bitcoingold.org/insight-api/txs?address={{address}}&pageNum=0"
-
 
 
 symbol="XTZ"
@@ -279,11 +279,9 @@ QTUM_transactions="https://qtum.info/api/address/{{address}}/txs?page=0&pageSize
 url_hash = "https://qtum.info/api/txs/{{hash}}"
 
 
-
 symbol="BTM"
 BTM_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 BTM_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-
 
 
 symbol="CRO"
@@ -351,7 +349,16 @@ AE_balance="https://roma-net.mdw.aepps.com/v2/accounts/{{address}}"
 AE_transactions="https://roma-net.mdw.aepps.com/middleware/transactions/account/{{address}}?limit=10&page=1"
 
 
-
 symbol="BTM"
 BTM_balance="https://blockmeta.com/api/v2/address-assets"
 BTM_transactions="https://blockmeta.com/api/v2/address-asset-transactions"
+
+
+symbol == "BTT":
+BTT_balance = "https://apilist.tronscan.org/api/account?address={{address}}"
+BTT_transactions = "https://apilist.tronscan.org/api/transaction?sort=-timestamp&count=true&limit=20&start=0&address={{address}}"
+
+
+symbol == "VET":
+VET_balance="https://explore.veforge.com/api/accounts/{{address}}"
+VET_transactions="https://explore.veforge.com/api/transactions?address={{address}}&count=10&offset=0"

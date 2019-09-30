@@ -6,6 +6,7 @@ import requests
 from app.config import ETH_url,BTC_url,ERC_url,LTC_url,BCH_url,BNB_url,BSV_url,TRX_url,LEO_url,MIOTA_url,ZEC_url,ONT_url,BTG_url,XTZ_url,XRP_url,USDT_url,EOS_url,DASH_url,XLM_url,MKR_url,LINK_url
 
 
+
 #----------Function for return ETH balance----------
 
 def ETH_balance(address,cointype,type_id):
@@ -15,6 +16,7 @@ def ETH_balance(address,cointype,type_id):
     balance = response['result']
     ret=(int(balance)/1000000000000000000)
     return str(ret)
+
 
 
 #----------Function for return BTC balance----------
@@ -102,6 +104,9 @@ def TRX_balance(address,cointype,type_id):
     ret=float(balance/1000000)
     dat = ("{:f}".format(float(ret)))
     return str(dat)
+
+
+#----------Function for return XMR balance----------
 
 def XMR_balance(address,cointype,type_id):
     return ("N/A")
@@ -211,7 +216,6 @@ def EOS_balance(address,cointype,type_id):
     return str(balance)
 
 
-
 #----------Function for return EOS balance----------
 
 def DASH_balance(address,cointype,type_id):
@@ -240,6 +244,7 @@ def XLM_balance(address,cointype,type_id):
     return str(response)
 
 
+#----------Function for return MKR balance----------
 
 def MKR_balance(address,cointype,type_id):
     ret=MKR_url.replace("{{address}}",''+address+'')
@@ -249,6 +254,8 @@ def MKR_balance(address,cointype,type_id):
     ret=(int(balance)/1000000000000000000)
     return str(ret)
 
+
+#----------Function for return LINK balance----------
 
 def LINK_balance(address,cointype,type_id):
     print("linkeeeeeeee")

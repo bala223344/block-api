@@ -1,7 +1,7 @@
 import requests
 from flask import jsonify
 from datetime import datetime
-from app.config import BTC_balance
+from app.config import BTC_balance,BTC_transactions
 from app import mongo
 
 
@@ -9,44 +9,108 @@ from app import mongo
 
 def btc_data(address,symbol,type_id):
     ret=BTC_balance.replace("{{address}}",''+address+'')
-    ret1=ret.replace("{{symbol}}",''+symbol+'')
-    print(ret1)
-    response_user_token = requests.get(url=ret1)
-    transaction = response_user_token.json()       
-    
-    balance =transaction['balance']
-    amountReceived =transaction['amount_received']
-    amountSent =transaction['amount_sent']
-    transactions = transaction['txs']
+    print(ret)
+    response_user_token = requests.get(url=ret)
+    response = response_user_token.json()       
+
+    data = response['data']
+    addr =data[''+address+'']
+    add =addr['address']
+    balance =add['balance']
+    bal = (balance/100000000)
+    receive_amount=add['received']
+    send_amount=add['spent']
+    transactions=addr['transactions']
     array=[]
-    for transaction in transactions:
-        fee=transaction['fee']
-        tx_id = transaction['hash']
-        frmm=transaction['inputs']
+    for tran in transactions:
+        doc=BTC_transactions.replace("{{address}}",''+tran+'')
+        response_user = requests.get(url=doc)
+        res = response_user.json()       
+        trs =res['data'][''+tran+'']
+        inputs=trs['inputs']
+        outputs=trs['outputs']
+        transact=trs['transaction']
+        fee =transact['fee']
+        time =transact['time']
+
         frm=[]
-        for trans in frmm:
-            fro=trans['address']
-            send=trans['value']
-            frm.append({"from":fro,"send_amount":(int(send)/100000000)})
-        transac=transaction['outputs']
+        for inp in inputs:
+            recipient = inp['recipient']
+            value=inp['value']
+            frm.append({"from":recipient,"send_amount":(value/100000000)})
         to=[]
-        for too in transac:
-            t = too['address'] 
-            recive =too['value']
-            to.append({"to":t,"receive_amount":(int(recive)/100000000)})
-        timestamp =transaction['timestamp']
-        dt_object = datetime.fromtimestamp(timestamp)
-        array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id})
+        for out in outputs:
+            recipient1 = out['recipient']
+            value1=out['value']
+            to.append({"to":recipient1,"receive_amount":(value1/100000000)})
+        array.append({"fee":fee,"from":frm,"to":to,"date":time})
+
     ret = mongo.db.sws_history.update({
         "address":address            
     },{
-        "$set":{    
+        "$set":{  
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,
-                "balance":(int(balance)/100000000),
+                "balance":bal,
                 "transactions":array,
-                "amountReceived":(int(amountReceived)/100000000),
-                "amountSent":(int(amountSent)/100000000)
+                "amountReceived":(receive_amount/100000000),
+                "amountSent":(send_amount/100000000)
             }},upsert=True)
     return jsonify({"status":"success"})
+
+'''
+def btc_cash_data(address,symbol,type_id):
+    ret=BCH_balance.replace("{{address}}",''+address+'')
+    print(ret)
+    response_user_token = requests.get(url=ret)
+    response = response_user_token.json()       
+
+    data = response['data']
+    addr =data[''+address+'']
+    add =addr['address']
+    balance =add['balance']
+    bal = (balance/100000000)
+    receive_amount=add['received']
+    send_amount=add['spent']
+    transactions=addr['transactions']
+    array=[]
+    for tran in transactions:
+        doc=BCH_transactions.replace("{{address}}",''+tran+'')
+        response_user = requests.get(url=doc)
+        res = response_user.json()       
+        trs =res['data'][''+tran+'']
+        inputs=trs['inputs']
+        outputs=trs['outputs']
+        transact=trs['transaction']
+        fee =transact['fee']
+        time =transact['time']
+
+        frm=[]
+        for inp in inputs:
+            recipient = inp['recipient']
+            value=inp['value']
+            frm.append({"from":recipient,"send_amount":(value/100000000)})
+        to=[]
+        for out in outputs:
+            recipient1 = out['recipient']
+            value1=out['value']
+            to.append({"to":recipient1,"receive_amount":(value1/100000000)})
+        array.append({"fee":fee,"from":frm,"to":to,"date":time})
+
+    ret = mongo.db.sws_history.update({
+        "address":address            
+    },{
+        "$set":{  
+                "address":address,
+                "symbol":symbol,
+                "type_id":type_id,
+                "balance":bal,
+                "transactions":array,
+                "amountReceived":(receive_amount/100000000),
+                "amountSent":(send_amount/100000000)
+            }},upsert=True)
+    return jsonify({"status":"success"})
+
+
+'''

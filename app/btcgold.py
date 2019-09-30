@@ -39,20 +39,6 @@ def btc_gold_data(address,symbol,type_id):
                     to.append({"to":addre,"receive_amount":recv_amount})
         array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
     
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
-
-    ret = mongo.db.address.find_one({
-        "address":address
-    })
-    _id=ret['_id']
-
     amount_recived =response['totalReceived']
     amount_sent =response['totalSent']
     balance = response['balance']
@@ -62,7 +48,6 @@ def btc_gold_data(address,symbol,type_id):
         "address":address            
     },{
         "$set":{
-                "record_id":str(_id),    
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,

@@ -38,15 +38,6 @@ def eos_data(address,symbol,type_id):
         to.append({"to":too,"receive_amount":""})
         array.append({"fee":"","from":frm,"to":to,"date":block_time})
     
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
-
     balance=response['core_liquid_balance']
     amount_recived =""
     amount_sent =""

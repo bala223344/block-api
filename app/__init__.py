@@ -19,6 +19,7 @@ from app.riskscore_oldtx_scheduler import tx_two_yearold
 from app.heist_associated_scheduler import heist_associated_fetch
 
 
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping()
@@ -45,6 +46,7 @@ def create_app(test_config=None):
     app.register_blueprint(fetch.bp)
     app.register_blueprint(balance.bp)
     
+
 
 
 #--------Schedulers timing and days functionality------------
@@ -95,6 +97,7 @@ def create_app(test_config=None):
     invoice_notification_scheduler.add_job(invoice_notification, trigger='cron', day_of_week='mon-sat', hour=19,minute=45)
     invoice_notification_scheduler.start()
     '''
+    
 
     try:
         return app

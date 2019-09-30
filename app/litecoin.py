@@ -52,15 +52,6 @@ def ltc_data(address,symbol,type_id):
     amount_recived =data['total_receive']
     amount_sent =data['total_send']
 
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
-
     ret = mongo.db.sws_history.update({
         "address":address            
     },{

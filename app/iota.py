@@ -33,15 +33,6 @@ def iota_data(address,symbol,type_id):
     amount_recived =""
     amount_sent =""
 
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
-
     ret = mongo.db.sws_history.update({
         "address":address            
     },{

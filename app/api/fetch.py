@@ -207,7 +207,6 @@ def main():
         currency = iota_data(address,symbol,type_id)
         return currency
 
-    
     if symbol == "ONT":
         currency = ont_data(address,symbol,type_id)
         return currency

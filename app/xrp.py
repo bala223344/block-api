@@ -30,14 +30,6 @@ def xrp_data(address,symbol,type_id):
         to.append({"to":too,"receive_amount":""})
         array.append({"fee":fee,"from":frm,"to":to,"date":date})
     
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
 
     balance=response['initial_balance']
     amount_recived =""

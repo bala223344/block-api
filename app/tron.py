@@ -9,14 +9,10 @@ from app.config import TRON_balance,TRON_transactions
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def tron_data(address,symbol,type_id):
-    records = mongo.db.symbol_url.find_one({"symbol":symbol})
-    url=records['url_balance']
-    ret=url.replace("{{address}}",''+address+'')
+    ret=TRON_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()
-    if "url_transaction" in records:
-        url1=records['url_transaction']
-    doc=url1.replace("{{address}}",''+address+'')
+    doc=TRON_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
     transactions = res['data']
@@ -39,15 +35,6 @@ def tron_data(address,symbol,type_id):
     balance = response['balance']
     amount_recived =""
     amount_sent =""
-
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
 
     ret = mongo.db.sws_history.update({
         "address":address            

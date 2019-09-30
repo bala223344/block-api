@@ -2,15 +2,13 @@ import requests
 from flask import jsonify
 from datetime import datetime
 from app import mongo
-
+from app.config import USDT_balance
 
 
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def tether_data(address,symbol,type_id):
-    records = mongo.db.symbol_url.find_one({"symbol":symbol})
-    url=records['url_balance']
-    response_user_token = requests.post(url ,data={"account_name":address})
+    response_user_token = requests.post(USDT_balance ,data={"account_name":address})
     response = response_user_token.json()          
 
     transactions=response['transactions']
@@ -32,14 +30,6 @@ def tether_data(address,symbol,type_id):
             to.append({"to":too,"receive_amount":""})
         array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
     
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
       
     bal=balances[0]
     value=bal['value']

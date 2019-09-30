@@ -33,15 +33,6 @@ def ont_data(address,symbol,type_id):
                 to.append({"to":too,"receive_amount":""})
         array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
     
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
-
     amount_recived =""
     amount_sent =""
     reslt = response['result']

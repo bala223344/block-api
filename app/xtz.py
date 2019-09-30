@@ -31,14 +31,6 @@ def xtz_data(address,symbol,type_id):
             to.append({"to":tz,"receive_amount":""})
         array.append({"fee":fee,"from":frm,"to":to,"date":timestamp})
     
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
 
     balance=response['balance']
     amount_recived =""

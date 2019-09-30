@@ -2,20 +2,18 @@ import requests
 from flask import jsonify
 from datetime import datetime
 from app import mongo
+from app.config import BTT_balance,BTT_transactions
+
 
 
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def btt_data(address,symbol,type_id):
-    records = mongo.db.symbol_url.find_one({"symbol":symbol})
-    url=records['url_balance']
-    if "url_transaction" in records:
-        url1=records['url_transaction']
-    ret=url.replace("{{address}}",''+address+'')
+    ret=BTT_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
     
-    doc=url1.replace("{{address}}",''+address+'')
+    doc=BTT_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
     
@@ -38,15 +36,6 @@ def btt_data(address,symbol,type_id):
     balance = response['balance']
     amount_recived =""
     amount_sent =""
-
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
 
     ret = mongo.db.sws_history.update({
         "address":address            

@@ -35,20 +35,7 @@ def bnb_data(address,symbol,type_id):
             to.append({"to":too,"receive_amount":""})
             array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id})
     
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
-
-    ret = mongo.db.address.find_one({
-        "address":address
-    })
-    _id=ret['_id']
-
+ 
     amount_recived =""
     amount_sent =""
     reslt = response['balance']
@@ -63,7 +50,6 @@ def bnb_data(address,symbol,type_id):
         "address":address            
     },{
         "$set":{
-                "record_id":str(_id),    
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,

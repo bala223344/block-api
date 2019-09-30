@@ -44,25 +44,10 @@ def bitcoin_svs_data(address,symbol,type_id):
     amount_recived =response['total_receive']
     amount_sent =response['total_send']
 
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
-
-    ret = mongo.db.address.find_one({
-        "address":address
-    })
-    _id=ret['_id']
-
     ret = mongo.db.sws_history.update({
         "address":address            
     },{
-        "$set":{
-                "record_id":str(_id),    
+        "$set":{    
                 "address":address,
                 "symbol":symbol,
                 "type_id":type_id,

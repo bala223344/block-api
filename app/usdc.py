@@ -5,6 +5,7 @@ from app import mongo
 from app.config import USDT_balance,USDT_transactions
 
 
+
 #----------Function for fetching tx_history and balance storing in mongod----------
 
 def usdc_data(address,symbol,type_id):
@@ -36,20 +37,6 @@ def usdc_data(address,symbol,type_id):
     balance = response['result']
     amount_recived =""
     amount_sent =""
-
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
-
-    ret = mongo.db.address.find_one({
-        "address":address
-    })
-    _id=ret['_id']
 
     ret = mongo.db.sws_history.update({
         "address":address            

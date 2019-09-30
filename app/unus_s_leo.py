@@ -5,6 +5,8 @@ import dateutil.parser as parser
 from app import mongo
 from app.config import UNUS_SED_LEO_balance,UNUS_SED_LEO_transactions
 
+
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def unus_sed_leo_data(address,symbol,type_id):
@@ -34,15 +36,6 @@ def unus_sed_leo_data(address,symbol,type_id):
     balance = response['result']
     amount_recived =""
     amount_sent =""
-
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
 
     ret = mongo.db.sws_history.update({
         "address":address            

@@ -2,23 +2,20 @@ import requests
 from flask import jsonify
 from datetime import datetime
 from app import mongo
+from app.config import BNB_balance,BNB_transactions
 
 
-#----------Function for fetching tx_history and balance storing in mongodb ----------
+#----------Function for fetching tx_history and balance storing in mongodb----------
 
-def b_chain_data(address,symbol,Preferred_Safename,Email,type_id):
-    records = mongo.db.symbol_url.find_one({"symbol":symbol})
-    url=records['url_balance']
-    if "url_transaction" in records:
-        url1=records['url_transaction']
-    ret=url.replace("{{address}}",''+address+'')
+def b_chain_data(address,symbol,type_id):
+    ret=BNB_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
 
     bln_detail=response['matchData']
     balances = bln_detail['balance']
 
-    doc=url1.replace("{{address}}",''+address+'')
+    doc=BNB_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
     
@@ -38,18 +35,6 @@ def b_chain_data(address,symbol,Preferred_Safename,Email,type_id):
             frm.append({"from":fromAddr,"send_amount":value})
             array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
      
-    ret = mongo.db.address.update({
-            "address":address            
-        },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id
-            }},upsert=True)
-    ret = mongo.db.address.find_one({
-        "address":address
-    })
-    _id=ret['_id']
     for balan in balances:
         sym=balan['mappedAsset']
         if sym =="BNB":
@@ -59,8 +44,7 @@ def b_chain_data(address,symbol,Preferred_Safename,Email,type_id):
             ret = mongo.db.sws_history.update({
             "address":address            
             },{
-            "$set":{
-                    "record_id":str(_id),    
+            "$set":{ 
                     "address":address,
                     "symbol":symbol,
                     "type_id":type_id,
