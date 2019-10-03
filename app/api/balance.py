@@ -3,7 +3,7 @@ from flask import (
 )
 import requests
 from datetime import datetime
-from app.balance_util import ETH_balance,BTC_balance,ERC_balance,LTC_balance,BCH_balance,BNB_balance,BSV_balance,TRX_balance,LEO_balance,MIOTA_balance,ZEC_balance,ONT_balance,XTZ_balance,BTG_balance,XRP_balance,USDT_balance,EOS_balance,DASH_balance,XLM_balance,MKR_balance,LINK_balance,XMR_balance
+from app.balance_util import ETH_balance,BTC_balance,ERC_balance,LTC_balance,BCH_balance,BNB_balance,BSV_balance,TRX_balance,LEO_balance,MIOTA_balance,ZEC_balance,ONT_balance,XTZ_balance,BTG_balance,XRP_balance,USDT_balance,EOS_balance,DASH_balance,XLM_balance,MKR_balance,LINK_balance,XMR_balance,ELF_balance,AE_balance,REP_balance,AOA_balance,BAT_balance,BSV_balance,BTT_balance,BTM_balance,CCCX_balance,MCO_balance
 
 
 
@@ -111,12 +111,12 @@ def balance():
         balance = XMR_balance(address,cointype,type_id)
         return balance
 
-
     '''
     if type_id == "4":
         balance = ABBC_balance(address,cointype,type_id)
         return balance
-    
+    '''
+
     if type_id == "5":
         balance = ELF_balance(address,cointype,type_id)
         return balance
@@ -124,10 +124,12 @@ def balance():
     if type_id == "6":
         balance = AE_balance(address,cointype,type_id)
         return balance
-
+    
+    '''
     if type_id == "7":
         balance = ARDR_balance(address,cointype,type_id)
         return balance
+    '''
 
     if type_id == "8":
         balance = REP_balance(address,cointype,type_id)
@@ -140,11 +142,12 @@ def balance():
     if type_id == "10":
         balance = BAT_balance(address,cointype,type_id)
         return balance
-
+    
+    '''
     if type_id == "13":
         balance = BCD_balance(address,cointype,type_id)
         return balance
-
+    '''
 
     if type_id == "15":
         balance = BSV_balance(address,cointype,type_id)
@@ -257,4 +260,4 @@ def balance():
     if type_id == "42":
         balance = HT_balance(address,cointype,type_id)
         return balance
-    '''
+    

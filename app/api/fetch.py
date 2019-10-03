@@ -175,96 +175,100 @@ def main():
 #-------ERC20 coin-----------
 
 
-    if symbol == "LTC":
+    if type_id == "53":
         currency = ltc_data(address,symbol,type_id)
         return currency
 
-    if symbol == "BCH":
+    if type_id == "12":
         currency = btc_cash_data(address,symbol,type_id)
         return currency
 
-    if symbol == "BNB":
+    if type_id == "11":
         currency = bnb_data(address,symbol,type_id)
         return currency
 
-    if symbol == "BSV":
+    if type_id == "15":
         currency = bitcoin_svs_data(address,symbol,type_id)
         return currency
 
+    '''
     if symbol == "USDT":#Not working properly
         currency = tether_data(address,symbol,type_id)
         return currency
-
-    if symbol == "TRON":
+    '''
+    
+    if type_id == "87":
         currency = tron_data(address,symbol,type_id)
         return currency
 
-    if symbol == "UNUS_SED_LEO":
+    if type_id == "89":
         currency = unus_sed_leo_data(address,symbol,type_id)
         return currency
 
-    if symbol == "IOTA":
+    if type_id == "47":
         currency = iota_data(address,symbol,type_id)
         return currency
 
-    if symbol == "ONT":
+    if type_id == "67":
         currency = ont_data(address,symbol,type_id)
         return currency
 
-    if symbol == "XTZ":
+    if type_id == "84":
         currency = xtz_data(address,symbol,type_id)
         return currency
 
-    if symbol == "BTC_GOLD":
+    if type_id == "14":
         currency = btc_gold_data(address,symbol,type_id)
         return currency
 
-    if symbol == "QTUM":
+    if type_id == "70":
         currency = qtum_data(address,symbol,type_id)
         return currency
 
-    if symbol == "VET":
+    if type_id == "91":
         currency = vet_data(address,symbol,type_id)
         return currency
 
-    if symbol == "CRO":
+    if type_id == "25":
         currency = cro_data(address,symbol,type_id)
         return currency
 
-    if symbol == "BAT":
+    if type_id == "10":
         currency = bat_data(address,symbol,type_id)
         return currency
 
-    if symbol == "USDC":
+    if type_id == "83":
         currency = usdc_data(address,symbol,type_id)
         return currency
 
-    if symbol == "BTT":
+    if type_id == "17":
         currency = btt_data(address,symbol,type_id)
         return currency
 
-    if symbol == "XRP":
+    if type_id == "75":
         currency = xrp_data(address,symbol,type_id)
         return currency
-
     
-    if symbol == "ICX":
+    if type_id == "44":
         currency = icx_data(address,symbol,type_id)
         return currency
-
-    if symbol == "HOT":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-
-    if symbol == "IOST":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
     
-    if symbol == "AE":
+    '''
+    if type_id == "41":
+        currency = erc_coin_data(address,symbol,type_id)
+        return currency
+
+
+    if type_id == "46":
+        currency = erc_coin_data(address,symbol,type_id)
+        return currency
+    '''
+
+    if type_id == "6":
         currency = ae_data(address,symbol,type_id)
         return currency
 
-    if symbol == "BTM":     #Not done completely
+    if symbol == "19":     #Not done completely
         currency = btm_data(address,symbol,type_id)
         return currency
 
@@ -286,7 +290,7 @@ def currency_symbol():
 def local_transaction(address):
     docs = mongo.db.sws_history.find({"address":address})
     docs = [serialize_doc(doc) for doc in docs]
-    return jsonify(docs), 200
+    return jsonify(docs),200
 
 
 

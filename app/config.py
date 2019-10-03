@@ -106,7 +106,7 @@ Copyright © 2019 safename.io
 #---------Urls for balance saprate apis----------
 
 ETH_url="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-BTC_url="https://blockchain.coinmarketcap.com/api/address?address={{address}}&symbol=BTC&start=1&limit=100"
+BTC_url="https://blockchain.coinmarketcap.com/api/address?address={{address}}&symbol=BTC&start=1&limit=50"
 ERC_url="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 LTC_url="https://explorer.viabtc.com/res/ltc/addresses/{{address}}"
 BCH_url="https://api.blockchair.com/bitcoin-cash/dashboards/address/{{address}}?limit=10,0"
@@ -126,8 +126,16 @@ DASH_url="https://api.blockchair.com/dash/dashboards/address/{{address}}?limit=1
 XLM_url = "https://horizon.stellar.org/accounts/{{address}}"
 MKR_url = "https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 LINK_url ="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x514910771af9ca656af840dff83e8264ecf986ca&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
-
-
+ELF_url = "https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xbf2179859fc6D5BEE9Bf9158632Dc51678a4100e&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+AE_url = "https://roma-net.mdw.aepps.com/v2/accounts/{{address}}"
+REP_url = "https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xe94327d07fc17907b4db788e5adf2ed424addff6&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+aoa_url = "https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x9ab165d795019b6d8b3e971dda91071421305e5a&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+BAT_url = "https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x0d8775f648430679a709e98d2b0cb6250d2887ef&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+BTT_url = "https://apilist.tronscan.org/api/account?address={{address}}"
+BTM_url = "https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+CCCX_url = "https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x378903a03fb2c3ac76bb52773e3ce11340377a32&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+MCO_url = "https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xb63b606ac810a52cca15e44bb630fd42d8d1d83d&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+CRO_url = "https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xa0b73e1ff0b80914ab6fe0444e65848c4c34450b&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
 
@@ -137,15 +145,15 @@ symbol="ETH"
 ETH_balance="https://api.etherscan.io/api?module=account&action=balance&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 ETH_transactions="http://api.etherscan.io/api?module=account&action=txlist&address={{address}}&startblock=0&endblock=99999999&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
  
-'''
-symbol="BTC"
-BTC_balance="https://blockchain.coinmarketcap.com/api/address?address={{address}}&symbol=BTC&start=1&limit=100"
-'''
 
+symbol="BTC"
+BTC_balance="https://blockchain.coinmarketcap.com/api/address?address={{address}}&symbol=BTC&start=1&limit=50"
+
+'''
 symbol="BTC"
 BTC_balance="https://api.blockchair.com/bitcoin/dashboards/address/{{address}}?limit=10,0" 
 BTC_transactions="https://api.blockchair.com/bitcoin/dashboards/transactions/{{address}}"
-
+'''
 
 symbol="DASH"
 DASH_balance="https://api.blockchair.com/dash/dashboards/address/{{address}}?limit=10,0"
