@@ -456,7 +456,7 @@ def unknown_riskscore():
     print("tx_knownheist_formula")
     print(tx_knownheist_formula)
     riskscore = 50 + formula + tx_safe_name_formula + tx_knownheist_formula
-    return jsonify({"riskscore":tx_knownheist_formula})
+    return jsonify({"riskscore":riskscore})
     
 
 
