@@ -1,7 +1,12 @@
 from app.config import mydb,mycursor
 from app.eth_notification import eth_notification
 from app.btc_notification import btc_notification
-
+from app.xrp_notification import xrp_notification
+from app.bch_notification import bch_notification
+from app.ltc_notification import ltc_notification
+from app.eos_notification import eos_notification
+from app.bnb_notification import bnb_notification
+from app.bsv_notification import bsv_notification
 
 #----------Function for new transaction notification----------
 
@@ -22,6 +27,35 @@ def tx_notification():
             symbol = 'BTC'
             currency = btc_notification(address,symbol,type_id)
         
+        '''
+        if type_id == 75:
+            symbol = 'XRP'
+            currency = xrp_notification(address,symbol,type_id)
+        
+
+        if type_id == 12:
+            symbol = 'BCH'
+            currency = bch_notification(address,symbol,type_id)        
+        
+
+        if type_id == 53:
+            symbol = 'LTC'
+            currency = ltc_notification(address,symbol,type_id)        
+    
+
+        if type_id == 35:
+            symbol = 'EOS'
+            currency = eos_notification(address,symbol,type_id)        
+        
+        if type_id == 11:
+            symbol = 'BNB'
+            currency = bnb_notification(address,symbol,type_id)
+        
+        if type_id == 15:
+            symbol = 'BSV'
+            currency = bsv_notification(address,symbol,type_id)
+        '''
+
         
         '''
         if type_id == 3:
@@ -114,12 +148,7 @@ def tx_notification():
         if type_id == 41:
             symbol = 'HOT'
             currency = erc_coin_data(address,symbol,type_id)
-        
-
-        if type_id == 75:
-            symbol = 'XRP'
-            currency = xrp_data(address,symbol,type_id)
-        
+                
         
         if type_id == 12:
             symbol = 'BCH'

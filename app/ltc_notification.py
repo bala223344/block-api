@@ -1,16 +1,22 @@
+
 import requests
 from datetime import datetime
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from app.config import SendGridAPIClient_key,Sendgrid_default_mail,XRP_transactions
+from app.config import SendGridAPIClient_key,Sendgrid_default_mail,LTC_balance
 from app.config import mydb,mycursor
 
-def xrp_notification(address,symbol,type_id):
+
+
+#----------Function for send notification if got new one----------
+
+def ltc_notification(address,symbol,type_id):
     print("ashgajhghgggggggggggggggggggggggggggggggggggggggggggggggggggggggg")
-    ret=XRP_transactions.replace("{{address}}",''+address+'')
+    ret=LTC_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     transaction = response_user_token.json()  
-    total_current_tx=transaction['count'] 
+    datta = transaction['data']
+    total_current_tx=datta['tx_count']  
     print('25')
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
@@ -31,7 +37,7 @@ def xrp_notification(address,symbol,type_id):
                 from_email=Sendgrid_default_mail,
                 to_emails=email_id,
                 subject='SafeName - New Transaction Notification In Your Account',
-                html_content= '<h3> You got a new transaction on your XRP address</h3>')
+                html_content= '<h3> You got a new transaction on your LTC address</h3>')
             sg = SendGridAPIClient(SendGridAPIClient_key)
             response = sg.send(message)
             print(response.status_code, response.body, response.headers)
@@ -39,3 +45,38 @@ def xrp_notification(address,symbol,type_id):
             print("email is none")
     else:
         print("no new transaction")
+
+
+
+    '''
+    transactions = transaction['txs']
+    
+    array=[]
+    total_current_tx=len(transactions)s
+    '''
+
+
+
+
+    
+    '''
+    last_transaction = transactions[-1]
+       
+    tx_id = last_transaction['hash']
+    frmm=last_transaction['inputs']
+    frm=[]
+    for trans in frmm:
+        fro=trans['address']
+        send=trans['value']
+        frm.append({"from":fro,"send_amount":(int(send)/100000000)})
+    transac=transaction['outputs']
+    to=[]
+    for too in transac:
+        t = too['address'] 
+        recive =too['value']
+        to.append({"to":t,"receive_amount":(int(recive)/100000000)})
+    timestamp =transaction['timestamp']
+    dt_object = datetime.fromtimestamp(timestamp)
+    array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id})
+    '''
+    

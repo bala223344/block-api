@@ -4,6 +4,7 @@ from datetime import datetime
 from app import mongo
 from app.config import LINK_balance,LINK_transactions
 
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def link_data(address,symbol,type_id):

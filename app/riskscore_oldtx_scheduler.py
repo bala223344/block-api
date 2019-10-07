@@ -27,7 +27,7 @@ def tx_two_yearold():
     mycursor.execute('SELECT address FROM sws_risk_score')
     check = mycursor.fetchall()
     for addrr in check:
-        address=addrr[0]
+        address=addrr[0] 
         records = mongo.db.sws_history.find_one({"address":address})
         if records is not None:
             transactions=records['transactions']

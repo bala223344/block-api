@@ -2,7 +2,6 @@ from app.config import mydb,mycursor,ETH_TRANSACTION_URL,BTC_TRANSACTION
 
 
 
-
 #-------Scheduler for calculating risk score by if receive fund from safename or kyc swsuser heist addresses-------
 
 def risk_score_by_safename():
@@ -71,4 +70,3 @@ def risk_score_by_safename():
                         mydb.commit()
                     else:
                         pass
-    

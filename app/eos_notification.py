@@ -5,7 +5,7 @@ from sendgrid.helpers.mail import Mail
 from app.config import SendGridAPIClient_key,Sendgrid_default_mail,XRP_transactions
 from app.config import mydb,mycursor
 
-def xrp_notification(address,symbol,type_id):
+def eos_notification(address,symbol,type_id):
     print("ashgajhghgggggggggggggggggggggggggggggggggggggggggggggggggggggggg")
     ret=XRP_transactions.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
