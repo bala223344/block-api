@@ -381,7 +381,7 @@ def unknown_riskscore():
                 else:
                     pass
         else:
-            formula = ((50*5)/100)
+            formula = -((50*5)/100)
     
     kyc_and_secure_addresses=[]
     mycursor.execute('SELECT u.address FROM db_safename.sws_user as a left join db_safename.sws_address as u on a.username = u.cms_login_name where (kyc_verified = 1 AND profile_status = "secure")') 
