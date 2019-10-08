@@ -17,7 +17,7 @@ from app.heist_riskscore_scheduler import risk_score_by_heist
 from app.riskscore_safename_scheduler import risk_score_by_safename
 from app.riskscore_oldtx_scheduler import tx_two_yearold
 from app.heist_associated_scheduler import heist_associated_fetch
-
+from app.top_users_scheduler import Top_user_percentage
 
 
 def create_app(test_config=None):
@@ -98,6 +98,11 @@ def create_app(test_config=None):
     invoice_notification_scheduler.start()
     '''
     
+    Top_user_percentage_scheduler = BackgroundScheduler()
+    Top_user_percentage_scheduler.add_job(Top_user_percentage, trigger='cron', day_of_week='mon-sat', hour=14,minute=48)
+    Top_user_percentage_scheduler.start()
+
+
 
     try:
         return app
@@ -112,3 +117,4 @@ def create_app(test_config=None):
         risk_score_scheduler.shutdown()
         invoice_notification_scheduler.shutdown()
         profile_risk_score_scheduler.shutdown()
+        Top_user_percentage_scheduler.shutdown()
