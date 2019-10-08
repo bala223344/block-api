@@ -416,7 +416,8 @@ def unknown_riskscore():
                 if checkk in secure_addresses:
                     print("addresss in secure_addresses")
                     tx_safe_name_formula = (50*5)/100
-
+        else:
+            tx_safe_name_formula=0
     heist_addresses=[]
     mycursor.execute('SELECT address FROM sws_heist_address WHERE (tag_name <> "heist_associated")')
     ret = mycursor.fetchall()
