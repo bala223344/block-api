@@ -99,7 +99,7 @@ def create_app(test_config=None):
     '''
     
     Top_user_percentage_scheduler = BackgroundScheduler()
-    Top_user_percentage_scheduler.add_job(Top_user_percentage, trigger='cron', day_of_week='mon-sat', hour=14,minute=48)
+    Top_user_percentage_scheduler.add_job(Top_user_percentage, trigger='cron', day_of_week='mon-sat', hour=10,minute=30)
     Top_user_percentage_scheduler.start()
 
 
