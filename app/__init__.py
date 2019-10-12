@@ -85,21 +85,19 @@ def create_app(test_config=None):
     #tx_notification_scheduler.add_job(tx_notification, trigger='interval', seconds=60)
     
     risk_score_scheduler = BackgroundScheduler()
-    risk_score_scheduler.add_job(risk_score, trigger='cron', day_of_week='sat', hour=12,minute=9)
+    risk_score_scheduler.add_job(risk_score, trigger='cron', day_of_week='mon', hour=12,minute=9)
     risk_score_scheduler.start()
 
     profile_risk_score_scheduler = BackgroundScheduler()
-    profile_risk_score_scheduler.add_job(profile_risk_score, trigger='cron', day_of_week='sat', hour=15,minute=17)
+    profile_risk_score_scheduler.add_job(profile_risk_score, trigger='cron', day_of_week='fri', hour=15,minute=17)
     profile_risk_score_scheduler.start()
     
-    '''
     invoice_notification_scheduler = BackgroundScheduler()
-    invoice_notification_scheduler.add_job(invoice_notification, trigger='cron', day_of_week='mon-sat', hour=19,minute=45)
+    invoice_notification_scheduler.add_job(invoice_notification, trigger='cron', day_of_week='mon', hour=13,minute=5)
     invoice_notification_scheduler.start()
-    '''
     
     Top_user_percentage_scheduler = BackgroundScheduler()
-    Top_user_percentage_scheduler.add_job(Top_user_percentage, trigger='cron', day_of_week='mon-sat', hour=10,minute=40)
+    Top_user_percentage_scheduler.add_job(Top_user_percentage, trigger='cron', day_of_week='mon-sat', hour=11,minute=00)
     Top_user_percentage_scheduler.start()
 
 
@@ -118,3 +116,10 @@ def create_app(test_config=None):
         invoice_notification_scheduler.shutdown()
         profile_risk_score_scheduler.shutdown()
         Top_user_percentage_scheduler.shutdown()
+
+'''
+
+to = 0x94d0b8ccd2141a6969018be0bc25adc7ef91068c
+from =0xbcbf6ac5f9d4d5d35bac4029b73aa4b9ed5e8c0b
+1.005
+'''

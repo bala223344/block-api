@@ -35,7 +35,7 @@ def eth_data(address,symbol,type_id):
         send_amount=transaction['value']
         tx_id = transaction['hash']
         to.append({"to":too,"receive_amount":""})
-        frm.append({"from":fro,"send_amount":(int(send_amount)/1000000000000000000)})
+        frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000)})
         array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id})
     
     balance = response['result']

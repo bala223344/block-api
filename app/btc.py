@@ -36,13 +36,13 @@ def btc_data(address,symbol,type_id):
             for trans in frmm:
                 fro=trans['address']
                 send=trans['value']
-                frm.append({"from":fro,"send_amount":(int(send)/100000000)})
+                frm.append({"from":fro,"send_amount":str(int(send)/100000000)})
             transac=transaction['outputs']
             to=[]
             for too in transac:
                 t = too['address'] 
                 recive =too['value']
-                to.append({"to":t,"receive_amount":(int(recive)/100000000)})
+                to.append({"to":t,"receive_amount":str(int(recive)/100000000)})
             timestamp =transaction['timestamp']
             dt_object = datetime.fromtimestamp(timestamp)
             array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id})
