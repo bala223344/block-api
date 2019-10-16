@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 .idea/
 .vscode/
-/app/config.py/
+app/config.py/
 
 # C extensions
 *.so
@@ -21,6 +21,7 @@ downloads/
 eggs/
 .eggs/
 lib/
+app/config.py/
 lib64/
 parts/
 sdist/
