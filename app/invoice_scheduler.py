@@ -25,16 +25,10 @@ def invoice_notification():
         amount=data['amt']
         notes = data['from_notes']
         to_username = data['to_username']
-        print("from")
-        print(frm)
-        print("to")
-        print(to)
-        print(amount)
         dabb = mongo.db.sws_history.find({
             "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":to,"send_amount":amount}}, "to":{'$elemMatch':{"to":frm}}}}
         },{"transactions.$": 1 })
         dabb=[serialize_doc(doc) for doc in dabb]
-        print(dabb)
         if dabb:
             for data in dabb:
                 trans = data['transactions']
@@ -61,23 +55,16 @@ def invoice_notification():
         else:
             mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(to)+'"')
             email = mycursor.fetchone()
-            print(email)
             if email is not None:
                 email_id=email[0]
-                print(email_id)
+                msg = '<h3> You have a pendig invoice request for {{notes}}</h3>'
+                massegee = msg.replace("{{notes}}",''+notes+'')
                 message = Mail(
                         from_email=Sendgrid_default_mail,
-                        to_emails='rasealex000000@gmail.com',
-                        subject='SafeName - Invoice Notification In Your Account',
-                        html_content= '<h3> Your invoice is not clear please accept the request</h3>')
+                        to_emails=email_id,
+                        subject='SafeName - Invoice Notification In Your Account', 
+                        html_content= massegee)
                 sg = SendGridAPIClient(SendGridAPIClient_key)
                 response = sg.send(message)
                 print(response.status_code, response.body, response.headers)
 
-
-'''
-{"transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":"0xe85dA0b7510F497978801A129638E0f2b4449C09","send_amount":"1.5"}}, "to":{'$elemMatch':{"to":"0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b"}}}}}
-
-to = 0xe85dA0b7510F497978801A129638E0f2b4449C09
-frm = 0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b
-'''
