@@ -16,9 +16,6 @@ mycursor=mydb.cursor()
 
 
 
-
-
-
 #-------Urls which are using in Schedulers--------
 
 ETH_SCAM_URL = "https://etherscamdb.info/api/scams"
