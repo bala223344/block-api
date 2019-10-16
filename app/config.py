@@ -18,6 +18,7 @@ mycursor=mydb.cursor()
 
 
 
+
 #-------Urls which are using in Schedulers--------
 
 ETH_SCAM_URL = "https://etherscamdb.info/api/scams"
@@ -29,7 +30,6 @@ BTC_TRANSACTION="https://blockchain.coinmarketcap.com/api/address?address={{addr
 
 
 #---------Schedulers running timings-------------
-
 
 heist_addresses_fetch_scheduler_minute=17
 heist_addresses_fetch_scheduler_seconds=51
