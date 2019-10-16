@@ -58,8 +58,7 @@ profile_risk_score_scheduler_seconds=57
 
 
 #------Apis keys------
-
-SendGridAPIClient_key='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'
+SendGridAPIClient_key='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'
 Sendgrid_default_mail='notifications@safename.io'
 
 
