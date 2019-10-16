@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 .idea/
 .vscode/
-app/config.py
+app/config.py/
 
 # C extensions
 *.so
