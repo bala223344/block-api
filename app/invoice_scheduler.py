@@ -25,10 +25,15 @@ def invoice_notification():
         amount=data['amt']
         notes = data['from_notes']
         to_username = data['to_username']
+        print("frm")
+        print(frm)
+        print("to")
+        print(to)
         dabb = mongo.db.sws_history.find({
-            "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":frm,"send_amount":amount}}, "to":{'$elemMatch':{"to":to}}}}
+            "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":str(to),"send_amount":amount}},"to":{'$elemMatch':{"to":str(frm)}}}}
         },{"transactions.$": 1 })
         dabb=[serialize_doc(doc) for doc in dabb]
+        print(dabb)
         if dabb:
             print("dabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
             for data in dabb:
@@ -42,7 +47,8 @@ def invoice_notification():
                 "amt": amount,
                 "type":"invoice"
             }) 
-                       
+            print(docs)
+            
             report = mongo.db.sws_notes.insert_one({
                 "tx_id": transaction_id,
                 "notes": notes,
@@ -53,6 +59,7 @@ def invoice_notification():
                 "update_at":datetime.datetime.now(),
                 "created_at":datetime.datetime.now()
             }).inserted_id
+            print(report)
         else:
             print("elseeeeeeeeeeeeeeeeeeeeeeeeeee")
             mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(to)+'"')
@@ -79,7 +86,7 @@ def invoice_notification():
                 pass
 
 
-            #from = 0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b
-            #to = 0xe85dA0b7510F497978801A129638E0f2b4449C09
+            #to = 0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b
+            #from = 0xe85dA0b7510F497978801A129638E0f2b4449C09
             #0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b
             #5da716445e2c000021002a8e
