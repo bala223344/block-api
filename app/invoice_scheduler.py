@@ -26,7 +26,7 @@ def invoice_notification():
         notes = data['from_notes']
         to_username = data['to_username']
         dabb = mongo.db.sws_history.find({
-            "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":to,"send_amount":amount}}, "to":{'$elemMatch':{"to":frm}}}}
+            "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":frm,"send_amount":amount}}, "to":{'$elemMatch':{"to":to}}}}
         },{"transactions.$": 1 })
         dabb=[serialize_doc(doc) for doc in dabb]
         if dabb:
@@ -67,7 +67,7 @@ def invoice_notification():
                     massegee = msg.replace("{{notes}}",''+notes+'')
                     message = Mail(
                             from_email=Sendgrid_default_mail,
-                            to_emails=email_id,
+                            to_emails='rasealex000000@gmail.com',
                             subject='SafeName - Invoice Notification In Your Account', 
                             html_content= massegee)
                     sg = SendGridAPIClient(SendGridAPIClient_key)
@@ -77,3 +77,9 @@ def invoice_notification():
                     pass
             else:
                 pass
+
+
+            #from = 0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b
+            #to = 0xe85dA0b7510F497978801A129638E0f2b4449C09
+            #0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b
+            #5da716445e2c000021002a8e
