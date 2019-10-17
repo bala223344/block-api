@@ -94,7 +94,7 @@ def create_app(test_config=None):
     
     invoice_notification_scheduler = BackgroundScheduler()
     #invoice_notification_scheduler.add_job(invoice_notification, trigger='cron', day_of_week='mon-sat', hour=9,minute=30)
-    invoice_notification_scheduler.add_job(invoice_notification, trigger='interval', minutes=30)
+    invoice_notification_scheduler.add_job(invoice_notification, trigger='interval', minutes=5)
     invoice_notification_scheduler.start()
     
     Top_user_percentage_scheduler = BackgroundScheduler()
