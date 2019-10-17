@@ -74,7 +74,7 @@ def invoice_notification():
                     massegee = msg.replace("{{notes}}",''+notes+'')
                     message = Mail(
                             from_email=Sendgrid_default_mail,
-                            to_emails='rasealex000000@gmail.com',
+                            to_emails=email_id,
                             subject='SafeName - Invoice Notification In Your Account', 
                             html_content= massegee)
                     sg = SendGridAPIClient(SendGridAPIClient_key)
