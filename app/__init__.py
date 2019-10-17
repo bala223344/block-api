@@ -77,7 +77,7 @@ def create_app(test_config=None):
     risk_score_by_heist_scheduler.start()
     
     tx_notification_scheduler = BackgroundScheduler()
-    #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=15, minute=25)
+    #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=10, minute=50)
     tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=7)
     tx_notification_scheduler.start()
     #tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=tx_notification_scheduler_minute)
@@ -93,7 +93,7 @@ def create_app(test_config=None):
     profile_risk_score_scheduler.start()
     
     invoice_notification_scheduler = BackgroundScheduler()
-    invoice_notification_scheduler.add_job(invoice_notification, trigger='cron', day_of_week='mon-sat', hour=5,minute=5)
+    invoice_notification_scheduler.add_job(invoice_notification, trigger='cron', day_of_week='mon-sat', hour=5,minute=50)
     invoice_notification_scheduler.start()
     
     Top_user_percentage_scheduler = BackgroundScheduler()
@@ -107,7 +107,7 @@ def create_app(test_config=None):
     except:
         auto_fetch_scheduler.shutdown()
        # pgp_verification_scheduler.shutdown()
-        heist_associated_fetch_scheduler.shutdown()
+       # heist_associated_fetch_scheduler.shutdown()
         tx_two_yearold_scheduler.shutdown()
         risk_score_by_safename_scheduler.shutdown()
         risk_score_by_heist_scheduler.shutdown()

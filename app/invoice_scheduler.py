@@ -30,6 +30,7 @@ def invoice_notification():
         },{"transactions.$": 1 })
         dabb=[serialize_doc(doc) for doc in dabb]
         if dabb:
+            print("dabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
             for data in dabb:
                 trans = data['transactions']
                 for tx_id in trans:
@@ -53,11 +54,12 @@ def invoice_notification():
                 "created_at":datetime.datetime.now()
             }).inserted_id
         else:
-            print("elseeeeeeeeeeee")
+            print("elseeeeeeeeeeeeeeeeeeeeeeeeeee")
             mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(to)+'"')
             email = mycursor.fetchone()
-            if email is not None:
-                email_id=email[0]
+            email_id=email[0]
+            if email_id is not None:
+                print(email_id)
                 msg = '<h3> You have a pendig invoice request for {{notes}}</h3>'
                 massegee = msg.replace("{{notes}}",''+notes+'')
                 message = Mail(
