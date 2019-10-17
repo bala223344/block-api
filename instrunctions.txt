@@ -1,0 +1,18 @@
+--------------cammands for run schedulers and python app-------------------------
+
+1-> For run scheduler need to set timing in __init__.py 
+trigger - 'interval' or 'cron'
+day_of_week - 'mon' or 'mon-sat' or any
+hour - 'time'
+minute - 'time'
+note - If trigger is interval then need to fix a interval like minute,second,or hour
+
+
+2->If you want to test something and check output on terinal 
+got to root/block-api/ and run this command --gunicorn "app:create_app()" --bind=0.0.0.0:8006
+
+3- how to run app by supervisior in background
+
+->supervisorctl update block
+->supervisorctl restart block
+->supervisorctl status block
