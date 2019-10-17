@@ -57,17 +57,23 @@ def invoice_notification():
             print("elseeeeeeeeeeeeeeeeeeeeeeeeeee")
             mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(to)+'"')
             email = mycursor.fetchone()
-            email_id=email[0]
-            if email_id is not None:
+            print(email)
+            if email[0]:
+                email_id=email[0]
                 print(email_id)
-                msg = '<h3> You have a pendig invoice request for {{notes}}</h3>'
-                massegee = msg.replace("{{notes}}",''+notes+'')
-                message = Mail(
-                        from_email=Sendgrid_default_mail,
-                        to_emails=email_id,
-                        subject='SafeName - Invoice Notification In Your Account', 
-                        html_content= massegee)
-                sg = SendGridAPIClient(SendGridAPIClient_key)
-                response = sg.send(message)
-                print(response.status_code, response.body, response.headers)
-
+                if email_id is not None:
+                    print(email_id)
+                    msg = '<h3> You have a pendig invoice request for {{notes}}</h3>'
+                    massegee = msg.replace("{{notes}}",''+notes+'')
+                    message = Mail(
+                            from_email=Sendgrid_default_mail,
+                            to_emails=email_id,
+                            subject='SafeName - Invoice Notification In Your Account', 
+                            html_content= massegee)
+                    sg = SendGridAPIClient(SendGridAPIClient_key)
+                    response = sg.send(message)
+                    print(response.status_code, response.body, response.headers)
+                else:
+                    pass
+            else:
+                pass
