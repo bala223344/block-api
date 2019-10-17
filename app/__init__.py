@@ -93,7 +93,7 @@ def create_app(test_config=None):
     profile_risk_score_scheduler.start()
     
     invoice_notification_scheduler = BackgroundScheduler()
-    invoice_notification_scheduler.add_job(invoice_notification, trigger='cron', day_of_week='mon', hour=13,minute=5)
+    invoice_notification_scheduler.add_job(invoice_notification, trigger='cron', day_of_week='mon-sat', hour=5,minute=5)
     invoice_notification_scheduler.start()
     
     Top_user_percentage_scheduler = BackgroundScheduler()

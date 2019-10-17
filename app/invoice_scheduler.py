@@ -14,7 +14,7 @@ from app.util import serialize_doc
 #-------Scheduler for invoice notifications-------
 
 def invoice_notification():
-    print("asdasndas,na")
+    print("invoice schedulerrrrrrrrrrrrrrrrr")
     dab = mongo.db.sws_pending_txs_from_app.find({
         "type":"invoice"})
     dab = [serialize_doc(doc) for doc in dab]
@@ -53,6 +53,7 @@ def invoice_notification():
                 "created_at":datetime.datetime.now()
             }).inserted_id
         else:
+            print("elseeeeeeeeeeee")
             mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(to)+'"')
             email = mycursor.fetchone()
             if email is not None:
