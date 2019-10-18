@@ -7,7 +7,7 @@ from app.config import mydb,mycursor
 #-------Scheduler for find ETHERNUM heist addresses-------
 
 def auto_fetch():
-    print("runing")
+    print("auto_fetch_runing")
     response_user_token = requests.get(url=ETH_SCAM_URL)
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_heist_address` ( id INT,coin varchar(100),tag_name varchar(100),status varchar(100),address varchar(100),source varchar(1000),subcategory varchar(100),description varchar(1500),also_known_as varchar(1000))""")
     response = response_user_token.json()
@@ -34,7 +34,6 @@ def auto_fetch():
                     mycursor.execute('SELECT * FROM sws_heist_address WHERE address="'+str(addresses)+'"')
                     check = mycursor.fetchall()
                     if not check:
-                        print("added")
                         mycursor.execute('''SELECT MAX(id) FROM sws_heist_address''')
                         maxid = mycursor.fetchone()
                         check=maxid[0]
@@ -42,7 +41,6 @@ def auto_fetch():
                             ids = 1
                         else:
                             ids=(maxid[0]+1)
-                        print(ids)
                         conversion =description.replace('"','')
                         mycursor.execute('INSERT INTO sws_heist_address (id,coin,tag_name,status,address,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(addresses)+'","https://etherscamdb.info/api/scams","'+str(subcategory)+'","'+str(conversion)+'","'+str(url)+'")')
                         mydb.commit()

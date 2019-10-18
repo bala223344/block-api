@@ -7,7 +7,7 @@ from app.config import GNT_balance,GNT_transactions
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def gnt_data(address,symbol,type_id):
-    print("gntttttttttttttttttttttttttttttttttttt")
+    print("gnt_data_notification")
     ret=GNT_balance.replace("{{address}}",''+address+'')
     print(ret)
     response_user_token = requests.get(url=ret)

@@ -11,10 +11,9 @@ from app.bsv_notification import bsv_notification
 #----------Function for new transaction notification----------
 
 def tx_notification():
-    print("asdasndas,na")
+    print("tx_notification_running")
     mycursor.execute('SELECT address,type_id FROM sws_address WHERE tx_notification_preferred = "1"')
     sws_addresses = mycursor.fetchall()
-    print(sws_addresses)
     for addres in sws_addresses:
         address=addres[0]
         type_id = addres[1] 

@@ -8,7 +8,7 @@ from app import mongo
 #----------Function for Erc 20 coins fetching Tx_history and balance ---------- 
 
 def erc_coin_data(address,symbol,type_id):
-    print("asdsadsadasdadaasd")
+    print("erc_coin_data_running")
     records = mongo.db.symbol_url.find_one({"symbol":symbol})
     url=records['url_balance']
     if "url_transaction" in records:

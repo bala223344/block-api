@@ -11,13 +11,12 @@ from app.config import mydb,mycursor
 #----------Function for send notification if got new one----------
 
 def ltc_notification(address,symbol,type_id):
-    print("ashgajhghgggggggggggggggggggggggggggggggggggggggggggggggggggggggg")
+    print("ltc_notification_running")
     ret=LTC_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     transaction = response_user_token.json()  
     datta = transaction['data']
     total_current_tx=datta['tx_count']  
-    print('25')
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
     tx_count=current_tx[0]
@@ -46,37 +45,3 @@ def ltc_notification(address,symbol,type_id):
     else:
         print("no new transaction")
 
-
-
-    '''
-    transactions = transaction['txs']
-    
-    array=[]
-    total_current_tx=len(transactions)s
-    '''
-
-
-
-
-    
-    '''
-    last_transaction = transactions[-1]
-       
-    tx_id = last_transaction['hash']
-    frmm=last_transaction['inputs']
-    frm=[]
-    for trans in frmm:
-        fro=trans['address']
-        send=trans['value']
-        frm.append({"from":fro,"send_amount":(int(send)/100000000)})
-    transac=transaction['outputs']
-    to=[]
-    for too in transac:
-        t = too['address'] 
-        recive =too['value']
-        to.append({"to":t,"receive_amount":(int(recive)/100000000)})
-    timestamp =transaction['timestamp']
-    dt_object = datetime.fromtimestamp(timestamp)
-    array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id})
-    '''
-    

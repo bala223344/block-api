@@ -15,17 +15,11 @@ def bnb_notification(address,symbol,type_id):
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
     tx_count=current_tx[0]
-    print('29')
-    print("tx_count")
-    print(tx_count)
-    print("total_current_tx")
-    print(total_current_tx)
     if tx_count is None or total_current_tx > tx_count:
         mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
         email = mycursor.fetchone()
         email_id=email[0]
-        print('35')
         if email_id is not None:
             message = Mail(
                 from_email=Sendgrid_default_mail,
