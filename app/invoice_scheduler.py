@@ -11,7 +11,7 @@ from app.util import serialize_doc
 
 
 
-#-------Scheduler for invoice notifications-------
+#-------Scheduler for invoice moving-------
 
 def invoice_notification():
     print("invoice running")
@@ -64,6 +64,7 @@ def invoice_notification_interval():
     for data in dab:
         frm=data['from']
         to = data['to']
+        print(to)
         symbol = data['symbol']
         amount=data['amt']
         notes = data['from_notes']
@@ -80,7 +81,7 @@ def invoice_notification_interval():
                 massegee = msg.replace("{{notes}}",''+notes+'')
                 message = Mail(
                         from_email=Sendgrid_default_mail,
-                        to_emails="rasealex000000@gmail.com",
+                        to_emails=email_id,
                         subject='SafeName - Invoice Notification In Your Account', 
                         html_content= massegee)
                 sg = SendGridAPIClient(SendGridAPIClient_key)
@@ -126,9 +127,3 @@ else:
 '''
 
 
-
-
-#to = 0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b
-#from = 0xe85dA0b7510F497978801A129638E0f2b4449C09
-#0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b
-#5da716445e2c000021002a8e

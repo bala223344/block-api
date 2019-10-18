@@ -99,7 +99,7 @@ def create_app(test_config=None):
 
 
     invoice_notification_interval_scheduler = BackgroundScheduler()
-    invoice_notification_interval_scheduler.add_job(invoice_notification_interval, trigger='cron', day_of_week='mon-sun', hour=5,minute=55)
+    invoice_notification_interval_scheduler.add_job(invoice_notification_interval, trigger='cron', day_of_week='mon-sun', hour=11,minute=54)
     invoice_notification_interval_scheduler.start()
 
     
@@ -125,9 +125,12 @@ def create_app(test_config=None):
         Top_user_percentage_scheduler.shutdown()
         invoice_notification_interval_scheduler.shutdown()
 
+<<<<<<< HEAD
 '''
 
 to = 0x94d0b8ccd2141a6969018be0bc25adc7ef91068c
 from =0xbcbf6ac5f9d4d5d35bac4029b73aa4b9ed5e8c0b
 1.005
 '''
+=======
+>>>>>>> b9c60bde2f6067e5047a1834b50386d9f440f844

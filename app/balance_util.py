@@ -202,7 +202,7 @@ def USDT_balance(address,cointype,type_id):
     response = response_user_token.json()          
     print(response)
     balances = response['balance']
-    return str(balance)
+    return str(balances)
 
 
 #----------Function for return EOS balance----------

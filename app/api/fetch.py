@@ -397,24 +397,19 @@ def unknown_riskscore():
         secure_addresses.append(cms_name)
     records = mongo.db.sws_history.find_one({"address":address})
     if records is not None:
-        print("record is not none")
         transactions=records['transactions']
         if transactions:
-            print("transactions is not none")
             addresses=[]
             for transaction in transactions:
                 fro=transaction['from']
                 for fromm in fro:
                     fr = fromm['from']
                     addresses.append(fr)
-            print(addresses)
             tx_safe_name_formula = 0
             for checkk in addresses:
                 if checkk in kyc_and_secure_addresses:
-                    print("addresss in kyc_and_secure_address")
                     tx_safe_name_formula = (50*10)/100
                 if checkk in secure_addresses:
-                    print("addresss in secure_addresses")
                     tx_safe_name_formula = (50*5)/100
         else:
             tx_safe_name_formula=0
@@ -448,14 +443,6 @@ def unknown_riskscore():
                 tx_knownheist_formula = -((50*30)/100)
     else:
         tx_knownheist_formula = 0
-
-    print("409")
-    print("formula")
-    print(formula)
-    print("tx_safe_name_formula")
-    print(tx_safe_name_formula)
-    print("tx_knownheist_formula")
-    print(tx_knownheist_formula)
     riskscore = 50 + formula + tx_safe_name_formula + tx_knownheist_formula
     return jsonify({"riskscore":riskscore})
     

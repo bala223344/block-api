@@ -10,7 +10,6 @@ from app.config import AE_balance,AE_transactions
 
 def ae_data(address,symbol,type_id):
     ret=AE_balance.replace("{{address}}",''+address+'')
-    print(ret)
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
     
