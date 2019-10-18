@@ -8,7 +8,7 @@ from app import mongo
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def zcash_data(address,symbol,type_id):
-    print("zcash") 
+    print("zcash_data_zcash") 
     ret=ZEC_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       

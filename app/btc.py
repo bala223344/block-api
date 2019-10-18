@@ -17,7 +17,6 @@ def btc_data(address,symbol,type_id):
 
     ret=BTC_balance.replace("{{address}}",''+address+'')
     ret1=ret.replace("{{symbol}}",''+symbol+'')
-    print(ret1)
     response_user_token = requests.get(url=ret1)
     transaction = response_user_token.json()       
     

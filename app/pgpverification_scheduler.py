@@ -24,7 +24,6 @@ def pgp_verification():
             mycursor.execute('SELECT address,type_id FROM sws_address where cms_login_name=''"' + str(user) + '"''')
             check = mycursor.fetchall()
             no_of_addresses=len(check)
-            print(no_of_addresses)
             template_array=[]
             for addr in range(0,no_of_addresses):
                 address_details=check[addr]
@@ -35,13 +34,11 @@ def pgp_verification():
                 if type_id == 2:
                     typee = 'Bitcoin'
                 if no_of_addresses !=1:
-                    if addr == 0:
-                        print("if")            
+                    if addr == 0:         
                         change=keybase_changes.replace('{{cointype}}',''+typee+'')
                         final_template=change.replace('{{addresses}}',''+addres+'\n' + '{{cointype}}'+'\n' + '{{addresses}}')
                         template_array.append(final_template)
                     elif addr == no_of_addresses-1:
-                        print("elif")
                         tempp=template_array[0]
                         del template_array[0]
                         chan=tempp.replace('{{cointype}}',''+typee+'')

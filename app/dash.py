@@ -10,7 +10,6 @@ from app.config import DASH_balance,DASH_transactions
 
 def dash_data(address,symbol,type_id):
     ret=DASH_balance.replace("{{address}}",''+address+'')
-    print(ret)
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
 
@@ -59,7 +58,7 @@ def dash_data(address,symbol,type_id):
                 "amountSent":(send_amount/100000000)
             }},upsert=True)
     return jsonify(bal)
-#{"status":"success"}
+
 
 
 

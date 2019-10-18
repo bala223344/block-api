@@ -8,7 +8,6 @@ from app.config import ICX_balance,ICX_transactions
 
 def icx_data(address,symbol,type_id):
     ret=ICX_balance.replace("{{address}}",''+address+'')
-    print(ret)
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
     

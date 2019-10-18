@@ -28,7 +28,7 @@ def risk_score():
 #-------scheduler for calculating overall profile riskscore------- 
 
 def profile_risk_score():
-    print("asdasndas,na")
+    print("profile_risk_score running")
     mycursor.execute('SELECT username FROM sws_user')
     sws_users = mycursor.fetchall()
     for user in sws_users:

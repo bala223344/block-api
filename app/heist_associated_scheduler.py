@@ -7,14 +7,13 @@ from app.config import mydb,mycursor,ETH_TRANSACTION_URL,BTC_TRANSACTION
 #-------Scheduler for find ETHERNUM heist assosiated addresses-------
 
 def heist_associated_fetch():
-    print("runningggggg")
+    print("heist_associated_fetch_running")
     mycursor.execute('select coin, address from `sws_heist_address`')
     result = mycursor.fetchall()
     for res in result:
         coin = res[0]
         address= res[1]
         if coin == 'ETH':
-            print("eth")
             url1=ETH_TRANSACTION_URL
             doc=url1.replace("{{address}}",''+address+'')
             response_user = requests.get(url=doc)
@@ -80,7 +79,6 @@ def heist_associated_fetch():
                     else:
                         print("already_exist")
         if coin == 'BTC':
-            print("btc")
             url1=BTC_TRANSACTION
             doc=url1.replace("{{address}}",''+address+'')
             response_user = requests.get(url=doc)

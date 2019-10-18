@@ -40,8 +40,6 @@ def dash_data(address,symbol,type_id):
             print(response.status_code, response.body, response.headers)
         else:
                 print("email is not none")
-        else:
-            print("amount is 0")
     else:
         print("no new transaction")
 else:
