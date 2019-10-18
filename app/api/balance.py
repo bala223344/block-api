@@ -152,7 +152,7 @@ def balance():
     if type_id == "15":
         balance = BSV_balance(address,cointype,type_id)
         return balance
-
+    '''
     if type_id == "16":
         balance = BTS_balance(address,cointype,type_id)
         return balance
@@ -260,4 +260,4 @@ def balance():
     if type_id == "42":
         balance = HT_balance(address,cointype,type_id)
         return balance
-    
+    '''
