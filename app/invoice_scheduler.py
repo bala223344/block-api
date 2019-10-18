@@ -86,6 +86,56 @@ def invoice_notification():
                 pass
 
 
+#-------Scheduler for invoice notifications-------
+
+def invoice_notification_interval():
+    print("asdasndas,na")
+    dab = mongo.db.sws_pending_txs_from_app.find({
+        "type":"invoice"})
+    dab = [serialize_doc(doc) for doc in dab]
+    for data in dab:
+        frm=data['from']
+        to = data['to']
+        symbol = data['symbol']
+        amount=data['amt']
+        notes = data['from_notes']
+        to_username = data['to_username']
+        print("frm")
+        print(frm)
+        print("to")
+        print(to)        
+        print("elseeeeeeeeeeeeeeeeeeeeeeeeeee")
+        mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(to)+'"')
+        email = mycursor.fetchone()
+        print(email)
+        if email[0]:
+            email_id=email[0]
+            print(email_id)
+            if email_id is not None:
+                print(email_id)
+                msg = '<h3> You have a pendig invoice request for {{notes}}</h3>'
+                massegee = msg.replace("{{notes}}",''+notes+'')
+                message = Mail(
+                        from_email=Sendgrid_default_mail,
+                        to_emails=email_id,
+                        subject='SafeName - Invoice Notification In Your Account', 
+                        html_content= massegee)
+                sg = SendGridAPIClient(SendGridAPIClient_key)
+                response = sg.send(message)
+                print(response.status_code, response.body, response.headers)
+            else:
+                pass
+        else:
+            pass
+
+
+
+
+
+
+
+
+
             #to = 0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b
             #from = 0xe85dA0b7510F497978801A129638E0f2b4449C09
             #0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b
