@@ -57,7 +57,7 @@ def invoice_notification():
 #-------Scheduler for invoice notifications-------
 
 def invoice_notification_interval():
-    print("asdasndas,na")
+    print("running_invoice")
     dab = mongo.db.sws_pending_txs_from_app.find({
         "type":"invoice"})
     dab = [serialize_doc(doc) for doc in dab]
@@ -80,7 +80,7 @@ def invoice_notification_interval():
                 massegee = msg.replace("{{notes}}",''+notes+'')
                 message = Mail(
                         from_email=Sendgrid_default_mail,
-                        to_emails=email_id,
+                        to_emails="rasealex000000@gmail.com",
                         subject='SafeName - Invoice Notification In Your Account', 
                         html_content= massegee)
                 sg = SendGridAPIClient(SendGridAPIClient_key)
