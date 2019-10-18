@@ -11,7 +11,7 @@ mongo = db.init_db()
 from app.scheduler import auto_fetch
 from app.notification_scheduler import tx_notification
 from app.pgpverification_scheduler import pgp_verification
-from app.invoice_scheduler import invoice_notification
+from app.invoice_scheduler import invoice_notification,invoice_notification_interval
 from app.riskscore_scheduler import risk_score,profile_risk_score
 from app.heist_riskscore_scheduler import risk_score_by_heist
 from app.riskscore_safename_scheduler import risk_score_by_safename
@@ -96,6 +96,12 @@ def create_app(test_config=None):
     #invoice_notification_scheduler.add_job(invoice_notification, trigger='cron', day_of_week='mon-sat', hour=9,minute=30)
     invoice_notification_scheduler.add_job(invoice_notification, trigger='interval', minutes=30)
     invoice_notification_scheduler.start()
+
+
+    invoice_notification_interval_scheduler = BackgroundScheduler()
+    invoice_notification_interval_scheduler.add_job(invoice_notification_interval, trigger='interval', minutes=3000)
+    invoice_notification_interval_scheduler.start()
+
     
     Top_user_percentage_scheduler = BackgroundScheduler()
     Top_user_percentage_scheduler.add_job(Top_user_percentage, trigger='cron', day_of_week='mon-sat', hour=11,minute=00)
@@ -117,6 +123,7 @@ def create_app(test_config=None):
         invoice_notification_scheduler.shutdown()
         profile_risk_score_scheduler.shutdown()
         Top_user_percentage_scheduler.shutdown()
+        invoice_notification_interval_scheduler.shutdown()
 
 '''
 
