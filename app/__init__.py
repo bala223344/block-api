@@ -73,7 +73,7 @@ def create_app(test_config=None):
     risk_score_by_safename_scheduler.start()
     
     risk_score_by_heist_scheduler = BackgroundScheduler()
-    risk_score_by_heist_scheduler.add_job(risk_score_by_heist, trigger='cron', day_of_week='sat', hour=12,minute=59)
+    risk_score_by_heist_scheduler.add_job(risk_score_by_heist, trigger='cron', day_of_week='mon-sat', hour=12,minute=59)
     risk_score_by_heist_scheduler.start()
     
     tx_notification_scheduler = BackgroundScheduler()
@@ -99,7 +99,7 @@ def create_app(test_config=None):
 
 
     invoice_notification_interval_scheduler = BackgroundScheduler()
-    invoice_notification_interval_scheduler.add_job(invoice_notification_interval, trigger='interval', minutes=3000)
+    invoice_notification_interval_scheduler.add_job(invoice_notification_interval, trigger='cron', day_of_week='mon-sun', hour=5,minute=55)
     invoice_notification_interval_scheduler.start()
 
     
