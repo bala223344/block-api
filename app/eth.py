@@ -49,9 +49,12 @@ def eth_data(address,symbol,type_id):
                 frrr = resul['from']
                 tooo = resul['to'] 
                 value = resul['value']
+                timeSta = resul['timeStamp']
+                first_dae=int(timeSta)
+                dt_obj = datetime.fromtimestamp(first_dae)
                 to.append({"to":tooo,"receive_amount":""})
                 frm.append({"from":frrr,"send_amount":str(int(value)/1000000000000000000)})
-                array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id,"internal_transaction":True})
+                array.append({"fee":fee,"from":frm,"to":to,"date":dt_obj,"Tx_id":tx_id,"internal_transaction":True})
             else:
                 pass
         else:
