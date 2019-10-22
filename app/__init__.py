@@ -99,7 +99,7 @@ def create_app(test_config=None):
 
 
     invoice_notification_interval_scheduler = BackgroundScheduler()
-    invoice_notification_interval_scheduler.add_job(invoice_notification_interval, trigger='cron', day_of_week='mon-sun', hour=11,minute=54)
+    invoice_notification_interval_scheduler.add_job(invoice_notification_interval, trigger='cron', day_of_week='mon-sun', hour=13,minute=12)
     invoice_notification_interval_scheduler.start()
 
     

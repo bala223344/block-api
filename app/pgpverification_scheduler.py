@@ -45,7 +45,6 @@ def pgp_verification():
                         template_used=chan.replace('{{addresses}}',''+addres+'')        
                         template_array.append(template_used)
                     else:
-                        print("else")
                         temp=template_array[0]
                         del template_array[0]
                         changed=temp.replace('{{cointype}}',''+typee+'')

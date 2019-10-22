@@ -174,7 +174,6 @@ def main():
         return currency
     
 
-
 #-------ERC20 coin-----------
 
 

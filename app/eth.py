@@ -4,7 +4,7 @@ from datetime import datetime
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from app import mongo
-from app.config import SendGridAPIClient_key,Sendgrid_default_mail,ETH_transactions,ETH_balance
+from app.config import SendGridAPIClient_key,Sendgrid_default_mail,ETH_transactions,ETH_balance,ETH_internal_transactions
 
 
 
@@ -33,11 +33,31 @@ def eth_data(address,symbol,type_id):
         fro =transaction['from']
         too=transaction['to']
         send_amount=transaction['value']
-        tx_id = transaction['hash']
-        to.append({"to":too,"receive_amount":""})
-        frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000)})
-        array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id})
-    
+        if send_amount == "0":
+            print(send_amount)
+            tx_id = transaction['hash']
+            print(tx_id)
+            docc=ETH_internal_transactions.replace("{{hash}}",''+tx_id+'')
+            internal_response_user = requests.get(url=docc)
+            ress = internal_response_user.json()  
+            message = ress['message']
+            if message == 'OK':
+                result = ress['result']   
+                resul = result[0] 
+                value = resul['value']
+                to.append({"to":too,"receive_amount":""})
+                frm.append({"from":fro,"send_amount":str(int(value)/1000000000000000000)})
+                array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id,"internal_transaction":True})
+            else:
+                pass
+        else:
+            print("elseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+            print(send_amount)
+            tx_id = transaction['hash']
+            to.append({"to":too,"receive_amount":""})
+            frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000)})
+            array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id})
+    print(len(array))
     balance = response['result']
     amount_recived =""
     amount_sent =""

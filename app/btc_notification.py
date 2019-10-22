@@ -25,7 +25,6 @@ def btc_notification(address,symbol,type_id):
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
         email = mycursor.fetchone()
         email_id=email[0]
-        print('35')
         if email_id is not None:
             message = Mail(
                 from_email=Sendgrid_default_mail,
