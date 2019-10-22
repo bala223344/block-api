@@ -40,13 +40,17 @@ def eth_data(address,symbol,type_id):
             docc=ETH_internal_transactions.replace("{{hash}}",''+tx_id+'')
             internal_response_user = requests.get(url=docc)
             ress = internal_response_user.json()  
+            print("response",ress)
+            print("from:",fro,"and","to:",too)
             message = ress['message']
             if message == 'OK':
                 result = ress['result']   
-                resul = result[0] 
+                resul = result[0]
+                frrr = resul['from']
+                tooo = resul['to'] 
                 value = resul['value']
-                to.append({"to":too,"receive_amount":""})
-                frm.append({"from":fro,"send_amount":str(int(value)/1000000000000000000)})
+                to.append({"to":tooo,"receive_amount":""})
+                frm.append({"from":frrr,"send_amount":str(int(value)/1000000000000000000)})
                 array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id,"internal_transaction":True})
             else:
                 pass
