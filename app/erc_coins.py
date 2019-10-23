@@ -55,6 +55,11 @@ def erc_coin_data(address,symbol,type_id):
             }},upsert=True)
     return jsonify({"status":"success"})
  
+
+
+
+
+ 
  
     '''
     mycursor.execute('SELECT tx_notification_preferred FROM sws_address WHERE address="'+str(address)+'"')

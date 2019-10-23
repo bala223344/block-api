@@ -6,6 +6,7 @@ from app import mongo
 from app.config import TRON_balance,TRON_transactions
 
 
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def tron_data(address,symbol,type_id):

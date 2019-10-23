@@ -16,7 +16,6 @@ def ae_data(address,symbol,type_id):
     doc=AE_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     transactions = response_user.json()       
-    total_current_tx=len(transactions)
     array=[]
     for transaction in transactions:
         frm=[]

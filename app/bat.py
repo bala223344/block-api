@@ -4,6 +4,8 @@ from datetime import datetime
 from app import mongo
 from app.config import BAT_balance,BAT_transactions
 
+
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def bat_data(address,symbol,type_id):

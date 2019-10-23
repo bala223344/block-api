@@ -5,6 +5,7 @@ from app import mongo
 from app.config import BTC_GOLD_balance,BTC_GOLD_transactions
 
 
+
 #----------Function for fetching tx_history and balance storing in mongodb ----------
 
 def btc_gold_data(address,symbol,type_id):

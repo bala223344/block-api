@@ -5,6 +5,9 @@ from sendgrid.helpers.mail import Mail
 from app.config import SendGridAPIClient_key,Sendgrid_default_mail,BNB_balance
 from app.config import mydb,mycursor
 
+
+#-----------Function for send notifications about transactions movement-----------
+
 def bnb_notification(address,symbol,type_id):
     print("bnb_notification")
     ret=BNB_balance.replace("{{address}}",''+address+'')

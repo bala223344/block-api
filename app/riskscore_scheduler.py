@@ -13,14 +13,12 @@ def risk_score():
         mycursor.execute('SELECT risk_score_by_tx,riskscore_by_safename,riskscore_by_knownheist FROM sws_risk_score WHERE address="'+str(address)+'"')
         check = mycursor.fetchall()
         for record in check:
-            print(record)
             score = 0
             for lst in record:
                 if lst is not None:
                     score = lst+score
             risk_score = 50+score
             mycursor.execute('UPDATE sws_address SET address_risk_score="'+str(risk_score)+'" WHERE address = "'+str(address)+'"')
-            print("updated")
             mydb.commit()
 
 
@@ -28,7 +26,6 @@ def risk_score():
 #-------scheduler for calculating overall profile riskscore------- 
 
 def profile_risk_score():
-    print("profile_risk_score running")
     mycursor.execute('SELECT username FROM sws_user')
     sws_users = mycursor.fetchall()
     for user in sws_users:

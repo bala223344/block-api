@@ -5,6 +5,7 @@ from app import mongo
 from app.config import BNB_balance,BNB_transactions
 
 
+
 #----------Function for fethcing tx_history and balance from api and send notification if got a new transaction---------- 
 
 def bnb_data(address,symbol,type_id):
@@ -16,7 +17,6 @@ def bnb_data(address,symbol,type_id):
     response_user = requests.get(url=doc)
     res = response_user.json()      
     transactions = res['txArray']
-    total_current_tx=len(transactions)
     array=[]
     
     for transaction in transactions:

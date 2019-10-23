@@ -5,6 +5,7 @@ from app import mongo
 from app.config import BTM_balance,BTM_transactions
 
 
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def btm_data(address,symbol,type_id):

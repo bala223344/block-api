@@ -4,6 +4,8 @@ from datetime import datetime
 from app import mongo
 from app.config import BCH_balance,BCH_transactions
 
+
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def btc_cash_data(address,symbol,type_id):

@@ -6,7 +6,7 @@ from app.config import VET_balance,VET_transactions
 
 
 
-#----------Function for fetching tx_history and balance storing in mongodb ----------
+#----------Function for fetching tx_history and balance storing in mongodb----------
 
 def vet_data(address,symbol,type_id):
     ret=VET_balance.replace("{{address}}",''+address+'')

@@ -6,7 +6,6 @@ from app import mongo
 #-------Scheduler for calculating risk score by if receive fund from heist or heist associated address-------
                         
 def risk_score_by_heist():
-    print("risk_score_by_heist_running")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),risk_score_by_tx float(3) NULL,type_id int(3) NULL,riskscore_by_safename float(3) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
     mycursor.execute('SELECT address,type_id FROM sws_address')
     check = mycursor.fetchall()

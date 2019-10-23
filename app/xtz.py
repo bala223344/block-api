@@ -3,6 +3,8 @@ from flask import jsonify
 from app import mongo
 from app.config import XTZ_balance,XTZ_transactions
 
+
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def xtz_data(address,symbol,type_id):

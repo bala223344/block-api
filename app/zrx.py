@@ -4,10 +4,12 @@ from datetime import datetime
 from app import mongo
 from app.config import ZRX_balance,ZRX_transactions
 
+
+
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def zrx_data(address,symbol,type_id):
-    print("zrx_data_running")
     ret=ZRX_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       

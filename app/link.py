@@ -8,7 +8,6 @@ from app.config import LINK_balance,LINK_transactions
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def link_data(address,symbol,type_id):
-    print("link_data_running")
     ret=LINK_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       

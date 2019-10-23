@@ -5,6 +5,9 @@ from sendgrid.helpers.mail import Mail
 from app.config import SendGridAPIClient_key,Sendgrid_default_mail,BCH_balance
 from app.config import mydb,mycursor
 
+
+#----------Function for send notifications if got new transactions----------
+
 def bch_notification(address,symbol,type_id):
     print("notification running")
     ret=BCH_balance.replace("{{address}}",''+address+'')

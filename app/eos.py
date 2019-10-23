@@ -4,7 +4,7 @@ from datetime import datetime
 from app import mongo
 from app.config import EOS_balance,EOS_transactions
 
-#----------Function for fetching tx_history and balance storing in mongodb ----------
+#----------Function for fetching tx_history and balance storing in mongodb----------
 
 def eos_data(address,symbol,type_id):
     acouunt={"account_name":address}

@@ -9,7 +9,6 @@ from app.config import LAMB_balance,LAMB_transactions
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def lamb_data(address,symbol,type_id):
-    print("lamb_data_running")
     ret=LAMB_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       

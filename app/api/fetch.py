@@ -12,7 +12,7 @@ from app.config import mydb,mycursor
 #-----Calling functions at the call of Transaction Api------
 
 from app.btc import btc_data
-from app.eth import eth_data
+from app.eth import eth_data,eth_data_internal
 from app.bnb import bnb_data
 from app.bitcoin_cash import btc_cash_data
 from app.bitcoin_SV import bitcoin_svs_data
@@ -58,6 +58,7 @@ from app.kcs import kcs_data
 from app.lamb import lamb_data
 
 
+#----------Blueprint connection----------
 
 bp = Blueprint('fetch', __name__, url_prefix='/')
 from app import mongo
@@ -79,7 +80,8 @@ def main():
 
     if type_id == "1":
         currency = eth_data(address,symbol,type_id)
-        return currency
+        #curre = eth_data_internal(address,symbol,type_id)
+        return (currency)
 
     if type_id == "27":
         currency = dash_data(address,symbol,type_id)
@@ -270,11 +272,11 @@ def main():
         currency = ae_data(address,symbol,type_id)
         return currency
 
-    if symbol == "19":     #Not done completely
+    if symbol == "19":     
         currency = btm_data(address,symbol,type_id)
         return currency
 
-#Not done for XMR,BTM,THerether
+
 
 #-----Api for return currency symbols and urls--------
 
@@ -293,157 +295,5 @@ def local_transaction(address):
     docs = mongo.db.sws_history.find({"address":address})
     docs = [serialize_doc(doc) for doc in docs]
     return jsonify(docs),200
-
-
-
-#--------Api for return riskscore for unknown address----------
-
-@bp.route("/unknown_riskscore",methods=['POST'])
-def unknown_riskscore():
-    if not request.json:
-        abort(500)
-    address=request.json.get("address", None)    
-    symbol=request.json.get("symbol", None)
-    type_id=request.json.get("type_id","")
-
-    if type_id == "2":
-        currency = btc_data(address,symbol,type_id)
-
-    if type_id == "1":
-        currency = eth_data(address,symbol,type_id)
-
-    if type_id == "27":
-        currency = dash_data(address,symbol,type_id)
-    
-    if type_id == "98":
-        currency = zcash_data(address,symbol,type_id)
-    
-    if type_id == "55":
-        currency = mkr_data(address,symbol,type_id)
-    
-    if type_id == "21":
-        currency = link_data(address,symbol,type_id)
-    
-#-------ERC20 coin-----------
-
-    if type_id == "3":
-        currency = zrx_data(address,symbol,type_id)
-    
-    if type_id == "5":
-        currency = elf_data(address,symbol,type_id)
-    
-    if type_id == "8":
-        currency = rep_data(address,symbol,type_id)
-    
-    if type_id == "9":
-        currency = aoa_data(address,symbol,type_id)
-    
-    if type_id == "10":
-        currency = bat_data(address,symbol,type_id)
-    
-    if type_id == "22":
-        currency = cccx_data(address,symbol,type_id)
-    
-    if type_id == "24":
-        currency = mco_data(address,symbol,type_id)
-    
-    if type_id == "25":
-        currency = cro_data(address,symbol,type_id)
-    
-    if type_id == "26":
-        currency = dai_data(address,symbol,type_id)
-    
-    if type_id == "31":
-        currency = ekt_data(address,symbol,type_id)
-    
-
-    records = mongo.db.sws_history.find_one({"address":address})
-    if records is not None:
-        print("record is not none")
-        transactions=records['transactions']
-        if transactions:
-            print("transactionnssss")
-            count =0
-            for transaction in transactions:
-                first_date = transaction['date']
-                date_time = dateutil.parser.parse(str(first_date))
-                month = date_time.strftime("%m/%d/%Y")
-                two_year_back = datetime.datetime.today() + relativedelta(months=-24)
-                back = two_year_back.strftime("%m/%d/%Y")
-                if month<back:
-                    count=count+1
-                    if count >= 4:
-                        print("count 4")
-                        formula = (50*10)/100
-                    else:
-                        formula = 0
-                else:
-                    pass
-        else:
-            formula = -((50*5)/100)
-    
-    kyc_and_secure_addresses=[]
-    mycursor.execute('SELECT u.address FROM db_safename.sws_user as a left join db_safename.sws_address as u on a.username = u.cms_login_name where (kyc_verified = 1 AND profile_status = "secure")') 
-    che = mycursor.fetchall()
-    for addr in che:
-        cms_name=addr[0]
-        kyc_and_secure_addresses.append(cms_name)
-    secure_addresses=[]
-    mycursor.execute('SELECT u.address FROM db_safename.sws_user as a left join db_safename.sws_address as u on a.username = u.cms_login_name where profile_status = "secure" AND (kyc_verified <> 1 OR kyc_verified is null )') 
-    chek = mycursor.fetchall()
-    for addr in chek:
-        cms_name=addr[0]
-        secure_addresses.append(cms_name)
-    records = mongo.db.sws_history.find_one({"address":address})
-    if records is not None:
-        transactions=records['transactions']
-        if transactions:
-            addresses=[]
-            for transaction in transactions:
-                fro=transaction['from']
-                for fromm in fro:
-                    fr = fromm['from']
-                    addresses.append(fr)
-            tx_safe_name_formula = 0
-            for checkk in addresses:
-                if checkk in kyc_and_secure_addresses:
-                    tx_safe_name_formula = (50*10)/100
-                if checkk in secure_addresses:
-                    tx_safe_name_formula = (50*5)/100
-        else:
-            tx_safe_name_formula=0
-    heist_addresses=[]
-    mycursor.execute('SELECT address FROM sws_heist_address WHERE (tag_name <> "heist_associated")')
-    ret = mycursor.fetchall()
-    for addres in ret:
-        address=addres[0]
-        heist_addresses.append(address)        
-    heist_associated_addresses=[]
-    mycursor.execute('SELECT address FROM sws_heist_address WHERE (tag_name = "heist_associated")')
-    ret = mycursor.fetchall()
-    for add in ret:
-        addres=add[0]
-        heist_associated_addresses.append(addres)
-
-    records = mongo.db.sws_history.find_one({"address":address})
-    if records is not None:
-        transactions=records['transactions']
-        addresses=[]
-        for transaction in transactions:
-            fro =transaction['from']
-            for frmm in fro:
-                fr = frmm['send_amount']
-                addresses.append(fr)
-        tx_knownheist_formula = 0
-        for checkk in addresses:
-            if checkk in heist_addresses:
-                tx_knownheist_formula = -((50*50)/100)
-            if checkk in heist_associated_addresses:
-                tx_knownheist_formula = -((50*30)/100)
-    else:
-        tx_knownheist_formula = 0
-    riskscore = 50 + formula + tx_safe_name_formula + tx_knownheist_formula
-    return jsonify({"riskscore":riskscore})
-    
 
 

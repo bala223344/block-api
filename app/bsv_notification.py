@@ -5,6 +5,10 @@ from sendgrid.helpers.mail import Mail
 from app.config import SendGridAPIClient_key,Sendgrid_default_mail,BSV_balance
 from app.config import mydb,mycursor
 
+
+
+#-----------Function for send notification about transactions movement------------
+
 def bsv_notification(address,symbol,type_id):
     print("bsv_notification")
     ret=BSV_balance.replace("{{address}}",''+address+'')

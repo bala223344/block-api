@@ -5,6 +5,7 @@ from app import mongo
 from app.config import USDT_balance
 
 
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def tether_data(address,symbol,type_id):

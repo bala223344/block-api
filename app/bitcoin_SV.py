@@ -4,6 +4,8 @@ from datetime import datetime
 from app import mongo
 from app.config import BSV_balance,BSV_transactions
 
+
+
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
 
 def bitcoin_svs_data(address,symbol,type_id):

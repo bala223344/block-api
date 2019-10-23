@@ -4,10 +4,11 @@ from datetime import datetime
 from app import mongo
 from app.config import EGT_balance,EGT_transactions
 
+
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def egt_data(address,symbol,type_id):
-    print("egt_data")
     ret=EGT_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       

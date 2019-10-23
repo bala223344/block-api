@@ -4,10 +4,11 @@ from datetime import datetime
 from app import mongo
 from app.config import ELF_balance,ELF_transactions
 
+
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def elf_data(address,symbol,type_id):
-    print("elf_data_running")
     ret=ELF_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       

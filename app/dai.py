@@ -4,6 +4,8 @@ from datetime import datetime
 from app import mongo
 from app.config import DAI_balance,DAI_transactions
 
+
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def dai_data(address,symbol,type_id):

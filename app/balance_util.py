@@ -1,9 +1,11 @@
 import requests
 
 
+
 #----------Import balance Apis End points from Config file----------
 
 from app.config import ETH_url,BTC_url,ERC_url,LTC_url,BCH_url,BNB_url,BSV_url,TRX_url,LEO_url,MIOTA_url,ZEC_url,ONT_url,BTG_url,XTZ_url,XRP_url,USDT_url,EOS_url,DASH_url,XLM_url,MKR_url,ELF_url,AE_url,REP_url,aoa_url,BAT_url,BSV_url,BTT_url,BTM_url,LINK_url,CCCX_url,MCO_url,CRO_url
+
 
 
 
@@ -16,7 +18,6 @@ def ETH_balance(address,cointype,type_id):
     balance = response['result']
     ret=(int(balance)/1000000000000000000)
     return str(ret)
-
 
 
 #----------Function for return BTC balance----------
@@ -281,6 +282,8 @@ def ELF_balance(address,cointype,type_id):
     return str(ret)
 
 
+#----------Function for return AE balance----------
+
 def AE_balance(address,cointype,type_id):
     print("linkeeeeeeee")
     ret=AE_url.replace("{{address}}",''+address+'')
@@ -291,6 +294,8 @@ def AE_balance(address,cointype,type_id):
     ret=(int(balance)/1000000000000000000)
     return str(ret)
 
+
+#----------Function for return REP balance----------
 
 def REP_balance(address,cointype,type_id):
     print("linkeeeeeeee")
@@ -303,6 +308,8 @@ def REP_balance(address,cointype,type_id):
     return str(ret)
 
 
+#----------Function for return AOA_balance----------
+
 def AOA_balance(address,cointype,type_id):
     print("linkeeeeeeee")
     ret=aoa_url.replace("{{address}}",''+address+'')
@@ -313,6 +320,8 @@ def AOA_balance(address,cointype,type_id):
     ret=(int(balance)/1000000000000000000)
     return str(ret)
 
+
+#----------Function for return BAT_balance----------
 
 def BAT_balance(address,cointype,type_id):
     print("linkeeeeeeee")
@@ -325,6 +334,8 @@ def BAT_balance(address,cointype,type_id):
     return str(ret)
 
 
+#----------Function for return BSV_balance----------
+
 def BSV_balance(address,cointype,type_id):
     print("linkeeeeeeee")
     ret=BSV_url.replace("{{address}}",''+address+'')
@@ -335,6 +346,8 @@ def BSV_balance(address,cointype,type_id):
     ret=(int(balance)/1000000000000000000)
     return str(ret)
 
+
+#----------Function for return BTT_balance----------
 
 def BTT_balance(address,cointype,type_id):
     print("linkeeeeeeee")
@@ -347,6 +360,7 @@ def BTT_balance(address,cointype,type_id):
     return str(ret)
 
 
+#----------Function for return BCN_balance----------
 
 def BCN_balance(address,cointype,type_id):
     print("linkeeeeeeee")
@@ -359,6 +373,8 @@ def BCN_balance(address,cointype,type_id):
     return str(ret)
 
 
+#----------Function for return BTM_balance----------
+
 def BTM_balance(address,cointype,type_id):
     print("linkeeeeeeee")
     ret=BTM_url.replace("{{address}}",''+address+'')
@@ -369,6 +385,8 @@ def BTM_balance(address,cointype,type_id):
     ret=(int(balance)/1000000000000000000)
     return str(ret)
 
+
+#----------Function for return LINK_balance----------
 
 def LINK_balance(address,cointype,type_id):
     print("linkeeeeeeee")
@@ -381,6 +399,8 @@ def LINK_balance(address,cointype,type_id):
     return str(ret)
 
 
+#----------Function for return CCCX_balance----------
+
 def CCCX_balance(address,cointype,type_id):
     print("linkeeeeeeee")
     ret=CCCX_url.replace("{{address}}",''+address+'')
@@ -392,6 +412,8 @@ def CCCX_balance(address,cointype,type_id):
     return str(ret)
 
 
+#----------Function for return MCO_balance----------
+
 def MCO_balance(address,cointype,type_id):
     print("linkeeeeeeee")
     ret=MCO_url.replace("{{address}}",''+address+'')
@@ -402,6 +424,8 @@ def MCO_balance(address,cointype,type_id):
     ret=(int(balance)/1000000000000000000)
     return str(ret)
 
+
+#----------Function for return CRO_balance----------
 
 def CRO_balance(address,cointype,type_id):
     print("linkeeeeeeee")
