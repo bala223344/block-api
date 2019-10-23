@@ -5,8 +5,11 @@ from sendgrid.helpers.mail import Mail
 from app.config import SendGridAPIClient_key,Sendgrid_default_mail,XRP_transactions
 from app.config import mydb,mycursor
 
+
+
+#-----------Function for send notifications about transactions notification movement-----------
+
 def xrp_notification(address,symbol,type_id):
-    print("xrp_notification_running")
     ret=XRP_transactions.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     transaction = response_user_token.json()  
@@ -14,11 +17,6 @@ def xrp_notification(address,symbol,type_id):
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
     tx_count=current_tx[0]
-    print('29')
-    print("tx_count")
-    print(tx_count)
-    print("total_current_tx")
-    print(total_current_tx)
     if tx_count is None or total_current_tx > tx_count:
         mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')

@@ -8,7 +8,6 @@ from dateutil.relativedelta import relativedelta
 #-------Scheduler for calculating risk score by two year old tx or no transactions heist addresses-------
 
 def tx_two_yearold():
-    print("runnnnnn")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),risk_score_by_tx float(3) NULL,type_id int(3) NULL,riskscore_by_safename float(3) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
     mycursor.execute('SELECT address,type_id FROM sws_address')
     check = mycursor.fetchall()

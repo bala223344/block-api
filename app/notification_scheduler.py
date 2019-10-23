@@ -8,6 +8,8 @@ from app.eos_notification import eos_notification
 from app.bnb_notification import bnb_notification
 from app.bsv_notification import bsv_notification
 
+
+
 #----------Function for new transaction notification----------
 
 def tx_notification():

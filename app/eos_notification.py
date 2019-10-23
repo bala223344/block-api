@@ -5,8 +5,10 @@ from sendgrid.helpers.mail import Mail
 from app.config import SendGridAPIClient_key,Sendgrid_default_mail,XRP_transactions
 from app.config import mydb,mycursor
 
+
+#-----------send EOS transactions movement notification-------------
+
 def eos_notification(address,symbol,type_id):
-    print("eos_notification_running")
     ret=XRP_transactions.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     transaction = response_user_token.json()  

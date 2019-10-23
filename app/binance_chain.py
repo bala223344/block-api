@@ -5,6 +5,7 @@ from app import mongo
 from app.config import BNB_balance,BNB_transactions
 
 
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def b_chain_data(address,symbol,type_id):

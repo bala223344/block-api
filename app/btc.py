@@ -6,15 +6,9 @@ from app import mongo
 
 
 
-#----------Function for fetching tx_history and balance storing in mongodb----------
-
-
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
 
-
 def btc_data(address,symbol,type_id):
-    print("ashgajhghgggggggggggggggggggggggggggggggggggggggggggggggggggggggg")
-
     ret=BTC_balance.replace("{{address}}",''+address+'')
     ret1=ret.replace("{{symbol}}",''+symbol+'')
     response_user_token = requests.get(url=ret1)
@@ -26,7 +20,6 @@ def btc_data(address,symbol,type_id):
         amountSent =transaction['amount_sent']
         transactions = transaction['txs']
         array=[]
-        total_current_tx=len(transactions)
         for transaction in transactions:
             fee=transaction['fee']
             tx_id = transaction['hash']

@@ -4,6 +4,8 @@ from datetime import datetime
 from app import mongo
 from app.config import ONT_balance,ONT_transactions
 
+
+
 #----------Function for fetching tx_history and balance storing in mongodb ----------
 
 def ont_data(address,symbol,type_id):
@@ -55,5 +57,4 @@ def ont_data(address,symbol,type_id):
                 "amountReceived":amount_recived,
                 "amountSent":amount_sent
             }},upsert=True)
-    
     return jsonify({"status":"success"})

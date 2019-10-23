@@ -9,7 +9,6 @@ from app.config import KCS_balance,KCS_transactions
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def kcs_data(address,symbol,type_id):
-    print("kcs_data_running")
     ret=KCS_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       

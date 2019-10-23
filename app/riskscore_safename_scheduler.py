@@ -5,7 +5,6 @@ from app import mongo
 #-------Scheduler for calculating risk score by if receive fund from safename or kyc swsuser heist addresses-------
 
 def risk_score_by_safename():
-    print("risk_score_by_safename_runnnnnn")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),risk_score_by_tx float(3) NULL,type_id int(3) NULL,riskscore_by_safename float(3) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
     mycursor.execute('SELECT address,type_id FROM sws_address')
     check = mycursor.fetchall()
@@ -23,19 +22,16 @@ def risk_score_by_safename():
     for addr in che:
         cms_name=addr[0]
         kyc_and_secure_addresses.append(cms_name)
-    print("308")
     secure_addresses=[]
     mycursor.execute('SELECT u.address FROM db_safename.sws_user as a left join db_safename.sws_address as u on a.username = u.cms_login_name where profile_status = "secure" AND (kyc_verified <> 1 OR kyc_verified is null )') 
     chek = mycursor.fetchall()
     for addr in chek:
         cms_name=addr[0]
         secure_addresses.append(cms_name)
-    print("323")
     mycursor.execute('SELECT address FROM sws_risk_score')
     check = mycursor.fetchall()
     for addr in check:
         address=addr[0]
-        print(address)
         records = mongo.db.sws_history.find_one({"address":address})
         if records is not None:
             transactions=records['transactions']

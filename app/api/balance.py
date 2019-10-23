@@ -7,14 +7,13 @@ from app.balance_util import ETH_balance,BTC_balance,ERC_balance,LTC_balance,BCH
 
 
 
-
 #------------Blueprint connection------------
 
 bp = Blueprint('balance', __name__, url_prefix='/')
 
 
 
-#---------Api only for balance for speed optimization direct hit apis end points---------
+#---------Api only for balance for speed optimization direct hit apis end points for balance---------
 
 @bp.route("/transaction/balance",methods=['POST'])
 def balance():

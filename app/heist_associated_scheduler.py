@@ -7,7 +7,6 @@ from app.config import mydb,mycursor,ETH_TRANSACTION_URL,BTC_TRANSACTION
 #-------Scheduler for find ETHERNUM heist assosiated addresses-------
 
 def heist_associated_fetch():
-    print("heist_associated_fetch_running")
     mycursor.execute('select coin, address from `sws_heist_address`')
     result = mycursor.fetchall()
     for res in result:
@@ -36,7 +35,6 @@ def heist_associated_fetch():
                     mycursor.execute('SELECT * FROM sws_heist_address WHERE address="'+str(address)+'"')
                     check = mycursor.fetchall()
                     if not check:
-                        print("added")
                         mycursor.execute('''SELECT MAX(id) FROM sws_heist_address''')
                         maxid = mycursor.fetchone()
                         check=maxid[0]
@@ -44,7 +42,6 @@ def heist_associated_fetch():
                             ids = 1
                         else:
                             ids=(maxid[0]+1)
-                        print(ids)
                         category = "heist_associated"
                         status = "Active"
                         url = ""
@@ -59,7 +56,6 @@ def heist_associated_fetch():
                     mycursor.execute('SELECT * FROM sws_heist_address WHERE address="'+str(address)+'"')
                     check = mycursor.fetchall()
                     if not check:
-                        print("to_added")
                         mycursor.execute('''SELECT MAX(id) FROM sws_heist_address''')
                         maxid = mycursor.fetchone()
                         check=maxid[0]
@@ -67,7 +63,6 @@ def heist_associated_fetch():
                             ids = 1
                         else:
                             ids=(maxid[0]+1)
-                        print(ids)
                         name = ""
                         category = "heist_associated"
                         status = "Active"
@@ -95,7 +90,6 @@ def heist_associated_fetch():
                 mycursor.execute('SELECT * FROM sws_heist_address WHERE address="'+str(address)+'"')
                 check = mycursor.fetchall()
                 if not check:
-                    print("added")
                     mycursor.execute('''SELECT MAX(id) FROM sws_heist_address''')
                     maxid = mycursor.fetchone()
                     check=maxid[0]
@@ -103,7 +97,6 @@ def heist_associated_fetch():
                         ids = 1
                     else:
                         ids=(maxid[0]+1)
-                    print(ids)
                     category = "heist_associated"
                     status = "Active"
                     url = ""

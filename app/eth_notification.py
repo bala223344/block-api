@@ -8,6 +8,7 @@ from app.config import ETH_transactions
 from app.config import mydb,mycursor,Sendgrid_default_mail,SendGridAPIClient_key
 
 
+
 #----------Function for fetching tx_history and balance for ETH storing in mongodb----------
 
 def eth_notification(address,symbol,type_id):    
@@ -25,48 +26,18 @@ def eth_notification(address,symbol,type_id):
         too=transaction['to']
         send_amount=(int(transaction['value'])/1000000000000000000)
         tx_id = transaction['hash']
-        print("87")
         mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
         current_tx = mycursor.fetchall()
         transactions_count=current_tx[0]
         tx_count=transactions_count[0]
-        print("tx_count")
-        print(tx_count)
-        print("total_current_tx")
-        print(total_current_tx)
-        print("send_amount")
-        print(send_amount)
         if tx_count is None or total_current_tx > tx_count:
-            print("93")
             if send_amount != 0:
-                print("105")
                 mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
-                print(address)
                 mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
                 email = mycursor.fetchone()
                 email_id=email[0]
-                print(email_id) 
                 
-                if email_id is not None:
-                    '''
-                    print("sendinnnnnngggggggg")
-                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
-                    from_safename_tx = mycursor.fetchall()
-                    if from_safename_tx:
-                        frm_safenames=from_safename_tx[0]
-                        frm = frm_safenames[0]
-                        frm_safename=fro+'(safename:'+frm+')'
-                    else:
-                        frm_safename=fro
-                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
-                    too_safenames_tx = mycursor.fetchall()
-                    if too_safenames_tx:
-                        too_safenames=too_safenames_tx[0]
-                        to = too_safenames[0]
-                        to_safename=too+'(safename:'+to+')'
-                    else:
-                        to_safename=too
-                    '''    
+                if email_id is not None:    
                     frm_safename=fro
                     to_safename=too
                     message = Mail(
@@ -86,3 +57,41 @@ def eth_notification(address,symbol,type_id):
     else:
         print("no transcations")
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
+                    print("sendinnnnnngggggggg")
+                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
+                    from_safename_tx = mycursor.fetchall()
+                    if from_safename_tx:
+                        frm_safenames=from_safename_tx[0]
+                        frm = frm_safenames[0]
+                        frm_safename=fro+'(safename:'+frm+')'
+                    else:
+                        frm_safename=fro
+                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
+                    too_safenames_tx = mycursor.fetchall()
+                    if too_safenames_tx:
+                        too_safenames=too_safenames_tx[0]
+                        to = too_safenames[0]
+                        to_safename=too+'(safename:'+to+')'
+                    else:
+                        to_safename=too
+'''

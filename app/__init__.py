@@ -8,6 +8,7 @@ mongo = db.init_db()
 
 
 #---------calling schedulers run time from config.py----------
+
 from app.scheduler import auto_fetch
 from app.notification_scheduler import tx_notification
 from app.pgpverification_scheduler import pgp_verification
@@ -40,11 +41,16 @@ def create_app(test_config=None):
 
     db.get_db(mongo=mongo, app=app)
 
+
+#---------register api files in blueprint----------
+
     from app.api import fetch
     from app.api import balance
+    from app.api import unknown_riskscore
 
     app.register_blueprint(fetch.bp)
     app.register_blueprint(balance.bp)
+    app.register_blueprint(unknown_riskscore.bp)
     
 
 
@@ -80,9 +86,6 @@ def create_app(test_config=None):
     #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=10, minute=50)
     tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=7)
     tx_notification_scheduler.start()
-    #tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=tx_notification_scheduler_minute)
-    #tx_notification_scheduler.add_job(tx_notification, trigger='interval', hours=20)
-    #tx_notification_scheduler.add_job(tx_notification, trigger='interval', seconds=60)
     
     risk_score_scheduler = BackgroundScheduler()
     risk_score_scheduler.add_job(risk_score, trigger='cron', day_of_week='mon', hour=12,minute=9)
@@ -93,16 +96,13 @@ def create_app(test_config=None):
     profile_risk_score_scheduler.start()
     
     invoice_notification_scheduler = BackgroundScheduler()
-    #invoice_notification_scheduler.add_job(invoice_notification, trigger='cron', day_of_week='mon-sat', hour=9,minute=30)
     invoice_notification_scheduler.add_job(invoice_notification, trigger='interval', minutes=30)
     invoice_notification_scheduler.start()
-
 
     invoice_notification_interval_scheduler = BackgroundScheduler()
     invoice_notification_interval_scheduler.add_job(invoice_notification_interval, trigger='cron', day_of_week='mon-sun', hour=13,minute=12)
     invoice_notification_interval_scheduler.start()
 
-    
     Top_user_percentage_scheduler = BackgroundScheduler()
     Top_user_percentage_scheduler.add_job(Top_user_percentage, trigger='cron', day_of_week='mon-sat', hour=11,minute=00)
     Top_user_percentage_scheduler.start()

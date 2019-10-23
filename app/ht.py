@@ -7,7 +7,6 @@ from app.config import HT_balance,HT_transactions
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def ht_data(address,symbol,type_id):
-    print("ht_data_running")
     ret=HT_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
@@ -29,7 +28,6 @@ def ht_data(address,symbol,type_id):
         send_amount=transaction['value']
         contractAddress = transaction['contractAddress']
         if contractAddress == "0x6f259637dcd74c767781e37bc6133cd6a68aa161":
-            print("contractccccc")
             to.append({"to":too,"receive_amount":""})
             frm.append({"from":fro,"send_amount":(int(send_amount)/1000000000000000000)})
             array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})

@@ -3,6 +3,9 @@ from flask import jsonify
 from app import mongo
 from app.config import XRP_balance,XRP_transactions
 
+
+
+
 #----------Function for fetching tx_history and balance storing in mongodb ----------
 
 def xrp_data(address,symbol,type_id):

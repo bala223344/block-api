@@ -7,7 +7,6 @@ from app.config import MKR_balance,MKR_transactions
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def mkr_data(address,symbol,type_id):
-    print("mkr_data_running")
     ret=MKR_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
