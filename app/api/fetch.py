@@ -14,8 +14,8 @@ from app.config import mydb,mycursor
 from app.btc import btc_data
 from app.eth import eth_data,eth_data_internal
 from app.bnb import bnb_data
-from app.bitcoin_cash import btc_cash_data
-from app.bitcoin_SV import bitcoin_svs_data
+from app.bch import btc_cash_data
+from app.bsv import bitcoin_svs_data
 from app.litecoin import ltc_data
 from app.tether import tether_data
 from app.xtz import xtz_data
@@ -26,16 +26,15 @@ from app.btt import btt_data
 from app.vet import vet_data
 from app.cro import cro_data
 from app.xrp import xrp_data
-from app.erc_coins import erc_coin_data
 from app.eos import eos_data
 from app.dash import dash_data
 from app.usdc import usdc_data
 from app.ont import ont_data
 from app.bat  import bat_data
 from app.zcash import zcash_data
-from app.btcgold import btc_gold_data
+from app.btg import btc_gold_data
 from app.iota import iota_data
-from app.unus_s_leo import unus_sed_leo_data
+from app.leo import unus_sed_leo_data
 from app.icx import icx_data
 from app.ae import ae_data
 from app.btm import btm_data
@@ -56,7 +55,7 @@ from app.ht import ht_data
 from app.inb import inb_data
 from app.kcs import kcs_data
 from app.lamb import lamb_data
-
+from app.gpl import gpl_data
 
 #----------Blueprint connection----------
 
@@ -80,8 +79,7 @@ def main():
 
     if type_id == "1":
         currency = eth_data(address,symbol,type_id)
-        #curre = eth_data_internal(address,symbol,type_id)
-        return (currency)
+        return currency
 
     if type_id == "27":
         currency = dash_data(address,symbol,type_id)
@@ -257,17 +255,10 @@ def main():
         currency = icx_data(address,symbol,type_id)
         return currency
     
-    '''
-    if type_id == "41":
-        currency = erc_coin_data(address,symbol,type_id)
+    if type_id == "101":
+        currency = gpl_data(address,symbol,type_id)
         return currency
-
-
-    if type_id == "46":
-        currency = erc_coin_data(address,symbol,type_id)
-        return currency
-    '''
-
+    
     if type_id == "6":
         currency = ae_data(address,symbol,type_id)
         return currency
