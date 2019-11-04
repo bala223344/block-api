@@ -16,7 +16,7 @@ from app.eth import eth_data,eth_data_internal
 from app.bnb import bnb_data
 from app.bch import btc_cash_data
 from app.bsv import bitcoin_svs_data
-from app.litecoin import ltc_data
+from app.ltc import ltc_data
 from app.tether import tether_data
 from app.xtz import xtz_data
 from app.qtum import qtum_data

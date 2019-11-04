@@ -3,7 +3,7 @@ from app.eth import eth_notification
 from app.btc import btc_notification
 from app.xrp import xrp_notification
 from app.bch import bch_notification
-from app.litecoin import ltc_notification
+from app.ltc import ltc_notification
 from app.eos import eos_notification
 from app.bnb import bnb_notification
 from app.bsv import bsv_notification
