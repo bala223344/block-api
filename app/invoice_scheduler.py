@@ -13,7 +13,7 @@ from app.util import serialize_doc
 
 #-------Scheduler for invoice moving-------
 
-def invoice_notification():
+def invoice_moving():
     dab = mongo.db.sws_pending_txs_from_app.find({
         "type":"invoice"})
     dab = [serialize_doc(doc) for doc in dab]

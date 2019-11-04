@@ -6,7 +6,6 @@ from app import mongo
 
 
 
-
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def zcash_data(address,symbol,type_id):
