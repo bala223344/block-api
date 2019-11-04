@@ -4,6 +4,8 @@ from datetime import datetime
 from app import mongo
 from app.config import QTUM_balance,QTUM_transactions
 
+
+
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
 def qtum_data(address,symbol,type_id):

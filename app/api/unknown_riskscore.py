@@ -63,6 +63,7 @@ from app.ht import ht_data
 from app.inb import inb_data
 from app.kcs import kcs_data
 from app.lamb import lamb_data
+from app.gpl import gpl_data
 
 
 
@@ -79,55 +80,176 @@ def unknown_riskscore():
     
     if type_id == "1":
         currency = eth_data(address,symbol,type_id)
-    
+        return currency
+
     if type_id == "2":
         currency = btc_data(address,symbol,type_id)
-
-    if type_id == "27":
-        currency = dash_data(address,symbol,type_id)
-    
-    if type_id == "98":
-        currency = zcash_data(address,symbol,type_id)
-    
-    if type_id == "55":
-        currency = mkr_data(address,symbol,type_id)
-    
-    if type_id == "21":
-        currency = link_data(address,symbol,type_id)
-    
-#-------ERC20 coin-----------
+        return currency
 
     if type_id == "3":
         currency = zrx_data(address,symbol,type_id)
-    
+        return currency
+
     if type_id == "5":
         currency = elf_data(address,symbol,type_id)
-    
+        return currency
+
+    if type_id == "6":
+        currency = ae_data(address,symbol,type_id)
+        return currency
+
     if type_id == "8":
         currency = rep_data(address,symbol,type_id)
-    
+        return currency
+
     if type_id == "9":
         currency = aoa_data(address,symbol,type_id)
-    
+        return currency
+
     if type_id == "10":
         currency = bat_data(address,symbol,type_id)
-    
+        return currency
+
+    if type_id == "11":
+        currency = bnb_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "12":
+        currency = btc_cash_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "14":
+        currency = btc_gold_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "15":
+        currency = bitcoin_svs_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "17":
+        currency = btt_data(address,symbol,type_id)
+        return currency
+
+    if symbol == "19":     
+        currency = btm_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "21":
+        currency = link_data(address,symbol,type_id)
+        return currency
+
     if type_id == "22":
         currency = cccx_data(address,symbol,type_id)
-    
+        return currency
+
     if type_id == "24":
         currency = mco_data(address,symbol,type_id)
-    
+        return currency
+
     if type_id == "25":
         currency = cro_data(address,symbol,type_id)
-    
+        return currency
+
     if type_id == "26":
         currency = dai_data(address,symbol,type_id)
-    
+        return currency
+
+    if type_id == "27":
+        currency = dash_data(address,symbol,type_id)
+        return currency
+
     if type_id == "31":
         currency = ekt_data(address,symbol,type_id)
-    
+        return currency
 
+    if type_id == "32":
+        currency = egt_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "34":
+        currency = enj_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "35":  
+        currency = eos_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "38":
+        currency = gnt_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "42":
+        currency = ht_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "44":
+        currency = icx_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "45":
+        currency = inb_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "47":
+        currency = iota_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "50":
+        currency = kcs_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "51":
+        currency = lamb_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "53":
+        currency = ltc_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "55":
+        currency = mkr_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "67":
+        currency = ont_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "70":
+        currency = qtum_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "75":
+        currency = xrp_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "83":
+        currency = usdc_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "84":
+        currency = xtz_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "87":
+        currency = tron_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "89":
+        currency = unus_sed_leo_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "91":
+        currency = vet_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "98":
+        currency = zcash_data(address,symbol,type_id)
+        return currency
+ 
+    if type_id == "101":
+        currency = gpl_data(address,symbol,type_id)
+        return currency
+    
     records = mongo.db.sws_history.find_one({"address":address})
     if records is not None:
         print("record is not none")

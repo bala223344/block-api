@@ -5,6 +5,7 @@ from app import mongo
 from app.config import mydb,mycursor,ETH_TRANSACTION_URL,BTC_TRANSACTION
 from dateutil.relativedelta import relativedelta
 
+
 #-------Scheduler for calculating risk score by two year old tx or no transactions heist addresses-------
 
 def tx_two_yearold():
