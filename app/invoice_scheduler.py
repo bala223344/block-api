@@ -33,14 +33,12 @@ def invoice_notification():
                 trans = data['transactions']
                 for tx_id in trans:
                     transaction_id = tx_id['Tx_id']
-            
             docs = mongo.db.sws_pending_txs_from_app.remove({
                 "from": frm,
                 "to": to,
                 "amt": amount,
                 "type":"invoice"
             }) 
-            
             report = mongo.db.sws_notes.insert_one({
                 "tx_id": transaction_id,
                 "notes": notes,

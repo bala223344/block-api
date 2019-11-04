@@ -9,7 +9,7 @@ mongo = db.init_db()
 
 #---------calling schedulers run time from config.py----------
 
-from app.scheduler import auto_fetch
+from app.heist_fetch_scheduler import auto_fetch
 from app.notification_scheduler import tx_notification
 from app.pgpverification_scheduler import pgp_verification
 from app.invoice_scheduler import invoice_notification,invoice_notification_interval
@@ -96,7 +96,7 @@ def create_app(test_config=None):
     profile_risk_score_scheduler.start()
     
     invoice_notification_scheduler = BackgroundScheduler()
-    invoice_notification_scheduler.add_job(invoice_notification, trigger='interval', minutes=30)
+    invoice_notification_scheduler.add_job(invoice_notification, trigger='interval', minutes=3)
     invoice_notification_scheduler.start()
 
     invoice_notification_interval_scheduler = BackgroundScheduler()

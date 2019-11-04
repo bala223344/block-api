@@ -1,12 +1,12 @@
 from app.config import mydb,mycursor
-from app.eth_notification import eth_notification
-from app.btc_notification import btc_notification
-from app.xrp_notification import xrp_notification
-from app.bch_notification import bch_notification
-from app.ltc_notification import ltc_notification
-from app.eos_notification import eos_notification
-from app.bnb_notification import bnb_notification
-from app.bsv_notification import bsv_notification
+from app.eth import eth_notification
+from app.btc import btc_notification
+from app.xrp import xrp_notification
+from app.bch import bch_notification
+from app.ltc import ltc_notification
+from app.eos import eos_notification
+from app.bnb import bnb_notification
+from app.bsv import bsv_notification
 
 
 
