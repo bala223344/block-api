@@ -57,3 +57,7 @@ def risk_score_by_safename():
                         mydb.commit()
                     else:
                         pass
+            else:
+                pass
+        else:
+            pass

@@ -56,6 +56,8 @@ from app.inb import inb_data
 from app.kcs import kcs_data
 from app.lamb import lamb_data
 from app.gpl import gpl_data
+from app.matic import matic_data
+
 
 #----------Blueprint connection----------
 
@@ -243,6 +245,11 @@ def main():
  
     if type_id == "101":
         currency = gpl_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "102":
+        print("Matic")
+        currency = matic_data(address,symbol,type_id)
         return currency
 
 
