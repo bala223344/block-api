@@ -62,6 +62,7 @@ def invoice_notification_interval():
         to = data['to']
         symbol = data['symbol']
         amount=data['amt']
+        created_at = data['created_at']
         notes = data['from_notes']
         to_username = data['to_username']
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(to)+'"')
@@ -69,7 +70,7 @@ def invoice_notification_interval():
         if email[0]:
             email_id=email[0]
             if email_id is not None:
-                msg = '<h3> You have a pendig invoice request for {{notes}}</h3>'
+                msg = '<h3> You have a pendig invoice request for {{notes}}</h3><strong>Date:</strong> ' + str(created_at) +' <div><strong>From:</strong> ' + str(frm) + ' </div><strong>To:</strong> ' + str(to) + ' </div><div><strong>Amount:</strong> ' + str(amount) + ' </div><div><strong>coin:</strong> ' + str(symbol) + ' </div>'
                 massegee = msg.replace("{{notes}}",''+notes+'')
                 message = Mail(
                         from_email=Sendgrid_default_mail,
@@ -91,7 +92,7 @@ def invoice_notification_interval():
 
 
 
-
+'<h3> You got a new transaction </h3><strong>Date:</strong> ' + str(dt_object) +' <div><strong>From:</strong> ' + str(frm_safename) + ' </div><strong>To:</strong> ' + str(to_safename) + ' </div><div><strong>Amount:</strong> ' + str(send_amount) + ' </div><div><strong>Tx_id:</strong> ' + str(tx_id) + ' </div><div><strong>Coin Type:</strong> ''ETH''  </div>'
 
 
 

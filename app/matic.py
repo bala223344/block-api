@@ -2,18 +2,19 @@ import requests
 from flask import jsonify
 from datetime import datetime
 from app import mongo
-from app.config import ELF_balance,ELF_transactions
+from app.config import MATIC_balance,MATIC_transactions
 
 
 
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
-def elf_data(address,symbol,type_id):
-    ret=ELF_balance.replace("{{address}}",''+address+'')
+def matic_data(address,symbol,type_id):
+    print("gpl_data_running")
+    ret=MATIC_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
     
-    doc=ELF_transactions.replace("{{address}}",''+address+'')
+    doc=MATIC_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
     transactions=res['result']
@@ -29,7 +30,7 @@ def elf_data(address,symbol,type_id):
         too=transaction['to']
         send_amount=transaction['value']
         contractAddress = transaction['contractAddress']
-        if contractAddress == "0xbf2179859fc6D5BEE9Bf9158632Dc51678a4100e":#0xbf2179859fc6D5BEE9Bf9158632Dc51678a4100e
+        if contractAddress == "0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0":
             to.append({"to":too,"receive_amount":""})
             frm.append({"from":fro,"send_amount":(int(send_amount)/1000000000000000000)})
             array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
@@ -52,3 +53,13 @@ def elf_data(address,symbol,type_id):
 
 
 
+'''
+def matic_notification(address,symbol,type_id):
+    ret=MATIC_url.replace("{{address}}",''+address+'')
+    print(ret)
+    response_user_token = requests.get(url=ret)
+    response = response_user_token.json()       
+    balance = response['result']
+    ret=(int(balance)/1000000000000000000)
+    return str(ret)
+'''
