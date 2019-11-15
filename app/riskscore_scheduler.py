@@ -43,3 +43,11 @@ def profile_risk_score():
             risk_score_kyc = risk_scores[0]
             final_profile_riskscore=risk_score_kyc+avrage
             mycursor.execute('UPDATE sws_user SET profile_risk_score="'+str(final_profile_riskscore)+'" WHERE username = "'+str(user_name)+'"')
+
+
+
+
+'''
+644065940874592257
+NjQ0MDY1OTQwODc0NTkyMjU3.XcunfQ.8rK56ZYzh9-kH_Luj9UMhy82mpE
+'''

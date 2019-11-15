@@ -71,7 +71,7 @@ def create_app(test_config=None):
     heist_associated_fetch_scheduler.start()
     '''
     tx_two_yearold_scheduler = BackgroundScheduler()
-    tx_two_yearold_scheduler.add_job(tx_two_yearold, trigger='cron', day_of_week='sat', hour=14,minute=2)
+    tx_two_yearold_scheduler.add_job(tx_two_yearold, trigger='cron', day_of_week='mon-sat', hour=14,minute=2)
     tx_two_yearold_scheduler.start()
     
     risk_score_by_safename_scheduler = BackgroundScheduler()
@@ -84,15 +84,15 @@ def create_app(test_config=None):
     
     tx_notification_scheduler = BackgroundScheduler()
     tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=7)
-    #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=15,minute=40)
+    #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=13,minute=24)
     tx_notification_scheduler.start()
     
     risk_score_scheduler = BackgroundScheduler()
-    risk_score_scheduler.add_job(risk_score, trigger='cron', day_of_week='mon', hour=12,minute=9)
+    risk_score_scheduler.add_job(risk_score, trigger='cron', day_of_week='mon-sat', hour=12,minute=9)
     risk_score_scheduler.start()
 
     profile_risk_score_scheduler = BackgroundScheduler()
-    profile_risk_score_scheduler.add_job(profile_risk_score, trigger='cron', day_of_week='fri', hour=15,minute=17)
+    profile_risk_score_scheduler.add_job(profile_risk_score, trigger='cron', day_of_week='mon-sat', hour=15,minute=17)
     profile_risk_score_scheduler.start()
     
     invoice_moving_scheduler = BackgroundScheduler()

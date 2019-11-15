@@ -11,8 +11,8 @@ from app.zcash import zcash_notification
 from app.mkr import mkr_notification
 from app.link import link_notification
 from app.btg import btg_notification
-
-
+from app.zrx import zrx_notification
+from app.elf import elf_notification
 
 
 
@@ -31,10 +31,18 @@ def tx_notification():
         if type_id == 1:
             symbol = 'ETH'
             currency = eth_notification(address,symbol,type_id)        
-        
+
+        if type_id == 3:
+            symbol = 'ZRX'
+            currency = zrx_notification(address,symbol,type_id)
+
         if type_id == 2:
             symbol = 'BTC'
             currency = btc_notification(address,symbol,type_id)
+
+        if type_id == 5:
+            symbol = 'ELF'
+            currency = elf_notification(address,symbol,type_id)
         
         if type_id == 27:
             symbol = 'DASH'
@@ -100,6 +108,7 @@ def tx_notification():
         if type_id == 35:
             symbol = 'EOS'
             currency = eos_notification(address,symbol,type_id)        
+        
         
         if type_id == 11:
             symbol = 'BNB'
