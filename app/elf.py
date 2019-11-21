@@ -70,13 +70,10 @@ def elf_notification(address,symbol,type_id):
             tx_list.append({"transaction":"tx"})
 
     total_current_tx = len(tx_list)
-    print("699")
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
     tx_count=current_tx[0]
-    print("7333")
     if tx_count is None or total_current_tx > tx_count:
-        print("7555")
         mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
         email = mycursor.fetchone()
@@ -84,7 +81,7 @@ def elf_notification(address,symbol,type_id):
         if email_id is not None:
             message = Mail(
                 from_email=Sendgrid_default_mail,
-                to_emails="rasealex000000@gmail.com",
+                to_emails=email_id,
                 subject='SafeName - New Transaction Notification In Your Account',
                 html_content= '<h3> You got a new transaction on your ELF address </h3><strong>Address:</strong> ' + str(address) +'')
             sg = SendGridAPIClient(SendGridAPIClient_key)

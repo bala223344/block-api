@@ -263,6 +263,7 @@ def unknown_riskscore():
                 month = date_time.strftime("%m/%d/%Y")
                 two_year_back = datetime.datetime.today() + relativedelta(months=-24)
                 back = two_year_back.strftime("%m/%d/%Y")
+                formula = 0
                 if month<back:
                     count=count+1
                     if count >= 4:
