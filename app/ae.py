@@ -47,3 +47,7 @@ def ae_data(address,symbol,type_id):
                 "amountSent":amount_sent
             }},upsert=True)
     return jsonify(balance)
+
+
+
+

@@ -13,9 +13,10 @@ from app.link import link_notification
 from app.btg import btg_notification
 from app.zrx import zrx_notification
 from app.elf import elf_notification
-
-
-
+from app.rep import rep_notification
+from app.aoa import aoa_notification
+from app.bat import bat_notification
+from app.cccx import cccx_notification
 
 
 #----------Function for new transaction notification----------
@@ -84,8 +85,21 @@ def tx_notification():
             symbol = 'BSV'
             currency = bsv_notification(address,symbol,type_id)
 
+        if type_id == 8:
+            symbol = 'REP'
+            currency = rep_notification(address,symbol,type_id)
 
+        if type_id == 9:
+            symbol = 'AOA'
+            currency = aoa_notification(address,symbol,type_id)
 
+        if type_id == 10:
+            symbol = 'BAT'
+            currency = bat_notification(address,symbol,type_id)
+
+        if type_id == 22:
+            symbol = 'CCCX'
+            currency = cccx_notification(address,symbol,type_id)
 
 
 
