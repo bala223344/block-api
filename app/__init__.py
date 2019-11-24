@@ -96,8 +96,8 @@ def create_app(test_config=None):
     profile_risk_score_scheduler.start()
     
     invoice_moving_scheduler = BackgroundScheduler()
-    #invoice_moving_scheduler.add_job(invoice_moving, trigger='interval', minutes=30)
-    invoice_moving_scheduler.add_job(invoice_moving, trigger='interval', seconds=50)
+    invoice_moving_scheduler.add_job(invoice_moving, trigger='interval', minutes=30)
+    #invoice_moving_scheduler.add_job(invoice_moving, trigger='interval', seconds=50)
     invoice_moving_scheduler.start()
 
     invoice_notification_interval_scheduler = BackgroundScheduler()
