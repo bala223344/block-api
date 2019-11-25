@@ -97,10 +97,13 @@ def create_app(test_config=None):
     
     invoice_moving_scheduler = BackgroundScheduler()
     invoice_moving_scheduler.add_job(invoice_moving, trigger='interval', minutes=30)
+    #invoice_moving_scheduler.add_job(invoice_moving, trigger='interval', seconds=50)
     invoice_moving_scheduler.start()
 
     invoice_notification_interval_scheduler = BackgroundScheduler()
     invoice_notification_interval_scheduler.add_job(invoice_notification_interval, trigger='cron', day_of_week='mon-sun', hour=13,minute=12)
+    #invoice_notification_interval_scheduler.add_job(invoice_notification_interval, trigger='interval', minutes=1)
+    
     invoice_notification_interval_scheduler.start()
 
     Top_user_percentage_scheduler = BackgroundScheduler()
