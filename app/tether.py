@@ -15,8 +15,6 @@ def tether_data(address,symbol,type_id):
     transactions=response['transactions']
     balances = response['balance']
     array=[]
-    
-    
     for transaction in transactions:
         fee =transaction['fee']
         timestamp = transaction['blocktime']
