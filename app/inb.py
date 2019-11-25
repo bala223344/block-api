@@ -47,3 +47,40 @@ def inb_data(address,symbol,type_id):
                 "amountSent":amount_sent
             }},upsert=True)
     return jsonify({"status":"success"})
+
+
+
+
+def inb_notification(address,symbol,type_id):
+    doc=INB_transactions.replace("{{address}}",''+address+'')
+    response_user = requests.get(url=doc)
+    res = response_user.json()  
+    transactions=res['result']
+    tx_list = []
+    for transaction in transactions:
+        contractAddress = transaction['contractAddress']
+        if contractAddress == "0x17aa18a4b64a55abed7fa543f2ba4e91f2dce482":
+            tx_list.append({"transaction":"tx"})
+
+    total_current_tx = len(tx_list)
+    mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
+    current_tx = mycursor.fetchone()
+    tx_count=current_tx[0]
+    if tx_count is None or total_current_tx > tx_count:
+        mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
+        mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
+        email = mycursor.fetchone()
+        email_id=email[0]
+        if email_id is not None:
+            message = Mail(
+                from_email=Sendgrid_default_mail,
+                to_emails=email_id,
+                subject='SafeName - New Transaction Notification In Your Account',
+                html_content= '<h3> You got a new transaction on your INB address </h3><strong>Address:</strong> ' + str(address) +'')
+            sg = SendGridAPIClient(SendGridAPIClient_key)
+            response = sg.send(message)
+            print(response.status_code, response.body, response.headers)
+        else:
+            pass
+    else:
+        pass

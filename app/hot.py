@@ -2,18 +2,16 @@ import requests
 from flask import jsonify
 from datetime import datetime
 from app import mongo
-from app.config import ENJ_balance,ENJ_transactions
-
-
+from app.config import HOT_balance,HOT_transactions
 
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
-def enj_data(address,symbol,type_id):
-    ret=ENJ_balance.replace("{{address}}",''+address+'')
+def hot_data(address,symbol,type_id):
+    ret=HOT_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
     
-    doc=ENJ_transactions.replace("{{address}}",''+address+'')
+    doc=HOT_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
     transactions=res['result']
@@ -29,7 +27,7 @@ def enj_data(address,symbol,type_id):
         too=transaction['to']
         send_amount=transaction['value']
         contractAddress = transaction['contractAddress']
-        if contractAddress == "0xf0ee6b27b759c9893ce4f094b49ad28fd15a23e4":
+        if contractAddress == "0x6c6ee5e31d828de241282b9606c8e98ea48526e2":
             to.append({"to":too,"receive_amount":""})
             frm.append({"from":fro,"send_amount":(int(send_amount)/1000000000000000000)})
             array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
@@ -52,15 +50,15 @@ def enj_data(address,symbol,type_id):
 
 
 
-def enj_notification(address,symbol,type_id):
-    doc=ENJ_transactions.replace("{{address}}",''+address+'')
+def hot_notification(address,symbol,type_id):
+    doc=HOT_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()  
     transactions=res['result']
     tx_list = []
     for transaction in transactions:
         contractAddress = transaction['contractAddress']
-        if contractAddress == "0xf0ee6b27b759c9893ce4f094b49ad28fd15a23e4":
+        if contractAddress == "0x6c6ee5e31d828de241282b9606c8e98ea48526e2":
             tx_list.append({"transaction":"tx"})
 
     total_current_tx = len(tx_list)
@@ -77,7 +75,7 @@ def enj_notification(address,symbol,type_id):
                 from_email=Sendgrid_default_mail,
                 to_emails=email_id,
                 subject='SafeName - New Transaction Notification In Your Account',
-                html_content= '<h3> You got a new transaction on your ENJ address </h3><strong>Address:</strong> ' + str(address) +'')
+                html_content= '<h3> You got a new transaction on your HOT address </h3><strong>Address:</strong> ' + str(address) +'')
             sg = SendGridAPIClient(SendGridAPIClient_key)
             response = sg.send(message)
             print(response.status_code, response.body, response.headers)

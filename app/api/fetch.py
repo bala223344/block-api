@@ -57,8 +57,8 @@ from app.kcs import kcs_data
 from app.lamb import lamb_data
 from app.gpl import gpl_data
 from app.matic import matic_data
-
-
+from app.hot import hot_data
+from app.iost import iost_data
 #----------Blueprint connection----------
 
 bp = Blueprint('fetch', __name__, url_prefix='/')
@@ -175,6 +175,10 @@ def main():
         currency = gnt_data(address,symbol,type_id)
         return currency
 
+    if type_id == "41":
+        currency = hot_data(address,symbol,type_id)
+        return currency
+
     if type_id == "42":
         currency = ht_data(address,symbol,type_id)
         return currency
@@ -248,10 +252,12 @@ def main():
         return currency
 
     if type_id == "102":
-        print("Matic")
         currency = matic_data(address,symbol,type_id)
         return currency
 
+    if type_id == "46":
+        currency = iost_data(address,symbol,type_id)
+        return currency
 
 
 #-----Api for return currency symbols and urls--------
