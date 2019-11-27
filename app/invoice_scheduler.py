@@ -52,10 +52,92 @@ from app.transactions_util import zcash_data
 from app.transactions_util import gpl_data
 from app.transactions_util import matic_data
 
+#--scheduler for safename verification payment--
+
+def safename_verification():
+    dab = mongo.db.sws_pending_txs_from_app.find({
+        "type":"verification"})
+    dab = [serialize_doc(doc) for doc in dab]
+    for data in dab:
+        frm=data['from']
+        to = data['to']
+        symbol = data['symbol']
+        amount=data['amt']
+        notes = data['from_notes']
+        from_username = data['from_username']
+        type_id = data['type_id']
+        tx_type = data['type']
+        is_erc20 = data['is_erc20']
+
+        print ('wa')
+        print(type_id)
+        #check destination
+        if is_erc20 == 1:
+            fetch_history(to,symbol,"1")
+        else:
+            fetch_history(to,symbol,type_id)    
+        dabb = mongo.db.sws_history.find({
+            "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":str(frm),"send_amount":str(amount)}},"to":{'$elemMatch':{"to":str(to)}}}}
+        ,
+       "address":str(to) },{"transactions.$": 1 })
+
+       
+
+        dabb=[serialize_doc(doc) for doc in dabb]
+        if dabb:
+            for data in dabb:
+                trans = data['transactions']
+                for tx_id in trans:
+                    transaction_id = tx_id['Tx_id']
+            docs = mongo.db.sws_pending_txs_from_app.remove({
+                "from": frm,
+                "to": to,
+                "amt": amount,
+                "type":"verification"
+            }) 
+
+            report = mongo.db.sws_notes.insert_one({
+                "tx_id": transaction_id,
+                "notes": notes,
+                "from": frm,
+                "to": to,
+                "type":tx_type,
+                "username":from_username,
+                "update_at":datetime.datetime.now(),
+                "created_at":datetime.datetime.now()
+            }).inserted_id
+        
+            #update the address as verified
+            if tx_type == 'verification':
+                 mycursor.execute('UPDATE sws_address SET address_status ="verified" WHERE address = "'+str(frm)+'" AND type_id = '+type_id+' AND cms_login_name =  "'+str(from_username)+'"' )
+                 #send a mail
+                 mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(frm)+'"')
+                 email = mycursor.fetchone()
+                 if email[0]:
+                    email_id=email[0]
+                    if email_id is not None:
+                        msg = ' Your address  <h3>' + str(frm) +'</h3>   is now verified <div><strong>coin:</strong> ' + str(symbol) + ' </div>'
+                        message = Mail(
+                                from_email=Sendgrid_default_mail,
+                                to_emails=email_id,
+                                subject='SafeName - Address verification done', 
+                                html_content= msg)
+                        sg = SendGridAPIClient(SendGridAPIClient_key)
+                        response = sg.send(message)
+                        print(response.status_code, response.body, response.headers)
+                    else:
+                        pass
+                 else:
+                   pass
+
+
+
+
 #-------Scheduler for invoice moving-------
 
 def invoice_moving():
-    dab = mongo.db.sws_pending_txs_from_app.find()
+    dab = mongo.db.sws_pending_txs_from_app.find({
+        "type":"invoice"})
     dab = [serialize_doc(doc) for doc in dab]
     for data in dab:
         frm=data['from']
@@ -67,138 +149,13 @@ def invoice_moving():
         from_username = data['from_username']
         type_id = data['type_id']
         tx_type = data['type']
-        address = frm
+
+   
         #press: fetch latest tx and put it in sws_history..or else we will not have the latest txs until someone hit POST /transaction    
-        if type_id == "1":
-            print(address)
-            currency = eth_data(address,symbol,type_id)
-            
-        if type_id == "2":
-            currency = btc_data(address,symbol,type_id)
-            
-        if type_id == "3":
-            currency = zrx_data(address,symbol,type_id)
-            
-        if type_id == "5":
-            currency = elf_data(address,symbol,type_id)
-            
-        if type_id == "6":
-            currency = ae_data(address,symbol,type_id)
-            
-        if type_id == "8":
-            currency = rep_data(address,symbol,type_id)
-            
-        if type_id == "9":
-            currency = aoa_data(address,symbol,type_id)
-            
-        if type_id == "10":
-            currency = bat_data(address,symbol,type_id)
-            
-        if type_id == "11":
-            currency = bnb_data(address,symbol,type_id)
-            
-        if type_id == "12":
-            currency = btc_cash_data(address,symbol,type_id)
-            
-        if type_id == "14":
-            currency = btc_gold_data(address,symbol,type_id)
-            
-        if type_id == "15":
-            currency = bitcoin_svs_data(address,symbol,type_id)
-            
-        if type_id == "17":
-            currency = btt_data(address,symbol,type_id)            
-
-        if type_id == "21":
-            currency = link_data(address,symbol,type_id)
-            
-        if type_id == "22":
-            currency = cccx_data(address,symbol,type_id)
-            
-        if type_id == "24":
-            currency = mco_data(address,symbol,type_id)
-            
-        if type_id == "25":
-            currency = cro_data(address,symbol,type_id)
-            
-        if type_id == "26":
-            currency = dai_data(address,symbol,type_id)
-            
-        if type_id == "27":
-            currency = dash_data(address,symbol,type_id)
-            
-        if type_id == "31":
-            currency = ekt_data(address,symbol,type_id)
-            
-        if type_id == "32":
-            currency = egt_data(address,symbol,type_id)
-            
-        if type_id == "34":
-            currency = enj_data(address,symbol,type_id)
-            
-        if type_id == "35":  
-            currency = eos_data(address,symbol,type_id)
-            
-        if type_id == "38":
-            currency = gnt_data(address,symbol,type_id)
-            
-        if type_id == "42":
-            currency = ht_data(address,symbol,type_id)
-            
-        if type_id == "44":
-            currency = icx_data(address,symbol,type_id)
-            
-        if type_id == "45":
-            currency = inb_data(address,symbol,type_id)
-            
-        if type_id == "47":
-            currency = iota_data(address,symbol,type_id)
-            
-        if type_id == "50":
-            currency = kcs_data(address,symbol,type_id)
-            
-        if type_id == "51":
-            currency = lamb_data(address,symbol,type_id)
-            
-        if type_id == "53":
-            currency = ltc_data(address,symbol,type_id)
-            
-        if type_id == "55":
-            currency = mkr_data(address,symbol,type_id)
-            
-        if type_id == "67":
-            currency = ont_data(address,symbol,type_id)
-            
-        if type_id == "70":
-            currency = qtum_data(address,symbol,type_id)
-            
-        if type_id == "75":
-            currency = xrp_data(address,symbol,type_id)
-            
-        if type_id == "83":
-            currency = usdc_data(address,symbol,type_id)
-            
-        if type_id == "84":
-            currency = xtz_data(address,symbol,type_id)
-            
-        if type_id == "87":
-            currency = tron_data(address,symbol,type_id)
-            
-        if type_id == "91":
-            currency = vet_data(address,symbol,type_id)
-            
-        if type_id == "98":
-            currency = zcash_data(address,symbol,type_id)
-            
-        if type_id == "101":
-            currency = gpl_data(address,symbol,type_id)
-            
-        if type_id == "102":
-            print("Matic")
-            currency = matic_data(address,symbol,type_id)
-
+      
+        fetch_history(to,symbol,type_id)
         dabb = mongo.db.sws_history.find({
-            "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":str(to),"send_amount":amount}},"to":{'$elemMatch':{"to":str(frm)}}}}
+            "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":str(to),"send_amount":str(amount)}},"to":{'$elemMatch':{"to":str(frm)}}}}
         },{"transactions.$": 1 })
         dabb=[serialize_doc(doc) for doc in dabb]
         if dabb:
@@ -209,7 +166,8 @@ def invoice_moving():
             docs = mongo.db.sws_pending_txs_from_app.remove({
                 "from": frm,
                 "to": to,
-                "amt": amount
+                "amt": amount,
+                "type":"invoice"
             }) 
 
             report = mongo.db.sws_notes.insert_one({
@@ -223,28 +181,7 @@ def invoice_moving():
                 "created_at":datetime.datetime.now()
             }).inserted_id
         
-            #update the address as verified
-            if tx_type == 'verification':
-                 mycursor.execute('UPDATE sws_address SET address_status ="verified" WHERE address = "'+str(address)+'" AND type_id = '+type_id+' AND cms_login_name =  "'+str(from_username)+'"' )
-                 #send a mail
-                 mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
-                 email = mycursor.fetchone()
-                 if email[0]:
-                    email_id=email[0]
-                    if email_id is not None:
-                        msg = '<h3> Your address  ' + str(address) +'  is now verified </h3><strong>Date:</strong> ' + str(created_at) +' <div><strong>coin:</strong> ' + str(symbol) + ' </div>'
-                        message = Mail(
-                                from_email=Sendgrid_default_mail,
-                                to_emails=email_id,
-                                subject='SafeName - Address verification done', 
-                                html_content= massegee)
-                        sg = SendGridAPIClient(SendGridAPIClient_key)
-                        response = sg.send(message)
-                        print(response.status_code, response.body, response.headers)
-                    else:
-                        pass
-                 else:
-                   pass
+           
 
 
 #-------Scheduler for invoice notifications-------
@@ -282,8 +219,133 @@ def invoice_notification_interval():
             pass
 
 
+def fetch_history(address,symbol,type_id):
+    if type_id == "1":
+        currency = eth_data(address,symbol,type_id)
+        
+    if type_id == "2":
+        currency = btc_data(address,symbol,type_id)
+        
+    if type_id == "3":
+        currency = zrx_data(address,symbol,type_id)
+        
+    if type_id == "5":
+        currency = elf_data(address,symbol,type_id)
+        
+    if type_id == "6":
+        currency = ae_data(address,symbol,type_id)
+        
+    if type_id == "8":
+        currency = rep_data(address,symbol,type_id)
+        
+    if type_id == "9":
+        currency = aoa_data(address,symbol,type_id)
+        
+    if type_id == "10":
+        currency = bat_data(address,symbol,type_id)
+        
+    if type_id == "11":
+        currency = bnb_data(address,symbol,type_id)
+        
+    if type_id == "12":
+        currency = btc_cash_data(address,symbol,type_id)
+        
+    if type_id == "14":
+        currency = btc_gold_data(address,symbol,type_id)
+        
+    if type_id == "15":
+        currency = bitcoin_svs_data(address,symbol,type_id)
+        
+    if type_id == "17":
+        currency = btt_data(address,symbol,type_id)            
 
-
+    if type_id == "21":
+        currency = link_data(address,symbol,type_id)
+        
+    if type_id == "22":
+        currency = cccx_data(address,symbol,type_id)
+        
+    if type_id == "24":
+        currency = mco_data(address,symbol,type_id)
+        
+    if type_id == "25":
+        currency = cro_data(address,symbol,type_id)
+        
+    if type_id == "26":
+        currency = dai_data(address,symbol,type_id)
+        
+    if type_id == "27":
+        currency = dash_data(address,symbol,type_id)
+        
+    if type_id == "31":
+        currency = ekt_data(address,symbol,type_id)
+        
+    if type_id == "32":
+        currency = egt_data(address,symbol,type_id)
+        
+    if type_id == "34":
+        currency = enj_data(address,symbol,type_id)
+        
+    if type_id == "35":  
+        currency = eos_data(address,symbol,type_id)
+        
+    if type_id == "38":
+        currency = gnt_data(address,symbol,type_id)
+        
+    if type_id == "42":
+        currency = ht_data(address,symbol,type_id)
+        
+    if type_id == "44":
+        currency = icx_data(address,symbol,type_id)
+        
+    if type_id == "45":
+        currency = inb_data(address,symbol,type_id)
+        
+    if type_id == "47":
+        currency = iota_data(address,symbol,type_id)
+        
+    if type_id == "50":
+        currency = kcs_data(address,symbol,type_id)
+        
+    if type_id == "51":
+        currency = lamb_data(address,symbol,type_id)
+        
+    if type_id == "53":
+        currency = ltc_data(address,symbol,type_id)
+        
+    if type_id == "55":
+        currency = mkr_data(address,symbol,type_id)
+        
+    if type_id == "67":
+        currency = ont_data(address,symbol,type_id)
+        
+    if type_id == "70":
+        currency = qtum_data(address,symbol,type_id)
+        
+    if type_id == "75":
+        currency = xrp_data(address,symbol,type_id)
+        
+    if type_id == "83":
+        currency = usdc_data(address,symbol,type_id)
+        
+    if type_id == "84":
+        currency = xtz_data(address,symbol,type_id)
+        
+    if type_id == "87":
+        currency = tron_data(address,symbol,type_id)
+        
+    if type_id == "91":
+        currency = vet_data(address,symbol,type_id)
+        
+    if type_id == "98":
+        currency = zcash_data(address,symbol,type_id)
+        
+    if type_id == "101":
+        currency = gpl_data(address,symbol,type_id)
+        
+    if type_id == "102":
+        print("Matic")
+        currency = matic_data(address,symbol,type_id)
 
 
 

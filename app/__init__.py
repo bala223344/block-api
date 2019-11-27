@@ -12,7 +12,7 @@ mongo = db.init_db()
 from app.heist_fetch_scheduler import auto_fetch
 from app.notification_scheduler import tx_notification
 from app.pgpverification_scheduler import pgp_verification
-from app.invoice_scheduler import invoice_moving,invoice_notification_interval
+from app.invoice_scheduler import invoice_moving,invoice_notification_interval, safename_verification
 from app.riskscore_scheduler import risk_score,profile_risk_score
 from app.heist_riskscore_scheduler import risk_score_by_heist
 from app.riskscore_safename_scheduler import risk_score_by_safename
@@ -95,11 +95,14 @@ def create_app(test_config=None):
     profile_risk_score_scheduler.add_job(profile_risk_score, trigger='cron', day_of_week='mon-sat', hour=15,minute=17)
     profile_risk_score_scheduler.start()
     
-    invoice_moving_scheduler = BackgroundScheduler()
-    invoice_moving_scheduler.add_job(invoice_moving, trigger='cron', day_of_week='mon-sat', hour=16,minute=52)
-    #invoice_moving_scheduler.add_job(invoice_moving, trigger='interval', minutes=30)
-    #invoice_moving_scheduler.add_job(invoice_moving, trigger='interval', seconds=50)
-    invoice_moving_scheduler.start()
+    # invoice_moving_scheduler = BackgroundScheduler()
+    # invoice_moving_scheduler.add_job(invoice_moving, trigger='interval', minutes=60)
+    # invoice_moving_scheduler.start()
+
+
+    safename_verification_scheduler = BackgroundScheduler()
+    safename_verification_scheduler.add_job(safename_verification, trigger='interval', seconds=50)
+    safename_verification_scheduler.start()
 
     invoice_notification_interval_scheduler = BackgroundScheduler()
     invoice_notification_interval_scheduler.add_job(invoice_notification_interval, trigger='cron', day_of_week='mon-sun', hour=13,minute=12)
