@@ -17,7 +17,7 @@ def risk_score_by_heist():
         if not check:
             mycursor.execute('INSERT INTO `sws_risk_score`(address,type_id) VALUES ("'+str(address)+'","'+str(type_id)+'")')
             mydb.commit()
-
+        
     heist_addresses=[]
     mycursor.execute('SELECT address FROM sws_heist_address WHERE (tag_name <> "heist_associated")')
     ret = mycursor.fetchall()

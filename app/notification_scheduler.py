@@ -17,6 +17,21 @@ from app.rep import rep_notification
 from app.aoa import aoa_notification
 from app.bat import bat_notification
 from app.cccx import cccx_notification
+from app.mco import mco_notification
+from app.cro import cro_notification
+from app.dai import dai_notification
+from app.ekt import ekt_notification
+from app.egt import egt_notification
+from app.enj import enj_notification
+from app.gnt import gnt_notification
+from app.hot import hot_notification
+from app.ht import ht_notification
+from app.icx import icx_notification
+from app.inb import inb_notification
+from app.kcs import kcs_notification
+from app.lamb import lamb_notification
+from app.iost import iost_notification
+
 
 
 #----------Function for new transaction notification----------
@@ -101,6 +116,61 @@ def tx_notification():
             symbol = 'CCCX'
             currency = cccx_notification(address,symbol,type_id)
 
+        if type_id == 24:
+            symbol = 'MCO'
+            currency = mco_notification(address,symbol,type_id)
+
+        if type_id == 25:
+            symbol = 'CRO'
+            currency = cro_notification(address,symbol,type_id)
+
+        if type_id == 26:
+            symbol = 'DAI'
+            currency = dai_notification(address,symbol,type_id)
+
+        if type_id == 31:
+            symbol = 'EKT'
+            currency = ekt_notification(address,symbol,type_id)
+
+        if type_id == 32:
+            symbol = 'EGT'
+            currency = egt_notification(address,symbol,type_id)
+
+        if type_id == 34:
+            symbol = 'ENJ'
+            currency = enj_notification(address,symbol,type_id)
+
+        if type_id == 38:
+            symbol = 'GNT'
+            currency = gnt_notification(address,symbol,type_id)
+
+        if type_id == 41:
+            symbol = 'HOT'
+            currency = hot_notification(address,symbol,type_id)
+
+        if type_id == 42:
+            symbol = 'HT'
+            currency = ht_notification(address,symbol,type_id)
+
+        if type_id == 44:
+            symbol = 'ICX'
+            currency = icx_notification(address,symbol,type_id)
+
+        if type_id == 45:
+            symbol = 'INB'
+            currency = inb_notification(address,symbol,type_id)
+
+        if type_id == 50:
+            symbol = 'KCS'
+            currency = kcs_notification(address,symbol,type_id)
+
+        if type_id == 51:
+            symbol = 'LAMB'
+            currency = lamb_notification(address,symbol,type_id)
+
+        if type_id == 46:
+            symbol = 'IOST'
+            currency = iost_notification(address,symbol,type_id)
 
 
         '''
