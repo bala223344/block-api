@@ -9,10 +9,11 @@ note - If trigger is interval then need to fix a interval like minute,second,or 
 
 
 2->If you want to test something and check output on terinal 
-got to root/block-api/ and run this command --gunicorn "app:create_app()" --bind=0.0.0.0:8006
+got to root/block-api/ and run this command :   gunicorn "app:create_app()" --bind=0.0.0.0:8006
 
 3- how to run app by supervisior in background
 
 ->supervisorctl update block
 ->supervisorctl restart block
 ->supervisorctl status block
+0.000334

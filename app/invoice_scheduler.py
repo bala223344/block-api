@@ -110,6 +110,11 @@ def safename_verification():
             #update the address as verified
             if tx_type == 'verification':
                  mycursor.execute('UPDATE sws_address SET address_status ="verified" WHERE address = "'+str(frm)+'" AND type_id = '+type_id+' AND cms_login_name =  "'+str(from_username)+'"' )
+
+                #delete other records added and still waiting for verified..because now this is verifed
+                 mycursor.execute('DELETE FROM sws_address WHERE address_status ="unverified" AND address = "'+str(frm)+'" AND type_id = '+type_id )
+                  
+
                  #send a mail
                  mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(frm)+'"')
                  email = mycursor.fetchone()

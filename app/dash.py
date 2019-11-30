@@ -62,7 +62,7 @@ def dash_data(address,symbol,type_id):
                 "amountReceived":(receive_amount/100000000),
                 "amountSent":(send_amount/100000000)
             }},upsert=True)
-    return jsonify(bal)
+    return jsonify({"status":"success"})
 
 
 
