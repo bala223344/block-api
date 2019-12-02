@@ -47,3 +47,6 @@ def iota_data(address,symbol,type_id):
             }},upsert=True)
 
     return jsonify({"status":"success"})
+
+
+
