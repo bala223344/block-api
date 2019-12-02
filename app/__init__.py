@@ -101,6 +101,7 @@ def create_app(test_config=None):
 
 
     safename_verification_scheduler = BackgroundScheduler()
+    #safename_verification_scheduler.add_job(safename_verification, trigger='cron', day_of_week='mon-sun', hour=13,minute=4)
     safename_verification_scheduler.add_job(safename_verification, trigger='interval', minutes=10)
     safename_verification_scheduler.start()
 

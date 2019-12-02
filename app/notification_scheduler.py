@@ -31,7 +31,10 @@ from app.inb import inb_notification
 from app.kcs import kcs_notification
 from app.lamb import lamb_notification
 from app.iost import iost_notification
-
+from app.jct import jct_notification
+from app.maid import maid_notification
+from app.mxm import mxm_notification
+from app.xin import xin_notification
 
 
 #----------Function for new transaction notification----------
@@ -171,6 +174,22 @@ def tx_notification():
         if type_id == 46:
             symbol = 'IOST'
             currency = iost_notification(address,symbol,type_id)
+
+        if type_id == 48:
+            symbol = 'JCT'
+            currency = jct_notification(address,symbol,type_id)
+
+        if type_id == 54:
+            symbol = 'MAID'
+            currency = maid_notification(address,symbol,type_id)
+
+        if type_id == 56:
+            symbol = 'MXM'
+            currency = mxm_notification(address,symbol,type_id)
+
+        if type_id == 58:
+            symbol = 'XIN'
+            currency = xin_notification(address,symbol,type_id)
 
 
         '''

@@ -59,6 +59,11 @@ from app.gpl import gpl_data
 from app.matic import matic_data
 from app.hot import hot_data
 from app.iost import iost_data
+from app.jct import jct_data
+from app.maid import maid_data
+from app.mxm import mxm_data
+from app.xin import xin_data
+
 #----------Blueprint connection----------
 
 bp = Blueprint('fetch', __name__, url_prefix='/')
@@ -259,6 +264,21 @@ def main():
         currency = iost_data(address,symbol,type_id)
         return currency
 
+    if type_id == "48":
+        currency = jct_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "54":
+        currency = maid_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "56":
+        currency = mxm_data(address,symbol,type_id)
+        return currency
+
+    if type_id == "58":
+        currency = xin_data(address,symbol,type_id)
+        return currency
 
 #-----Api for return currency symbols and urls--------
 

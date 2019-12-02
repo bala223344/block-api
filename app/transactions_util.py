@@ -590,52 +590,53 @@ def ltc_data(address,symbol,type_id):
     doc=LTC_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
-    
-    transactions = res['data']['data']
+    res = res['data']
+    if res:
+        transactions = res['data']#['data']
 
-    array=[]
-    for transaction in transactions:
-        if transaction:
-            inputs = transaction['inputs']
-            outputs =transaction['outputs']
-            frm=[]
-            for inpu in inputs:
-                if inpu:
-                    prev_value=inpu['prev_value']
-                    if "prev_addresses" in inpu:
-                        prev_addresses=inpu['prev_addresses']
-                        for pre in prev_addresses:
-                            frm.append({"from":pre,"send_amount":prev_value})
-            to=[]
-            for out in outputs:
-                if out:    
-                    value=out['value']
-                    if "addresses" in out:   
-                        addresses=out['addresses']
-                        for addr in addresses:
-                            to.append({"to":addr,"receive_amount":value})
-            fee =transaction['income']
-            timestamp = transaction['time']
-            conver_d = int(timestamp)
-            dt_object = datetime.fromtimestamp(conver_d)
-            array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
-    
-    balance = data['balance']
-    amount_recived =data['total_receive']
-    amount_sent =data['total_send']
+        array=[]
+        for transaction in transactions:
+            if transaction:
+                inputs = transaction['inputs']
+                outputs =transaction['outputs']
+                frm=[]
+                for inpu in inputs:
+                    if inpu:
+                        prev_value=inpu['prev_value']
+                        if "prev_addresses" in inpu:
+                            prev_addresses=inpu['prev_addresses']
+                            for pre in prev_addresses:
+                                frm.append({"from":pre,"send_amount":prev_value})
+                to=[]
+                for out in outputs:
+                    if out:    
+                        value=out['value']
+                        if "addresses" in out:   
+                            addresses=out['addresses']
+                            for addr in addresses:
+                                to.append({"to":addr,"receive_amount":value})
+                fee =transaction['income']
+                timestamp = transaction['time']
+                conver_d = int(timestamp)
+                dt_object = datetime.fromtimestamp(conver_d)
+                array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
+        
+        balance = data['balance']
+        amount_recived =data['total_receive']
+        amount_sent =data['total_send']
 
-    ret = mongo.db.sws_history.update({
-        "address":address            
-    },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id,
-                "balance":balance,
-                "transactions":array,
-                "amountReceived":amount_recived,
-                "amountSent":amount_sent
-            }},upsert=True)
+        ret = mongo.db.sws_history.update({
+            "address":address            
+        },{
+            "$set":{
+                    "address":address,
+                    "symbol":symbol,
+                    "type_id":type_id,
+                    "balance":balance,
+                    "transactions":array,
+                    "amountReceived":amount_recived,
+                    "amountSent":amount_sent
+                }},upsert=True)
     
 
 

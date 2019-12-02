@@ -81,7 +81,7 @@ def safename_verification():
         ,
        "address":str(to) },{"transactions.$": 1 })
 
-       
+
 
         dabb=[serialize_doc(doc) for doc in dabb]
         if dabb:
