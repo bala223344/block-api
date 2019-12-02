@@ -9,7 +9,7 @@ def init_db():
 #----------Setup MongoUri----------
 
 def get_db(app, mongo):
-    app.config["MONGO_URI"] =MongoUri 
+    app.config["MONGO_URI"] = MongoUri#"mongodb://localhost:27017/crypto_app"
     mongo.init_app(app)
 
 
