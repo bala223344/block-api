@@ -2,6 +2,10 @@ from flask import jsonify
 import requests
 from app import mongo
 from app.config import ICX_balance,ICX_transactions
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from app.config import SendGridAPIClient_key,Sendgrid_default_mail
+from app.config import mydb,mycursor
 
 
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------

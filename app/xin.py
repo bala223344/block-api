@@ -2,22 +2,21 @@ import requests
 from flask import jsonify
 from datetime import datetime
 from app import mongo
-from app.config import HOT_balance,HOT_transactions
+from app.config import XIN_balance,XIN_transactions
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from app.config import SendGridAPIClient_key,Sendgrid_default_mail
 from app.config import mydb,mycursor
 
 
-
 #----------Function for fetching tx_history and balance storing in mongodb----------
 
-def hot_data(address,symbol,type_id):
-    ret=HOT_balance.replace("{{address}}",''+address+'')
+def xin_data(address,symbol,type_id):
+    ret=XIN_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
     
-    doc=HOT_transactions.replace("{{address}}",''+address+'')
+    doc=XIN_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
     transactions=res['result']
@@ -33,7 +32,7 @@ def hot_data(address,symbol,type_id):
         too=transaction['to']
         send_amount=transaction['value']
         contractAddress = transaction['contractAddress']
-        if contractAddress == "0x6c6ee5e31d828de241282b9606c8e98ea48526e2":
+        if contractAddress == "0xa974c709cfb4566686553a20790685a47aceaa33":
             to.append({"to":too,"receive_amount":""})
             frm.append({"from":fro,"send_amount":(int(send_amount)/1000000000000000000)})
             array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
@@ -56,15 +55,18 @@ def hot_data(address,symbol,type_id):
 
 
 
-def hot_notification(address,symbol,type_id):
-    doc=HOT_transactions.replace("{{address}}",''+address+'')
+#----------Function for fetching tx_history and balance storing in mongodb----------
+
+
+def xin_notification(address,symbol,type_id):
+    doc=XIN_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()  
     transactions=res['result']
     tx_list = []
     for transaction in transactions:
         contractAddress = transaction['contractAddress']
-        if contractAddress == "0x6c6ee5e31d828de241282b9606c8e98ea48526e2":
+        if contractAddress == "0xa974c709cfb4566686553a20790685a47aceaa33":
             tx_list.append({"transaction":"tx"})
 
     total_current_tx = len(tx_list)
@@ -81,7 +83,7 @@ def hot_notification(address,symbol,type_id):
                 from_email=Sendgrid_default_mail,
                 to_emails=email_id,
                 subject='SafeName - New Transaction Notification In Your Account',
-                html_content= '<h3> You got a new transaction on your HOT address </h3><strong>Address:</strong> ' + str(address) +'')
+                html_content= '<h3> You got a new transaction on your XIN address </h3><strong>Address:</strong> ' + str(address) +'')
             sg = SendGridAPIClient(SendGridAPIClient_key)
             response = sg.send(message)
             print(response.status_code, response.body, response.headers)
