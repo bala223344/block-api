@@ -101,7 +101,7 @@ def create_app(test_config=None):
 
 
     safename_verification_scheduler = BackgroundScheduler()
-    safename_verification_scheduler.add_job(safename_verification, trigger='interval', minutes=10)
+    safename_verification_scheduler.add_job(safename_verification, trigger='interval', minutes=1)
     safename_verification_scheduler.start()
 
     invoice_notification_interval_scheduler = BackgroundScheduler()

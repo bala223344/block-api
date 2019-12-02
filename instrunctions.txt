@@ -16,4 +16,3 @@ got to root/block-api/ and run this command :   gunicorn "app:create_app()" --bi
 ->supervisorctl update block
 ->supervisorctl restart block
 ->supervisorctl status block
-0.000334
