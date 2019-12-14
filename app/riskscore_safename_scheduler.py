@@ -5,7 +5,7 @@ from app import mongo
 #-------Scheduler for calculating risk score by if receive fund from safename or kyc swsuser heist addresses-------
 
 def risk_score_by_safename():
-    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),risk_score_by_tx float(3) NULL,type_id int(3) NULL,riskscore_by_safename float(3) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT(3) NOT NULL AUTO_INCREMENT,address varchar(100),type_id int(3) NULL,risk_score_by_tx float(3) NULL,riskscore_by_safename float(3) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
     mycursor.execute('SELECT address,type_id FROM sws_address')
     check = mycursor.fetchall()
     for a in check:
@@ -15,7 +15,7 @@ def risk_score_by_safename():
         check = mycursor.fetchall()
         if not check:
             mycursor.execute('INSERT INTO `sws_risk_score`(address,type_id) VALUES ("'+str(address)+'","'+str(type_id)+'")')
-            mydb.commit()    
+            mydb.commit()   
     kyc_and_secure_addresses=[]
     mycursor.execute('SELECT u.address FROM db_safename.sws_user as a left join db_safename.sws_address as u on a.username = u.cms_login_name where (kyc_verified = 1 AND profile_status = "secure")') 
     che = mycursor.fetchall()
@@ -46,13 +46,11 @@ def risk_score_by_safename():
                     if checkk in kyc_and_secure_addresses:
                         tx_safe_name_formula = (50*10)/100
                         mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
-                        print(checkk)
                         print("updated_10%")
                         mydb.commit()
                     if checkk in secure_addresses:
                         tx_safe_name_formula = (50*5)/100
                         mycursor.execute('UPDATE sws_risk_score SET riskscore_by_safename ="'+str(tx_safe_name_formula)+'" WHERE address = "'+str(address)+'"')
-                        print(checkk)
                         print("updated_5%")
                         mydb.commit()
                     else:

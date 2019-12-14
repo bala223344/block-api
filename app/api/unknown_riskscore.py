@@ -326,7 +326,7 @@ def unknown_riskscore():
         for transaction in transactions:
             fro =transaction['from']
             for frmm in fro:
-                fr = frmm['send_amount']
+                fr = frmm['from']
                 addresses.append(fr)
         tx_knownheist_formula = 0
         for checkk in addresses:
