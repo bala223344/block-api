@@ -42,18 +42,19 @@ def risk_score_by_heist():
             for transaction in transactions:
                 fro =transaction['from']
                 for frmm in fro:
-                    fr = frmm['send_amount']
+                    fr = frmm['from']
                     addresses.append(fr)
             for checkk in addresses:
+                print(checkk)
                 if checkk in heist_addresses:
                     tx_knownheist_formula =-((50*50)/100)
                     mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_knownheist_formula)+'" WHERE address = "'+str(address)+'"')
-                    print("updated_50%")
+                    print("minus_50%")
                     mydb.commit()
                 if checkk in heist_associated_addresses:
                     tx_heistassosiated_formula = -((50*30)/100)
                     mycursor.execute('UPDATE sws_risk_score SET riskscore_by_knownheist ="'+str(tx_heistassosiated_formula)+'" WHERE address = "'+str(address)+'"')
-                    print("updated_30%")
+                    print("minus_30%")
                     mydb.commit()
                 else:
                     pass
