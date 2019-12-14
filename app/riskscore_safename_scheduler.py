@@ -40,7 +40,7 @@ def risk_score_by_safename():
                 for transaction in transactions:
                     fro=transaction['from']
                     for fromm in fro:
-                        fr = fromm['send_amount']
+                        fr = fromm['from']
                         addresses.append(fr)
                 for checkk in addresses:
                     if checkk in kyc_and_secure_addresses:
