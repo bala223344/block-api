@@ -75,11 +75,25 @@ def safename_verification():
         if is_erc20 == 1:
             fetch_history(to,symbol,"1")
         else:
-            fetch_history(to,symbol,type_id)    
-        dabb = mongo.db.sws_history.find({
-            "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":str(frm),"send_amount":str(amount)}},"to":{'$elemMatch':{"to":str(to)}}}}
-        ,
-       "address":str(to) },{"transactions.$": 1 })
+            fetch_history(to,symbol,type_id)
+
+
+        #eth doesn't have a receive_amt
+        if is_erc20 == 1 or type_id == "1" :
+            dabb = mongo.db.sws_history.find({
+                "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":str(frm),"send_amount":str(amount)}},"to":{'$elemMatch':{"to":str(to)}}}}
+            ,
+        "address":str(to) },{"transactions.$": 1 })
+        else :
+        #other coins 
+     
+            dabb = mongo.db.sws_history.find({
+                "transactions": {'$elemMatch': {"from":{'$elemMatch':
+                {"from":str(frm)}},"to":{'$elemMatch':
+                {"to":str(to),"receive_amount":  str(amount)}}}}
+            ,
+        "address":str(to) },{"transactions.$": 1 })
+
 
 
 

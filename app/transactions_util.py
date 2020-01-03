@@ -1155,23 +1155,24 @@ def dash_data(address,symbol,type_id):
         response_user = requests.get(url=doc)
         res = response_user.json()       
         trs =res['data'][''+tran+'']
+        print (trs)
         inputs=trs['inputs']
         outputs=trs['outputs']
         transact=trs['transaction']
         fee =transact['fee']
         time =transact['time']
-
+        Tx_id = transact['hash']    
         frm=[]
         for inp in inputs:
             recipient = inp['recipient']
             value=inp['value']
-            frm.append({"from":recipient,"send_amount":(value/100000000)})
+            frm.append({"from":recipient,"send_amount":str(value/100000000)})
         to=[]
         for out in outputs:
             recipient1 = out['recipient']
             value1=out['value']
-            to.append({"to":recipient1,"receive_amount":(value1/100000000)})
-        array.append({"fee":fee,"from":frm,"to":to,"date":time})
+            to.append({"to":recipient1,"receive_amount":str(value1/100000000)})
+        array.append({"fee":fee,"from":frm,"to":to,"date":time, "Tx_id": Tx_id})
 
     ret = mongo.db.sws_history.update({
         "address":address            
