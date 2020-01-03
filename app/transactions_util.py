@@ -1998,7 +1998,7 @@ def eth_data(address,symbol,type_id):
                 "amountSent":amount_sent
             }},upsert=True)
     internal_transact = eth_data_internal(address,symbol,type_id)
-
+    print("update")
 
 
 
