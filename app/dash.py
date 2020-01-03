@@ -42,12 +42,12 @@ def dash_data(address,symbol,type_id):
         for inp in inputs:
             recipient = inp['recipient']
             value=inp['value']
-            frm.append({"from":recipient,"send_amount":(value/100000000)})
+            frm.append({"from":recipient,"send_amount":str(value/100000000)})
         to=[]
         for out in outputs:
             recipient1 = out['recipient']
             value1=out['value']
-            to.append({"to":recipient1,"receive_amount":(value1/100000000)})
+            to.append({"to":recipient1,"receive_amount":str(value1/100000000)})
         array.append({"fee":fee,"from":frm,"to":to,"date":time})
 
     ret = mongo.db.sws_history.update({
