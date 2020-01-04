@@ -46,6 +46,7 @@ from app.config import VET_balance,VET_transactions
 from app.config import ZEC_balance,ZEC_transactions
 from app.config import GPL_balance,GPL_transactions
 from app.config import MATIC_balance,MATIC_transactions
+import numpy as np
 
 
 #----------Function for fetching tx_history and balance storing in mongodb----------
@@ -1155,7 +1156,6 @@ def dash_data(address,symbol,type_id):
         response_user = requests.get(url=doc)
         res = response_user.json()       
         trs =res['data'][''+tran+'']
-        print (trs)
         inputs=trs['inputs']
         outputs=trs['outputs']
         transact=trs['transaction']
@@ -1170,8 +1170,9 @@ def dash_data(address,symbol,type_id):
         to=[]
         for out in outputs:
             recipient1 = out['recipient']
-            value1=out['value']
-            to.append({"to":recipient1,"receive_amount":str(value1/100000000)})
+            value1=out['value']/100000000
+            #avoid scientfic notation
+            to.append({"to":recipient1,"receive_amount":np.format_float_positional(value1)})
         array.append({"fee":fee,"from":frm,"to":to,"date":time, "Tx_id": Tx_id})
 
     ret = mongo.db.sws_history.update({
