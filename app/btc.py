@@ -37,8 +37,9 @@ def btc_data(address,symbol,type_id):
             to=[]
             for too in transac:
                 t = too['address'] 
-                recive =too['value']
-                to.append({"to":t,"receive_amount":str(int(recive)/100000000)})
+                recive =too['value']/100000000
+               
+                to.append({"to":t,"receive_amount": np.format_float_positional(recive)})
             timestamp =transaction['timestamp']
             dt_object = datetime.fromtimestamp(timestamp)
             array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id})
