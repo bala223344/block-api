@@ -71,6 +71,7 @@ def safename_verification():
 
         print ('wa')
         print(type_id)
+        
         #check destination
         if is_erc20 == 1:
             fetch_history(to,symbol,"1")
