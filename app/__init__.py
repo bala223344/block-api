@@ -133,4 +133,3 @@ def create_app(test_config=None):
         profile_risk_score_scheduler.shutdown()
         Top_user_percentage_scheduler.shutdown()
         invoice_notification_interval_scheduler.shutdown()
-

@@ -86,7 +86,17 @@ def safename_verification():
         "address":str(to) },{"transactions.$": 1 })
         else :
         #other coins 
-     
+    
+         
+#            print ("pressde")
+#            print ({
+#                "transactions": {'$elemMatch': {"from":{'$elemMatch':
+#                {"from":str(frm)}},"to":{'$elemMatch':
+#                {"to":str(to),"receive_amount":  str(amount)}}}}
+#            ,
+#        "address":str(to) })    
+            
+    
             dabb = mongo.db.sws_history.find({
                 "transactions": {'$elemMatch': {"from":{'$elemMatch':
                 {"from":str(frm)}},"to":{'$elemMatch':
@@ -392,4 +402,5 @@ else:
             else:
                 pass
 '''
+
 
