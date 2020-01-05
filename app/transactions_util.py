@@ -598,9 +598,12 @@ def ltc_data(address,symbol,type_id):
         array=[]
         for transaction in transactions:
             if transaction:
+                print (transaction)
                 inputs = transaction['inputs']
                 outputs =transaction['outputs']
                 frm=[]
+                Tx_id = transaction['txid']    
+
                 for inpu in inputs:
                     if inpu:
                         prev_value=inpu['prev_value']
@@ -620,7 +623,7 @@ def ltc_data(address,symbol,type_id):
                 timestamp = transaction['time']
                 conver_d = int(timestamp)
                 dt_object = datetime.fromtimestamp(conver_d)
-                array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
+                array.append({"fee":fee,"from":frm,"to":to,"date":dt_object, "Tx_id": Tx_id})
         
         balance = data['balance']
         amount_recived =data['total_receive']
