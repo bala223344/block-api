@@ -1603,6 +1603,7 @@ def btc_cash_data(address,symbol,type_id):
         fee =transact['fee']
         time =transact['time']
 
+        tx_id = transact['hash']
         frm=[]
         for inp in inputs:
             recipient = inp['recipient']
@@ -1611,9 +1612,9 @@ def btc_cash_data(address,symbol,type_id):
         to=[]
         for out in outputs:
             recipient1 = out['recipient']
-            value1=out['value']
-            to.append({"to":recipient1,"receive_amount":(value1/100000000)})
-        array.append({"fee":fee,"from":frm,"to":to,"date":time})
+            value1=out['value']/100000000
+            to.append({"to":recipient1,"receive_amount":np.format_float_positional(value1)})
+        array.append({"fee":fee,"from":frm,"to":to,"date":time,"Tx_id":tx_id})
 
     ret = mongo.db.sws_history.update({
         "address":address            
