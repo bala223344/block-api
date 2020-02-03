@@ -7,6 +7,7 @@ from sendgrid.helpers.mail import Mail
 from app.config import SendGridAPIClient_key,Sendgrid_default_mail,BTC_balance
 from app.config import mydb,mycursor
 from app import mongo
+import numpy as np
 
 
 
