@@ -37,7 +37,7 @@ def xrp_data(address,symbol,type_id):
         array.append({"fee":fee,"from":frm,"to":to,"date":date})
     
 
-    balance=response['initial_balance']
+    balance=float(response['initial_balance'])
     amount_recived =""
     amount_sent =""
     

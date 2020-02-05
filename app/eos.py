@@ -38,13 +38,16 @@ def eos_data(address,symbol,type_id):
             too=""
         if "quantity" in action_trace:   
             amount_sent=action_trace['quantity']
+
         else:
             amount_sent=""
+        amount_sent = amount_sent.replace(" EOS", "")
+
         frm.append({"from":fro,"send_amount":amount_sent})
         to.append({"to":too,"receive_amount":""})
         array.append({"fee":"","from":frm,"to":to,"date":block_time})
     
-    balance=response['core_liquid_balance']
+    balance=float(response['core_liquid_balance'].replace(" EOS", ""))
     amount_recived =""
     amount_sent =""
     
