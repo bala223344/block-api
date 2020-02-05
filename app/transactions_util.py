@@ -404,10 +404,12 @@ def xrp_data(address,symbol,type_id):
         date = transaction['date']
         frm.append({"from":fro,"send_amount":""})
         to.append({"to":too,"receive_amount":""})
-        array.append({"fee":fee,"from":frm,"to":to,"date":date})
-    
+        Tx_id = transaction['hash']    
 
-    balance=response['initial_balance']
+        array.append({"fee":fee,"from":frm,"to":to,"date":date, "Tx_id": Tx_id})
+
+
+    balance=float(response['initial_balance'])
     amount_recived =""
     amount_sent =""
     
@@ -983,11 +985,14 @@ def eos_data(address,symbol,type_id):
             amount_sent=action_trace['quantity']
         else:
             amount_sent=""
+        amount_sent = amount_sent.replace(" EOS", "")
+        Tx_id = transaction['action_trace']['trx_id']
+
         frm.append({"from":fro,"send_amount":amount_sent})
         to.append({"to":too,"receive_amount":""})
-        array.append({"fee":"","from":frm,"to":to,"date":block_time})
+        array.append({"fee":"","from":frm,"to":to,"date":block_time, "Tx_id": Tx_id})
     
-    balance=response['core_liquid_balance']
+    balance=float(response['core_liquid_balance'].replace(" EOS", ""))
     amount_recived =""
     amount_sent =""
     

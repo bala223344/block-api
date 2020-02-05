@@ -79,26 +79,36 @@ def safename_verification():
             fetch_history(to,symbol,type_id)
 
 
-        #eth doesn't have a receive_amt
-        if is_erc20 == 1 or type_id == "1" :
+        #some doesn't have a receive_amt
+        if is_erc20 == 1 or type_id == "1" or type_id == "35" :
             dabb = mongo.db.sws_history.find({
                 "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":str(frm),"send_amount":str(amount)}},"to":{'$elemMatch':{"to":str(to)}}}}
             ,
         "address":str(to) },{"transactions.$": 1 })
         else :
         #other coins 
-    
-         
-            print ("pressde")
-            print ({
+         # for coins with split amount, it doesn't matter what amt they sent..just confirm   
+            if type_id == "2" or type_id == "75":
+                print ('ok 75')
+                print ({
                "transactions": {'$elemMatch': {"from":{'$elemMatch':
                {"from":str(frm)}},"to":{'$elemMatch':
-               {"to":str(to),"receive_amount":  str(amount)}}}}
+               {"to":str(to)}}}}
            ,
-       "address":str(to) })    
-            
-    
-            dabb = mongo.db.sws_history.find({
+       "address":str(to) }) 
+         
+                dabb = mongo.db.sws_history.find({
+                "transactions": {'$elemMatch': {"from":{'$elemMatch':
+                {"from":str(frm)}},"to":{'$elemMatch':
+                {"to":str(to)}}}}
+            ,
+            "address":str(to) },{"transactions.$": 1 })
+
+ 
+
+          #need to match exact amt  
+            else :  
+                dabb = mongo.db.sws_history.find({
                 "transactions": {'$elemMatch': {"from":{'$elemMatch':
                 {"from":str(frm)}},"to":{'$elemMatch':
                 {"to":str(to),"receive_amount":  str(amount)}}}}
