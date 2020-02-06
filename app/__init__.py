@@ -57,6 +57,12 @@ def create_app(test_config=None):
 
 #--------Schedulers timing and days functionality------------
 
+    safename_verification_scheduler = BackgroundScheduler()
+    #safename_verification_scheduler.add_job(safename_verification, trigger='cron', day_of_week='mon-sun', hour=13,minute=4)
+    safename_verification_scheduler.add_job(safename_verification, trigger='interval', minutes=1)
+    safename_verification_scheduler.start()
+    
+
     auto_fetch_scheduler = BackgroundScheduler()
     auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='mon-sat', hour=11,minute=41)
     auto_fetch_scheduler.start()
@@ -102,10 +108,7 @@ def create_app(test_config=None):
     # invoice_moving_scheduler.start()
 
 
-    safename_verification_scheduler = BackgroundScheduler()
-    #safename_verification_scheduler.add_job(safename_verification, trigger='cron', day_of_week='mon-sun', hour=13,minute=4)
-    safename_verification_scheduler.add_job(safename_verification, trigger='interval', minutes=1)
-    safename_verification_scheduler.start()
+
 
     invoice_notification_interval_scheduler = BackgroundScheduler()
     invoice_notification_interval_scheduler.add_job(invoice_notification_interval, trigger='cron', day_of_week='mon-sun', hour=13,minute=12)
