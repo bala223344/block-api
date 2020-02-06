@@ -43,7 +43,7 @@ class BlockScraperPipeline(object):
 #----------Function of create table if already not exists----------
 
     def create_table(self): 
-        self.curr.execute("""CREATE TABLE IF NOT EXISTS `sws_known_address` (address_id INT,address varchar(1000),type_id varchar(50),address_risk_score INT, coin varchar(100),tag_name varchar(1000),source varchar(1000),tx_count varchar(1000))""")
+        #self.curr.execute("""CREATE TABLE IF NOT EXISTS `sws_known_address` (address_id INT,address varchar(1000),type_id varchar(50),address_risk_score INT, coin varchar(100),tag_name varchar(1000),source varchar(1000),tx_count varchar(1000))""")
 
 
 #----------Function which calling a function for store data----------
@@ -112,7 +112,7 @@ class HeistBlockPipeline(object):
 #----------Function of create table if already not exists----------
 
     def create_table(self): 
-        self.curr.execute("""CREATE TABLE IF NOT EXISTS `sws_heist_address` ( id INT,coin varchar(100),tag_name varchar(100),status varchar(100),address varchar(100),source varchar(1000),subcategory varchar(100),description varchar(1500),also_known_as varchar(1000))""")
+       # self.curr.execute("""CREATE TABLE IF NOT EXISTS `sws_heist_address` ( id INT,coin varchar(100),tag_name varchar(100),status varchar(100),address varchar(100),source varchar(1000),subcategory varchar(100),description varchar(1500),also_known_as varchar(1000))""")
 
 
 #----------Function which calling a function for store data----------

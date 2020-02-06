@@ -8,7 +8,7 @@ from app.config import mydb,mycursor
 
 def auto_fetch():
     response_user_token = requests.get(url=ETH_SCAM_URL)
-    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_heist_address` ( id INT,coin varchar(100),tag_name varchar(100),status varchar(100),address varchar(100),source varchar(1000),subcategory varchar(100),description varchar(1500),also_known_as varchar(1000))""")
+    #mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_heist_address` ( id INT,coin varchar(100),tag_name varchar(100),status varchar(100),address varchar(100),source varchar(1000),subcategory varchar(100),description varchar(1500),also_known_as varchar(1000))""")
     response = response_user_token.json()
     result = response['result']
     if result:
