@@ -5,7 +5,7 @@ from app import mongo
 #-------Scheduler for calculating risk score by if receive fund from safename or kyc swsuser heist addresses-------
 
 def risk_score_by_safename():
-    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT(3) NOT NULL AUTO_INCREMENT,address varchar(100),type_id int(3) NULL,risk_score_by_tx float(3) NULL,riskscore_by_safename float(3) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
+   # mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT(3) NOT NULL AUTO_INCREMENT,address varchar(100),type_id int(3) NULL,risk_score_by_tx float(3) NULL,riskscore_by_safename float(3) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
     mycursor.execute('SELECT address,type_id FROM sws_address')
     check = mycursor.fetchall()
     for a in check:

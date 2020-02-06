@@ -38,10 +38,11 @@ def profile_risk_score():
             list_of_scores.append(score)
         if list_of_scores:
             avrage = np.mean(list_of_scores)
-            mycursor.execute('SELECT profile_risk_score_by_kyc_options FROM sws_user WHERE username="'+str(user_name)+'"')
-            risk_scores = mycursor.fetchone()
-            risk_score_kyc = risk_scores[0]
-            final_profile_riskscore=risk_score_kyc+avrage
+            #mycursor.execute('SELECT profile_risk_score_by_kyc_options FROM sws_user WHERE username="'+str(user_name)+'"')
+            #risk_scores = mycursor.fetchone()
+            #risk_score_kyc = risk_scores[0]
+            #final_profile_riskscore=risk_score_kyc+avrage
+            final_profile_riskscore=avrage
             mycursor.execute('UPDATE sws_user SET profile_risk_score="'+str(final_profile_riskscore)+'" WHERE username = "'+str(user_name)+'"')
 
 
