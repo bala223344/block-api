@@ -81,21 +81,26 @@ def safename_verification():
 
         #some doesn't have a receive_amt
         if is_erc20 == 1 or type_id == "1" or type_id == "35" :
+        #     print({
+        #         "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":str(frm).lower(),"send_amount":str(amount)}},"to":{'$elemMatch':{"to":str(to).lower()}}}}
+        #     ,
+        # "address":str(to) },{"transactions.$": 1 })
+        
             dabb = mongo.db.sws_history.find({
-                "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":str(frm),"send_amount":str(amount)}},"to":{'$elemMatch':{"to":str(to)}}}}
+                "transactions": {'$elemMatch': {"from":{'$elemMatch':{"from":str(frm).lower(),"send_amount":str(amount)}},"to":{'$elemMatch':{"to":str(to).lower()}}}}
             ,
         "address":str(to) },{"transactions.$": 1 })
         else :
         #other coins 
          # for coins with split amount, it doesn't matter what amt they sent..just confirm   
             if type_id == "2" or type_id == "75":
-                print ('ok 75')
-                print ({
-               "transactions": {'$elemMatch': {"from":{'$elemMatch':
-               {"from":str(frm)}},"to":{'$elemMatch':
-               {"to":str(to)}}}}
-           ,
-       "address":str(to) }) 
+               # print ('ok 75')
+    #             print ({
+    #            "transactions": {'$elemMatch': {"from":{'$elemMatch':
+    #            {"from":str(frm)}},"to":{'$elemMatch':
+    #            {"to":str(to)}}}}
+    #        ,
+    #    "address":str(to) }) 
          
                 dabb = mongo.db.sws_history.find({
                 "transactions": {'$elemMatch': {"from":{'$elemMatch':

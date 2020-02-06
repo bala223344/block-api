@@ -1149,9 +1149,16 @@ def dash_data(address,symbol,type_id):
     ret=DASH_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
     response = response_user_token.json()       
-
     data = response['data']
-    addr =data[''+address+'']
+      
+
+    try:
+        addr = data[''+address+'']
+    except TypeError:
+        print ('data is : ')
+        print (data)
+        raise  
+
     add =addr['address']
     balance =add['balance']
     bal = (balance/100000000)
