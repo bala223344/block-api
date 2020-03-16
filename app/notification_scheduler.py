@@ -40,7 +40,6 @@ from app.xin import xin_notification
 #----------Function for new transaction notification----------
 
 def tx_notification():
-    print("tx_notification_running")
     mycursor.execute('SELECT address,type_id FROM sws_address WHERE tx_notification_preferred = "1"')
     sws_addresses = mycursor.fetchall()
     for addres in sws_addresses:

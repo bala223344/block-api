@@ -68,9 +68,6 @@ def safename_verification():
         type_id = data['type_id']
         tx_type = data['type']
         is_erc20 = data['is_erc20']
-
-        print ('wa')
-        print(type_id)
         
         #check destination
         if is_erc20 == 1:
