@@ -19,6 +19,7 @@ from app.riskscore_safename_scheduler import risk_score_by_safename
 from app.riskscore_oldtx_scheduler import tx_two_yearold
 from app.heist_associated_scheduler import heist_associated_fetch
 from app.top_users_scheduler import Top_user_percentage
+from app.ethersync import EthSync
 
 
 def create_app(test_config=None):
@@ -53,6 +54,9 @@ def create_app(test_config=None):
     app.register_blueprint(unknown_riskscore.bp)
     
 
+    EthSync_scheduler = BackgroundScheduler()
+    EthSync_scheduler.add_job(EthSync,trigger='cron',day_of_week='mon-sat',hour=12,minute=15)
+    EthSync_scheduler.start()
 
 
 #--------Schedulers timing and days functionality------------
