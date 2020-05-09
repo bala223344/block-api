@@ -19,7 +19,7 @@ from app.riskscore_safename_scheduler import risk_score_by_safename
 from app.riskscore_oldtx_scheduler import tx_two_yearold
 from app.heist_associated_scheduler import heist_associated_fetch
 from app.top_users_scheduler import Top_user_percentage
-from app.ethersync import EthSync
+from app.ethersync import EthSync,EthTimeSync
 
 
 def create_app(test_config=None):
@@ -55,9 +55,17 @@ def create_app(test_config=None):
     
 
     EthSync_scheduler = BackgroundScheduler()
-    EthSync_scheduler.add_job(EthSync,trigger='cron',day_of_week='mon-sat',hour=12,minute=15)
+    EthSync_scheduler.add_job(EthSync,trigger='cron',day_of_week='mon-sun',hour=14,minute=00)
+    EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=30)
+    EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=20)
+    EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=60)
+    EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=10)
     EthSync_scheduler.start()
 
+
+    EthTimeSync_scheduler = BackgroundScheduler()
+    EthTimeSync_scheduler.add_job(EthTimeSync,trigger='interval',minutes=2)
+    EthTimeSync_scheduler.start()
 
 #--------Schedulers timing and days functionality------------
 
@@ -136,7 +144,9 @@ def create_app(test_config=None):
        # risk_score_by_heist_scheduler.shutdown()
         tx_notification_scheduler.shutdown()
         risk_score_scheduler.shutdown()
-        invoice_moving_scheduler.shutdown()
+        #invoice_moving_scheduler.shutdown()
         profile_risk_score_scheduler.shutdown()
         Top_user_percentage_scheduler.shutdown()
         invoice_notification_interval_scheduler.shutdown()
+        EthSync_scheduler.shutdown()
+        EthTimeSync_scheduler.shutdown()
