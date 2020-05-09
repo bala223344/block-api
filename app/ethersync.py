@@ -98,10 +98,18 @@ def EthSync():
                             "transactions":listobj}})
 
 def EthTimeSync():
+    EthTimeSyncc(1)
+def EthTimeSync1():
+    EthTimeSyncc(20)
+def EthTimeSync2():
+    EthTimeSyncc(10)
+
+
+def EthTimeSyncc(minn):
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         "date_time": {
-            "$lte": datetime.datetime.utcnow() - datetime.timedelta(minutes=3)
+            "$lte": datetime.datetime.utcnow() - datetime.timedelta(minutes=minn)
         }
     }).distinct("address")
     for address in addresses:
