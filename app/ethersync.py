@@ -28,7 +28,6 @@ ETHERSCAN_API_KEY = "UKIKGWXX57YZQBVF2DYG1KQYQFVKUU8CEH"
 def EthSync():
     mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     current_tx = mycursor.fetchall()
-    #current_tx = ["0x467D629A836d50AbECec436A615030A845feD378","0xdabb1e456cb0c490a34f65eff43ed0c449f039a7","0xa6fe83Dcf28Cc982818656ba680e03416824D5E4"]
     for addresses in current_tx:
         array=[]
         address = addresses[0]
@@ -98,11 +97,13 @@ def EthSync():
                             "transactions":listobj}})
 
 def EthTimeSync():
-    EthTimeSyncc(1)
+    EthTimeSyncc(5)
 def EthTimeSync1():
     EthTimeSyncc(20)
 def EthTimeSync2():
     EthTimeSyncc(10)
+def EthTimeSync3():
+    EthTimeSyncc(30)
 
 
 def EthTimeSyncc(minn):
