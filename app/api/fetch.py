@@ -294,7 +294,7 @@ def currency_symbol():
 
 @bp.route("/local_transaction/<string:address>",methods=['GET'])
 def local_transaction(address):
-    docs = mongo.db.sws_history.find_one({"address":address})
+    docs = mongo.db.dev_sws_history.find_one({"address":address},{"_id":0})
     return jsonify({"Transactions":docs}),200
 
 
