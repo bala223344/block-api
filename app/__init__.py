@@ -19,7 +19,7 @@ from app.riskscore_safename_scheduler import risk_score_by_safename
 from app.riskscore_oldtx_scheduler import tx_two_yearold
 from app.heist_associated_scheduler import heist_associated_fetch
 from app.top_users_scheduler import Top_user_percentage
-from app.ethersync import EthSync,EthTimeSync,EthTimeSync1,EthTimeSync2,EthTimeSync3
+from app.ethersync import EthSync,EthTimeSync,EthTimeSync1,EthTimeSync2,EthTimeSync3,EthIntSync1,EthIntSync2,EthIntSync3,EthIntSync4
 
 
 def create_app(test_config=None):
@@ -67,6 +67,18 @@ def create_app(test_config=None):
     EthTimeSync_scheduler.add_job(EthTimeSync2,trigger='interval',minutes=10)
     EthTimeSync_scheduler.add_job(EthTimeSync3,trigger='interval',minutes=30)
     EthTimeSync_scheduler.start()
+
+
+    EthIntSync_scheduler = BackgroundScheduler()
+    EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',minutes=20)
+    EthIntSync_scheduler.add_job(EthIntSync2,trigger='interval',minutes=40)
+    EthIntSync_scheduler.add_job(EthIntSync3,trigger='interval',minutes=70)
+    EthIntSync_scheduler.add_job(EthIntSync4,trigger='interval',minutes=5)
+    #EthIntSync_scheduler.add_job(EthIntSync, trigger='cron', day_of_week='mon-sat', hour=14,minute=27)
+    #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=30)
+    #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=60)
+    EthIntSync_scheduler.start()
+
 
 #--------Schedulers timing and days functionality------------
 

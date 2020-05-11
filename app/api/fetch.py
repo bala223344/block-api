@@ -290,7 +290,7 @@ def currency_symbol():
 
 
 
-#-----Api for return tx_history and balance by address--------
+#-------Api for return tx_history and balance by address--------
 
 @bp.route("/local_transaction/<string:address>",methods=['GET'])
 def local_transaction(address):

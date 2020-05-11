@@ -23,6 +23,8 @@ ETHERSCAN_API_KEYS = {
 SMART_CONTRACT_BLOCK_STEP = 10000000
 ETHERSCAN_API_KEY = "UKIKGWXX57YZQBVF2DYG1KQYQFVKUU8CEH"
 
+TOPIC_TRANSFER = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+ETH_internal_transactions ="http://api.etherscan.io/api?module=account&action=txlistinternal&address={{address}}&startblock={{startblock}}&endblock={{endblock}}&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 
 def EthSync():
@@ -95,16 +97,6 @@ def EthSync():
                 },{
                     "$push":{    
                             "transactions":listobj}})
-
-def EthTimeSync():
-    EthTimeSyncc(5)
-def EthTimeSync1():
-    EthTimeSyncc(20)
-def EthTimeSync2():
-    EthTimeSyncc(10)
-def EthTimeSync3():
-    EthTimeSyncc(30)
-
 
 def EthTimeSyncc(minn):
     addresses = mongo.db.dev_sws_history.find({
@@ -194,65 +186,101 @@ def get_txn_list(address, start_block, end_block, apikey):
         logging.error("get_txn_exception|address=%s,start_block=%s,end_block=%s,api_key=%s,msg=%s", address, start_block, end_block, apikey, error.message)
         return None
 
-"""
-def EthIntSync(address,symbol,type_id):
-    #ret=ETH_internal_transactions.replace("{{address}}",''+address+'')
-    #response_user_token = requests.get(url=ret)
-    #response = response_user_token.json()       
-    
-    #transactions=response['result']
-    #array=[]
-    addresses = []
 
-    for transaction in transactions:
-        frm=[]
-        to=[]
-        fee =""
-        timestamp = transaction['timeStamp']
-        first_date=int(timestamp)
-        dt_object = datetime.fromtimestamp(first_date)   
-        fro =transaction['from']
-        if 'to' in transaction:
-            too=transaction['to']
+
+def EthTimeSync():
+    EthTimeSyncc(5)
+def EthTimeSync1():
+    EthTimeSyncc(20)
+def EthTimeSync2():
+    EthTimeSyncc(10)
+def EthTimeSync3():
+    EthTimeSyncc(30)
+
+#----------------------------------------------------------------------------------------------
+
+def EthIntSync1():
+    EthIntSync(30)
+
+def EthIntSync2():
+    EthIntSync(60)
+
+def EthIntSync3():
+    EthIntSync(120)
+
+def EthIntSync4():
+    EthIntSync(10)
+
+
+def EthIntSync(minn):
+    addresses = mongo.db.dev_sws_history.find({
+        "type_id": "1",
+        "date_time": {
+            "$gte": datetime.datetime.utcnow() - datetime.timedelta(minutes=minn)
+        }
+    }).distinct("address")
+    print(addresses)
+    for address in addresses:
+        array=[]
+        blocks = mongo.db.dev_sws_history.aggregate(
+        [  
+            {"$unwind" : "$transactions"},
+            {
+                "$match": {
+                    "address":address
+                }
+            },
+            {
+                "$group" : {
+                    "_id" : "$_id",
+                    "maxintblockNumber" : {"$max" : "$transactions.intblockNumber"}
+                }
+            }
+        ])
+        blocks = [serialize_doc(doc) for doc in blocks]
+        if blocks:
+            block = blocks[0]
+            if block['maxintblockNumber'] is not None:
+                StartBlock = int(block['maxintblockNumber']) + 1
+            else:
+                StartBlock = 0
         else:
-            too=""
-        send_amount=transaction['value']
-        if send_amount != "0":
-            tx_id = transaction['hash']
-            to.append({"to":too,"receive_amount":""})
-            frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000)})
-            array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id,"internal_transaction":True})
-    for arra in array:
-        ret = mongo.db.sws_history.update({
-            "address":address            
-        },{'$push': {'transactions': arra}},upsert=False)
-
-
-def get_event_list(address, start_block, end_block, apikey, topic):
-	try:
-		params = {
-			"module": "logs",
-			"action": "getLogs",
-			"apikey": apikey,
-			"address": address,
-			"fromBlock": start_block,
-			"toBlock": end_block,
-			"topic0": topic
-		}
-		response = requests.get(ETHER_SCAN_DOMAIN, params=params)
-		if response.status_code != 200:
-			logging.error("get_event_log_fail|address=%s,start_block=%s,end_block=%s,api_key=%s,topic=%s,response_code=%s", address, start_block, end_block, apikey, topic, response.status_code)
-			return None
-		response_data = response.json()
-		if int(response_data["status"]) != 1:
-			logging.info("get_event_status_empty|address=%s,start_block=%s,end_block=%s,api_key=%s,topic=%s,response_data=%s", address, start_block, end_block, apikey, topic, response_data)
-			return []
-		return response_data["result"]
-	except Exception as error:
-		logging.error("get_event_exception|address=%s,start_block=%s,end_block=%s,api_key=%s,topic=%s,msg=%s", address, start_block, end_block, apikey, topic, error.message)
-		return None
-"""
-
+            StartBlock = 0
+        EndBlock = StartBlock + SMART_CONTRACT_BLOCK_STEP
+        ret1=ETH_internal_transactions.replace("{{address}}",''+address+'')
+        rett=ret1.replace("{{startblock}}",''+str(StartBlock)+'')
+        ret=rett.replace("{{endblock}}",''+str(EndBlock)+'')
+        response_user_token = requests.get(url=ret)
+        response = response_user_token.json()       
+        
+        transactions=response['result']
+        array=[]
+        for transaction in transactions:
+            frm=[]
+            to=[]
+            fee =""
+            timestamp = transaction['timeStamp']
+            first_date=int(timestamp)
+            dt_object = datetime.datetime.fromtimestamp(first_date)   
+            fro =transaction['from']
+            if 'to' in transaction:
+                too=transaction['to']
+            else:
+                too=""
+            send_amount=transaction['value']
+            if send_amount != "0":
+                tx_id = transaction['hash']
+                intblockNumber = transaction['blockNumber']
+                to.append({"to":too,"receive_amount":""})
+                frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000)})
+                array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})
+        if array:
+            for arra in array:
+                ret = mongo.db.dev_sws_history.update({
+                    "address":address            
+                },{'$push': {'transactions': arra}},upsert=False)
+        else:
+            pass        
 
 
 """
