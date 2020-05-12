@@ -288,12 +288,16 @@ def currency_symbol():
     urls = [serialize_doc(doc) for doc in urls]
     return jsonify(urls), 200
 
-
+@bp.route("/local_transaction/<string:address>",methods=['GET'])
+def local_transaction(address):
+    docs = mongo.db.sws_history.find({"address":address})
+    docs = [serialize_doc(doc) for doc in docs]
+    return jsonify(docs),200
 
 #-------Api for return tx_history and balance by address--------
 
-@bp.route("/local_transaction/<string:address>",methods=['GET'])
-def local_transaction(address):
+@bp.route("/LocalTransaction/<string:address>",methods=['GET'])
+def LocalTransaction(address):
     docs = mongo.db.dev_sws_history.find_one({"address":address},{"_id":0})
     return jsonify({"Transactions":docs}),200
 
