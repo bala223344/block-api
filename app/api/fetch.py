@@ -296,10 +296,14 @@ def local_transaction(address):
 
 #-------Api for return tx_history and balance by address--------
 
-@bp.route("/LocalTransaction/<string:address>",methods=['GET'])
-def LocalTransaction(address):
+@bp.route("/LocalTransaction",methods=['POST'])
+def LocalTransaction():
+    if not request.json:
+        abort(500)
+    address=request.json.get("address", None)    
+    symbol=request.json.get("symbol", None)
+    type_id=request.json.get("type_id","")
     docs = mongo.db.dev_sws_history.find_one({"address":address})
-    #docs = [serialize_doc(doc) for doc in docs]
     if docs is not None:
         docs=serialize_doc(docs)
         return jsonify(docs),200
