@@ -20,7 +20,7 @@ from app.riskscore_oldtx_scheduler import tx_two_yearold
 from app.heist_associated_scheduler import heist_associated_fetch
 from app.top_users_scheduler import Top_user_percentage
 from app.ethersync import EthSync,EthTimeSync,EthTimeSync1,EthTimeSync2,EthTimeSync3,EthIntSync1,EthIntSync2,EthIntSync3,EthIntSync4
-
+from app.btc import btc_data_sync
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -78,6 +78,13 @@ def create_app(test_config=None):
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=30)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=60)
     EthIntSync_scheduler.start()
+
+
+    btc_data_sync_scheduler = BackgroundScheduler()
+    btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=5)
+    btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=2)
+    btc_data_sync_scheduler.add_job(btc_data_sync, trigger='cron', day_of_week='mon-sat', hour=19,minute=10)
+    btc_data_sync_scheduler.start()
 
 
 #--------Schedulers timing and days functionality------------

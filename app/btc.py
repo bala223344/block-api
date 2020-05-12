@@ -1,6 +1,6 @@
 import requests
 from flask import jsonify
-from datetime import datetime
+import datetime
 from app.config import BTC_balance
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -9,6 +9,7 @@ from app.config import mydb,mycursor
 from app import mongo
 import numpy as np
 
+BTC_sync_balance="https://blockchain.coinmarketcap.com/api/address?address={{address}}&symbol=BTC&start={{block}}&limit=50"
 
 
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
@@ -42,7 +43,7 @@ def btc_data(address,symbol,type_id):
                
                 to.append({"to":t,"receive_amount": np.format_float_positional(recive)})
             timestamp =transaction['timestamp']
-            dt_object = datetime.fromtimestamp(timestamp)
+            dt_object = datetime.datetime.fromtimestamp(timestamp)
             array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id})
     ret = mongo.db.sws_history.update({
         "address":address            
@@ -94,12 +95,70 @@ def btc_notification(address,symbol,type_id):
 
 
 
+#----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
 
-
-
-
-
-
+def btc_data_sync():
+    mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(2)+'"')
+    current_tx = mycursor.fetchall()
+    current_tx = ["1416bVmA8Wwd3GGGA9W3kgmWiJTota7U62","18xmAHjjsTe8FJ6PAKAL5TxBc4Ypewo6q3","1BPnQZhMzVmM2Rnhs9YpRf8kJvBAzaUcAt","1EAECn7nzqMbk7FD3qa1dvbYkWj58iSV69","1GQhVHcghcNrgdvuWqzHxM3Ln23hxfqpvX","1JDSPz2rsfwNixJzc8pWBQx5v7b4wr5equ","1LP5s5m1VVXd59AYzdjcDLm4Rz1Duw1s2v","3NxLx7v8N2uA1HA4z7cncYVMcjKakqBmm9"]
+    for addresses in current_tx:
+        address = addresses[0]
+        Recblocks = mongo.db.dev_sws_history.find_one({"address":address,"type_id":"2"})
+        if Recblocks is not None:
+            block = Recblocks['block']
+        else:
+            block = 1
+        ret=BTC_sync_balance.replace("{{address}}",''+address+'')
+        ret1=ret.replace("{{block}}",''+str(block)+'')
+        response_user_token = requests.get(url=ret1)
+        transaction = response_user_token.json()       
+        
+        balance =transaction['balance']
+        amountReceived =transaction['amount_received']
+        amountSent =transaction['amount_sent']
+        transactions = transaction['txs']
+        array=[]
+        for transaction in transactions:
+            fee=transaction['fee']
+            tx_id = transaction['hash']
+            frmm=transaction['inputs']
+            frm=[]
+            for trans in frmm:
+                fro=trans['address']
+                send=trans['value']
+                frm.append({"from":fro,"send_amount":str(int(send)/100000000)})
+            transac=transaction['outputs']
+            to=[]
+            for too in transac:
+                t = too['address'] 
+                recive =too['value']/100000000
+            
+                to.append({"to":t,"receive_amount": np.format_float_positional(recive)})
+            timestamp =transaction['timestamp']
+            dt_object = datetime.datetime.fromtimestamp(timestamp)
+            array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id})
+        if array:
+            block = block+len(array)
+        ret = mongo.db.dev_sws_history.update({
+            "address":address            
+        },{
+            "$set":{    
+                    "address":address,
+                    "symbol":"BTC",
+                    "type_id":"2",
+                    "block":int(block),
+                    "date_time":datetime.datetime.utcnow(),
+                    "balance":(int(balance)/100000000),
+                    "amountReceived":(int(amountReceived)/100000000),
+                    "amountSent":(int(amountSent)/100000000)
+                }},upsert=True)
+        if array:
+            for listobj in array:
+                ret = mongo.db.dev_sws_history.update({
+                    "address":address            
+                },{
+                    "$push":{    
+                            "transactions":listobj}})
 
 
 
