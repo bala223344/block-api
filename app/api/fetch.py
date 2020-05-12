@@ -298,8 +298,11 @@ def local_transaction(address):
 
 @bp.route("/LocalTransaction/<string:address>",methods=['GET'])
 def LocalTransaction(address):
-    docs = mongo.db.dev_sws_history.find({"address":address})
-    docs = [serialize_doc(doc) for doc in docs]
-    return jsonify(docs),200
-
+    docs = mongo.db.dev_sws_history.find_one({"address":address})
+    #docs = [serialize_doc(doc) for doc in docs]
+    if docs is not None:
+        docs=serialize_doc(docs)
+        return jsonify(docs),200
+    else:
+        return jsonify({"status":"no data"})
 
