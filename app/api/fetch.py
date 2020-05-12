@@ -299,6 +299,6 @@ def local_transaction(address):
 @bp.route("/LocalTransaction/<string:address>",methods=['GET'])
 def LocalTransaction(address):
     docs = mongo.db.dev_sws_history.find_one({"address":address},{"_id":0})
-    return jsonify({"Transactions":docs}),200
+    return jsonify(list(docs)),200
 
 
