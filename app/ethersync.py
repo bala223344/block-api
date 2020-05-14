@@ -104,7 +104,6 @@ def EthSync():
         balance = response['result']
         amount_recived =""
         amount_sent =""
-        print(address)
         ret = mongo.db.dev_sws_history.update({
             "address":address            
         },{
