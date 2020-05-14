@@ -72,19 +72,19 @@ def EthSync():
             total_time = diff.days*24*60*60 + diff.seconds
 
             if total_time <= 60:
-                #total_time = round(total_time,2)
+                total_time = round(total_time,2)
                 total_expected_time = "{} second ago".format(total_time)
             elif total_time>60 and total_time<=3600:
                 total_time = total_time/60
-                #total_time = round(total_time,1)
+                total_time = round(total_time,1)
                 total_expected_time = "{} minutes ago".format(total_time)
             elif total_time>3600 and total_time<=86400:
                 total_time = total_time/3600
-                #total_time = round(total_time,1)
+                total_time = round(total_time,1)
                 total_expected_time = "{} hours ago".format(total_time)
             else:
                 total_time = total_time/86400
-                #total_time = round(total_time,1)
+                total_time = round(total_time,1)
                 total_expected_time = "{} days ago".format(total_time)
 
             fro =transaction['from']
@@ -168,19 +168,19 @@ def EthTimeSyncc(minn):
             total_time = diff.days*24*60*60 + diff.seconds
 
             if total_time <= 60:
-                #total_time = round(total_time,2)
+                total_time = round(total_time,2)
                 total_expected_time = "{} second ago".format(total_time)
             elif total_time>60 and total_time<=3600:
                 total_time = total_time/60
-                #total_time = round(total_time,1)
+                total_time = round(total_time,1)
                 total_expected_time = "{} minutes ago".format(total_time)
             elif total_time>3600 and total_time<=86400:
                 total_time = total_time/3600
-                #total_time = round(total_time,1)
+                total_time = round(total_time,1)
                 total_expected_time = "{} hours ago".format(total_time)
             else:
                 total_time = total_time/86400
-                #total_time = round(total_time,1)
+                total_time = round(total_time,1)
                 total_expected_time = "{} days ago".format(total_time)
 
 
@@ -319,21 +319,20 @@ def EthIntSync(minn):
             total_time = diff.days*24*60*60 + diff.seconds
 
             if total_time <= 60:
-                #total_time = round(total_time,2)
+                total_time = round(total_time,2)
                 total_expected_time = "{} second ago".format(total_time)
             elif total_time>60 and total_time<=3600:
                 total_time = total_time/60
-                #total_time = round(total_time,1)
+                total_time = round(total_time,1)
                 total_expected_time = "{} minutes ago".format(total_time)
             elif total_time>3600 and total_time<=86400:
                 total_time = total_time/3600
-                #total_time = round(total_time,1)
+                total_time = round(total_time,1)
                 total_expected_time = "{} hours ago".format(total_time)
             else:
                 total_time = total_time/86400
-                #total_time = round(total_time,1)
+                total_time = round(total_time,1)
                 total_expected_time = "{} days ago".format(total_time)
-
 
             fro =transaction['from']
             if 'to' in transaction:
