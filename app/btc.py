@@ -128,7 +128,7 @@ def btc_data_sync():
                 send=trans['value']
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
                 from_safename = mycursor.fetchone()
-                frm.append({"from":fro,"send_amount":str(int(send)/100000000),"safename":from_safename[0]})
+                frm.append({"from":fro,"send_amount":str(int(send)/100000000),"safename":from_safename[0] if from_safename else None})
             transac=transaction['outputs']
             to=[]
             for too in transac:
@@ -136,7 +136,7 @@ def btc_data_sync():
                 recive =too['value']/100000000
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(t)+'"')
                 to_safename = mycursor.fetchone()
-                to.append({"to":t,"receive_amount": np.format_float_positional(recive),"safename":to_safename[0]})
+                to.append({"to":t,"receive_amount": np.format_float_positional(recive),"safename":to_safename[0] if to_safename else None})
             timestamp =transaction['timestamp']
             dt_object = datetime.datetime.fromtimestamp(timestamp)
             current_t = datetime.datetime.utcnow()
