@@ -97,9 +97,7 @@ def EthSync():
                 to_safename = mycursor.fetchone()
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
                 from_safename = mycursor.fetchone()
-                print(to_safename)
-                print(from_safename)
-                to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None })
+                to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None})
                 frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
                 array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         balance = response['result']
@@ -196,8 +194,8 @@ def EthTimeSyncc(minn):
                 to_safename = mycursor.fetchone()
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
                 from_safename = mycursor.fetchone()
-                to.append({"to":too,"receive_amount":"","safename":to_safename[0]})
-                frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000),"safename":from_safename[0]})
+                to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None})
+                frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
                 array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         ret = mongo.db.dev_sws_history.update({
             "address":address            
@@ -349,8 +347,8 @@ def EthIntSync(minn):
                 to_safename = mycursor.fetchone()
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
                 from_safename = mycursor.fetchone()
-                to.append({"to":too,"receive_amount":"","safename":to_safename[0]})
-                frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000),"safename":from_safename[0]})
+                to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None})
+                frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
                 array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})
         if array:
             for arra in array:
