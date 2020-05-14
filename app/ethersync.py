@@ -28,6 +28,7 @@ ETH_internal_transactions ="http://api.etherscan.io/api?module=account&action=tx
 
 
 def EthSync():
+    print("start")
     mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     current_tx = mycursor.fetchall()
     for addresses in current_tx:
