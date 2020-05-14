@@ -104,6 +104,7 @@ def EthSync():
         balance = response['result']
         amount_recived =""
         amount_sent =""
+        print(address)
         ret = mongo.db.dev_sws_history.update({
             "address":address            
         },{
@@ -344,8 +345,11 @@ def EthIntSync(minn):
             if send_amount != "0":
                 tx_id = transaction['hash']
                 intblockNumber = transaction['blockNumber']
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
-                to_safename = mycursor.fetchone()
+                if too !="":
+                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
+                    to_safename = mycursor.fetchone()
+                else:
+                    to_safename = []
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
                 from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None})

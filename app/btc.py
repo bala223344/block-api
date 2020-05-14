@@ -113,7 +113,7 @@ def btc_data_sync():
         response_user_token = requests.get(url=ret1)
         transaction = response_user_token.json()       
         
-        balance =transaction['balance']
+        balance =transaction['balance'] if "balance" in transaction else 0
         amountReceived =transaction['amount_received']
         amountSent =transaction['amount_sent']
         transactions = transaction['txs']
