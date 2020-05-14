@@ -100,7 +100,7 @@ def btc_notification(address,symbol,type_id):
 def btc_data_sync():
     mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(2)+'"')
     current_tx = mycursor.fetchall()
-    current_tx = ["1416bVmA8Wwd3GGGA9W3kgmWiJTota7U62","18xmAHjjsTe8FJ6PAKAL5TxBc4Ypewo6q3","1BPnQZhMzVmM2Rnhs9YpRf8kJvBAzaUcAt","1EAECn7nzqMbk7FD3qa1dvbYkWj58iSV69","1GQhVHcghcNrgdvuWqzHxM3Ln23hxfqpvX","1JDSPz2rsfwNixJzc8pWBQx5v7b4wr5equ","1LP5s5m1VVXd59AYzdjcDLm4Rz1Duw1s2v","3NxLx7v8N2uA1HA4z7cncYVMcjKakqBmm9"]
+    #current_tx = ["1416bVmA8Wwd3GGGA9W3kgmWiJTota7U62","18xmAHjjsTe8FJ6PAKAL5TxBc4Ypewo6q3","1BPnQZhMzVmM2Rnhs9YpRf8kJvBAzaUcAt","1EAECn7nzqMbk7FD3qa1dvbYkWj58iSV69","1GQhVHcghcNrgdvuWqzHxM3Ln23hxfqpvX","1JDSPz2rsfwNixJzc8pWBQx5v7b4wr5equ","1LP5s5m1VVXd59AYzdjcDLm4Rz1Duw1s2v","3NxLx7v8N2uA1HA4z7cncYVMcjKakqBmm9"]
     for addresses in current_tx:
         address = addresses[0]
         Recblocks = mongo.db.dev_sws_history.find_one({"address":address,"type_id":"2"})
@@ -126,17 +126,41 @@ def btc_data_sync():
             for trans in frmm:
                 fro=trans['address']
                 send=trans['value']
-                frm.append({"from":fro,"send_amount":str(int(send)/100000000)})
+                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
+                from_safename = mycursor.fetchone()
+                frm.append({"from":fro,"send_amount":str(int(send)/100000000),"safename":from_safename})
             transac=transaction['outputs']
             to=[]
             for too in transac:
                 t = too['address'] 
                 recive =too['value']/100000000
-            
-                to.append({"to":t,"receive_amount": np.format_float_positional(recive)})
+                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(t)+'"')
+                to_safename = mycursor.fetchone()
+                to.append({"to":t,"receive_amount": np.format_float_positional(recive),"safename":to_safename})
             timestamp =transaction['timestamp']
             dt_object = datetime.datetime.fromtimestamp(timestamp)
-            array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"Tx_id":tx_id})
+            current_t = datetime.datetime.utcnow()
+
+            diff = current_t- dt_object
+            total_time = diff.days*24*60*60 + diff.seconds
+
+            if total_time <= 60:
+                #total_time = round(total_time,2)
+                total_expected_time = "{} second ago".format(total_time)
+            elif total_time>60 and total_time<=3600:
+                total_time = total_time/60
+                #total_time = round(total_time,1)
+                total_expected_time = "{} minutes ago".format(total_time)
+            elif total_time>3600 and total_time<=86400:
+                total_time = total_time/3600
+                #total_time = round(total_time,1)
+                total_expected_time = "{} hours ago".format(total_time)
+            else:
+                total_time = total_time/86400
+                #total_time = round(total_time,1)
+                total_expected_time = "{} days ago".format(total_time)
+
+            array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"Tx_id":tx_id})
         if array:
             block = block+len(array)
         ret = mongo.db.dev_sws_history.update({
