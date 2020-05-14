@@ -56,6 +56,7 @@ def create_app(test_config=None):
 
     EthSync_scheduler = BackgroundScheduler()
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=3)
+    EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=7,minute=23)
     EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=30)
     EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=60)
     EthSync_scheduler.start()
@@ -83,7 +84,7 @@ def create_app(test_config=None):
     btc_data_sync_scheduler = BackgroundScheduler()
     btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=5)
     btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=2)
-    btc_data_sync_scheduler.add_job(btc_data_sync, trigger='cron', day_of_week='mon-sat', hour=19,minute=10)
+    btc_data_sync_scheduler.add_job(btc_data_sync, trigger='cron', day_of_week='mon-sat', hour=7,minute=25)
     btc_data_sync_scheduler.start()
 
 
