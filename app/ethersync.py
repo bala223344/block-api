@@ -29,11 +29,12 @@ ETH_internal_transactions ="http://api.etherscan.io/api?module=account&action=tx
 
 def EthSync():
     print("start")
-    mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
-    current_tx = mycursor.fetchall()
+    #mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
+    #current_tx = mycursor.fetchall()
+    current_tx = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4"]
     for addresses in current_tx:
         array=[]
-        address = addresses[0]
+        address = addresses#[0]
         ret=ETH_balance.replace("{{address}}",''+address+'')
         response_user_token = requests.get(url=ret)
         response = response_user_token.json()       
@@ -104,6 +105,7 @@ def EthSync():
         balance = response['result']
         amount_recived =""
         amount_sent =""
+        print(address)
         ret = mongo.db.dev_sws_history.update({
             "address":address            
         },{
