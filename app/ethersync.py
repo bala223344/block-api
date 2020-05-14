@@ -29,12 +29,11 @@ ETH_internal_transactions ="http://api.etherscan.io/api?module=account&action=tx
 
 def EthSync():
     print("start")
-    #mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
-    #current_tx = mycursor.fetchall()
-    current_tx = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4"]
+    mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
+    current_tx = mycursor.fetchall()
     for addresses in current_tx:
         array=[]
-        address = addresses#[0]
+        address = addresses[0]
         ret=ETH_balance.replace("{{address}}",''+address+'')
         response_user_token = requests.get(url=ret)
         response = response_user_token.json()       
@@ -105,7 +104,6 @@ def EthSync():
         balance = response['result']
         amount_recived =""
         amount_sent =""
-        print(address)
         ret = mongo.db.dev_sws_history.update({
             "address":address            
         },{
@@ -254,19 +252,20 @@ def EthTimeSync3():
 #----------------------------------------------------------------------------------------------
 
 def EthIntSync1():
-    EthIntSync(30)
+    EthIntSync()
 
 def EthIntSync2():
-    EthIntSync(60)
+    EthIntSync()
 
 def EthIntSync3():
-    EthIntSync(120)
+    EthIntSync()
 
 def EthIntSync4():
-    EthIntSync(10)
+    EthIntSync()
 
 
-def EthIntSync(minn):
+def EthIntSync():
+    """
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         "date_time": {
@@ -274,6 +273,8 @@ def EthIntSync(minn):
         }
     }).distinct("address")
     print(addresses)
+    """
+    addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378"]
     for address in addresses:
         array=[]
         blocks = mongo.db.dev_sws_history.aggregate(
