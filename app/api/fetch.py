@@ -310,3 +310,5 @@ def LocalTransaction():
     else:
         return jsonify({"status":"no data"})
 
+
+#docs = mongo.db.dev_sws_history.find_one({"address":"0x0008bf191dafec36005b85778e7f25e8fc98fe3a"},{"transactions":{ "$slice":[1, 15 ]}})

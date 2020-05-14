@@ -55,26 +55,26 @@ def create_app(test_config=None):
     
 
     EthSync_scheduler = BackgroundScheduler()
-    EthSync_scheduler.add_job(EthSync,trigger='interval',hours=300)
-    EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=9,minute=25)
-    EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=3000)
-    EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=60000)
+    EthSync_scheduler.add_job(EthSync,trigger='interval',hours=30)
+    EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=12,minute=30)
+    EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=30)
+    EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=60)
     EthSync_scheduler.start()
 
 
     EthTimeSync_scheduler = BackgroundScheduler()
-    EthTimeSync_scheduler.add_job(EthTimeSync,trigger='interval',minutes=5000)
-    EthTimeSync_scheduler.add_job(EthTimeSync1,trigger='interval',minutes=2000)
-    EthTimeSync_scheduler.add_job(EthTimeSync2,trigger='interval',minutes=1000)
-    EthTimeSync_scheduler.add_job(EthTimeSync3,trigger='interval',minutes=30000)
+    EthTimeSync_scheduler.add_job(EthTimeSync,trigger='interval',minutes=50)
+    EthTimeSync_scheduler.add_job(EthTimeSync1,trigger='interval',minutes=20)
+    EthTimeSync_scheduler.add_job(EthTimeSync2,trigger='interval',minutes=100)
+    EthTimeSync_scheduler.add_job(EthTimeSync3,trigger='interval',minutes=300)
     EthTimeSync_scheduler.start()
 
 
     EthIntSync_scheduler = BackgroundScheduler()
-    EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',minutes=20000)
-    EthIntSync_scheduler.add_job(EthIntSync2,trigger='interval',minutes=40000)
-    EthIntSync_scheduler.add_job(EthIntSync3,trigger='interval',minutes=70000)
-    EthIntSync_scheduler.add_job(EthIntSync4,trigger='interval',minutes=50000)
+    EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',minutes=20)
+    EthIntSync_scheduler.add_job(EthIntSync2,trigger='interval',minutes=40)
+    EthIntSync_scheduler.add_job(EthIntSync3,trigger='interval',minutes=70)
+    EthIntSync_scheduler.add_job(EthIntSync4,trigger='interval',minutes=50)
     #EthIntSync_scheduler.add_job(EthIntSync, trigger='cron', day_of_week='mon-sat', hour=14,minute=27)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=30)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=60)
@@ -82,9 +82,9 @@ def create_app(test_config=None):
 
 
     btc_data_sync_scheduler = BackgroundScheduler()
-    btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=5000)
-    btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=2000)
-    btc_data_sync_scheduler.add_job(btc_data_sync, trigger='cron', day_of_week='mon', hour=8,minute=5)
+    btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=50)
+    btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=20)
+    btc_data_sync_scheduler.add_job(btc_data_sync, trigger='cron', day_of_week='mon-sat', hour=8,minute=5)
     btc_data_sync_scheduler.start()
 
 
@@ -124,7 +124,7 @@ def create_app(test_config=None):
     '''
 
     tx_notification_scheduler = BackgroundScheduler()
-    tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=7)
+    tx_notification_scheduler.add_job(tx_notification, trigger='interval', minutes=7000)
     #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=13,minute=24)
     tx_notification_scheduler.start()
     
