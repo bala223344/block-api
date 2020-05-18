@@ -160,7 +160,7 @@ def btc_data_sync():
                 total_time = round(total_time,1)
                 total_expected_time = "{} days ago".format(total_time)
 
-            array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"Tx_id":tx_id})
+            array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id})
         if array:
             block = block+len(array)
         ret = mongo.db.dev_sws_history.update({

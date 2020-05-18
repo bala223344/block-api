@@ -29,11 +29,12 @@ ETH_internal_transactions ="http://api.etherscan.io/api?module=account&action=tx
 
 def EthSync():
     print("start")
-    mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
-    current_tx = mycursor.fetchall()
-    for addresses in current_tx:
+    #mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
+    #current_tx = mycursor.fetchall()
+    addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378"]
+    for addresses in addresses:
         array=[]
-        address = addresses[0]
+        address = addresses#[0]
         ret=ETH_balance.replace("{{address}}",''+address+'')
         response_user_token = requests.get(url=ret)
         response = response_user_token.json()       
@@ -100,7 +101,7 @@ def EthSync():
                 from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None})
                 frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
-                array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
+                array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         balance = response['result']
         amount_recived =""
         amount_sent =""
@@ -197,7 +198,7 @@ def EthTimeSyncc(minn):
                 from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None})
                 frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
-                array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
+                array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         ret = mongo.db.dev_sws_history.update({
             "address":address            
         },{
@@ -356,7 +357,7 @@ def EthIntSync():
                 from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None})
                 frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
-                array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})
+                array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})
         if array:
             for arra in array:
                 ret = mongo.db.dev_sws_history.update({
