@@ -316,3 +316,31 @@ def LocalTransaction():
 
 
 #docs = mongo.db.dev_sws_history.find_one({"address":"0x0008bf191dafec36005b85778e7f25e8fc98fe3a"},{"transactions":{ "$slice":[1, 15 ]}})
+
+
+@bp.route("/Notes",methods=['POST'])
+def Notes():
+    if not request.json:
+        abort(500)
+    tx_id =request.json.get("tx_id", None)    
+    fro =request.json.get("from", None)
+    to=request.json.get("to","")
+    notes =request.json.get("notes", None)    
+    typ =request.json.get("type", None)    
+    username =request.json.get("username", None)    
+    updated_at = datetime.datetime.utcnow()
+    created_at = datetime.datetime.utcnow()
+    ret = mongo.db.sws_notes.update({
+        "tx_id":tx_id            
+    },{
+        "$set":{    
+                "tx_id":tx_id,
+                "from":fro,
+                "to":to,
+                "notes":notes,
+                "type":typ,
+                "username":username,
+                "updated_at":updated_at,
+                "created_at":created_at
+            }},upsert=True)
+    return jsonify({"status":"success"})
