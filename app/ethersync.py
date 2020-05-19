@@ -29,12 +29,12 @@ ETH_internal_transactions ="http://api.etherscan.io/api?module=account&action=tx
 
 def EthSync():
     print("start")
-    #mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
-    #current_tx = mycursor.fetchall()
-    addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378"]
-    for addresses in addresses:
+    mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
+    current_tx = mycursor.fetchall()
+    #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378"]
+    for addresses in current_tx:
         array=[]
-        address = addresses#[0]
+        address = addresses[0]
         ret=ETH_balance.replace("{{address}}",''+address+'')
         response_user_token = requests.get(url=ret)
         response = response_user_token.json()       
@@ -242,40 +242,39 @@ def get_txn_list(address, start_block, end_block, apikey):
 
 
 def EthTimeSync():
-    EthTimeSyncc(5)
-def EthTimeSync1():
-    EthTimeSyncc(20)
-def EthTimeSync2():
     EthTimeSyncc(10)
-def EthTimeSync3():
+def EthTimeSync1():
     EthTimeSyncc(30)
+def EthTimeSync2():
+    EthTimeSyncc(40)
+def EthTimeSync3():
+    EthTimeSyncc(60)
 
 #----------------------------------------------------------------------------------------------
 
 def EthIntSync1():
-    EthIntSync()
+    EthIntSync(10)
 
 def EthIntSync2():
-    EthIntSync()
+    EthIntSync(30)
 
 def EthIntSync3():
-    EthIntSync()
+    EthIntSync(60)
 
 def EthIntSync4():
-    EthIntSync()
+    EthIntSync(120)
 
 
-def EthIntSync():
-    """
+def EthIntSync(minn):
+
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         "date_time": {
             "$gte": datetime.datetime.utcnow() - datetime.timedelta(minutes=minn)
         }
     }).distinct("address")
-    print(addresses)
-    """
-    addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378"]
+
+    #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378"]
     for address in addresses:
         array=[]
         blocks = mongo.db.dev_sws_history.aggregate(
