@@ -105,6 +105,10 @@ def EthSync():
         balance = response['result']
         amount_recived =""
         amount_sent =""
+        try:
+            bal = (int(balance)/1000000000000000000)
+        except Exception:
+            bal = 0
         print(address)
         ret = mongo.db.dev_sws_history.update({
             "address":address            
@@ -114,7 +118,7 @@ def EthSync():
                     "symbol":"ETH",
                     "type_id":"1",
                     "date_time":datetime.datetime.utcnow(),
-                    "balance":(int(balance)/1000000000000000000),
+                    "balance":bal,
                     "amountReceived":amount_recived,
                     "amountSent":amount_sent
                 }},upsert=True)
