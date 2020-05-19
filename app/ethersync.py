@@ -366,6 +366,23 @@ def EthIntSync(minn):
             pass        
 
 
+def risk_score():
+    mycursor.execute('SELECT address FROM sws_risk_score')
+    check = mycursor.fetchall()
+    for addr in check:
+        address=addr[0]
+        mycursor.execute('SELECT risk_score_by_tx,riskscore_by_safename,riskscore_by_knownheist FROM sws_risk_score WHERE address="'+str(address)+'"')
+        check = mycursor.fetchall()
+        for record in check:
+            score = 0
+            for lst in record:
+                if lst is not None:
+                    score = lst+score
+            risk_score = 50+score
+            mycursor.execute('UPDATE sws_address SET address_risk_score="'+str(risk_score)+'" WHERE address = "'+str(address)+'"')
+            mydb.commit()
+
+
 """
 ret=ETH_balance.replace("{{address}}",''+address+'')
 response_user_token = requests.get(url=ret)
