@@ -331,7 +331,8 @@ def CreateNotes():
     updated_at = datetime.datetime.utcnow()
     created_at = datetime.datetime.utcnow()
     ret = mongo.db.dev_sws_notes.update({
-        "tx_id":tx_id
+        "tx_id":tx_id,
+        "type":typ
     },{
         "$set":{
                 "tx_id":tx_id,
@@ -349,9 +350,6 @@ def CreateNotes():
 
 @bp.route("/GetNotes",methods=['GET'])
 def GetNotes():
-    tx_id =request.json.get("tx_id", None)
-    docs = mongo.db.dev_sws_notes.find({
-        "tx_id":tx_id
-    })
+    docs = mongo.db.dev_sws_notes.find({}).sort("created_at",1)
     docs = [serialize_doc(doc) for doc in docs]
     return jsonify({"Notes":docs}),200
