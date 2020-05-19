@@ -322,6 +322,7 @@ def LocalTransaction():
 def CreateNotes():
     if not request.json:
         abort(500)
+    address =request.json.get("address", None)
     tx_id =request.json.get("tx_id", None)
     fro =request.json.get("from", None)
     to=request.json.get("to","")
@@ -331,10 +332,12 @@ def CreateNotes():
     updated_at = datetime.datetime.utcnow()
     created_at = datetime.datetime.utcnow()
     ret = mongo.db.dev_sws_notes.update({
+        "address":address,
         "tx_id":tx_id,
         "type":typ
     },{
         "$set":{
+                "address":address,
                 "tx_id":tx_id,
                 "from":fro,
                 "to":to,
@@ -350,6 +353,10 @@ def CreateNotes():
 
 @bp.route("/GetNotes",methods=['GET'])
 def GetNotes():
-    docs = mongo.db.dev_sws_notes.find({}).sort("created_at",1)
-    docs = [serialize_doc(doc) for doc in docs]
-    return jsonify({"Notes":docs}),200
+    address =request.json.get("address", None)
+    if address is not None:
+        docs = mongo.db.dev_sws_notes.find({"address":address}).sort("created_at",1)
+        docs = [serialize_doc(doc) for doc in docs]
+        return jsonify({"Notes":docs}),200
+    else:
+        return jsonify({"status":"address is none"}),400
