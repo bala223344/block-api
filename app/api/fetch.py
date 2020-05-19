@@ -351,12 +351,8 @@ def CreateNotes():
 
 
 
-@bp.route("/GetNotes",methods=['GET'])
-def GetNotes():
-    address =request.json.get("address", None)
-    if address is not None:
+@bp.route("/GetNotes/<string:address>",methods=['GET'])
+def GetNotes(address):
         docs = mongo.db.dev_sws_notes.find({"address":address}).sort("created_at",1)
         docs = [serialize_doc(doc) for doc in docs]
         return jsonify({"Notes":docs}),200
-    else:
-        return jsonify({"status":"address is none"}),400
