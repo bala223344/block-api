@@ -56,7 +56,7 @@ def create_app(test_config=None):
 
     EthSync_scheduler = BackgroundScheduler()
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=3)
-    EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=12,minute=40)
+    EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=18,minute=59)
     EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=10)
     EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=20)
     EthSync_scheduler.start()
@@ -75,7 +75,7 @@ def create_app(test_config=None):
     EthIntSync_scheduler.add_job(EthIntSync2,trigger='interval',minutes=10)
     EthIntSync_scheduler.add_job(EthIntSync3,trigger='interval',minutes=20)
     EthIntSync_scheduler.add_job(EthIntSync4,trigger='interval',minutes=30)
-    EthIntSync_scheduler.add_job(EthIntSync1, trigger='cron', day_of_week='mon-sat', hour=14,minute=27)
+    EthIntSync_scheduler.add_job(EthIntSync1, trigger='cron', day_of_week='mon-sat', hour=18,minute=59)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=30)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=60)
     EthIntSync_scheduler.start()
