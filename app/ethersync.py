@@ -98,11 +98,6 @@ def EthSync():
             if send_amount != "0":
                 tx_id = transaction['hash']
                 blockNumber = transaction['blockNumber']
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
-                to_safename = mycursor.fetchone()
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
-                from_safename = mycursor.fetchone()
-
                 token_details = temp_db.owners_data.find_one({"owner_address":str(too)},{"username":1,"_id":0})
                 if token_details is not None:
                     usern = token_details['username']
@@ -113,8 +108,11 @@ def EthSync():
                 if token_deta is not None:
                     fromusern = token_deta['username']
                 else:
-                    fromusern = None
-
+                    fromusern = None                
+                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
+                to_safename = mycursor.fetchone()
+                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
+                from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
                 frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                 array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
@@ -217,10 +215,6 @@ def EthTimeSyncc(minn):
             if send_amount != "0":
                 tx_id = transaction['hash']
                 blockNumber = transaction['blockNumber']
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
-                to_safename = mycursor.fetchone()
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
-                from_safename = mycursor.fetchone()
 
                 token_details = temp_db.owners_data.find_one({"owner_address":str(too)},{"username":1,"_id":0})
                 if token_details is not None:
@@ -233,6 +227,11 @@ def EthTimeSyncc(minn):
                     fromusern = token_deta['username']
                 else:
                     fromusern = None
+
+                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
+                to_safename = mycursor.fetchone()
+                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
+                from_safename = mycursor.fetchone()
 
 
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
@@ -386,13 +385,6 @@ def EthIntSync():
             if send_amount != "0":
                 tx_id = transaction['hash']
                 intblockNumber = transaction['blockNumber']
-                if too !="":
-                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
-                    to_safename = mycursor.fetchone()
-                else:
-                    to_safename = []
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
-                from_safename = mycursor.fetchone()
                 token_details = temp_db.owners_data.find_one({"owner_address":str(too)},{"username":1,"_id":0})
                 if token_details is not None:
                     usern = token_details['username']
@@ -404,6 +396,13 @@ def EthIntSync():
                     fromusern = token_deta['username']
                 else:
                     fromusern = None
+                if too !="":
+                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
+                    to_safename = mycursor.fetchone()
+                else:
+                    to_safename = []
+                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
+                from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
                 frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                 array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})
