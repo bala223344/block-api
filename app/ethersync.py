@@ -104,14 +104,13 @@ def EthSync():
                     usern = token_details['username']
                 else:
                     usern = None
-                print(usern)
                 token_deta = temp_db.owners_data.find_one({"owner_address":transaction['from']},{"username":1,"_id":0})
                 if token_deta is not None:
                     fromusern = token_deta['username']
                 else:
                     fromusern = None                
-                print(fromusern)
                 print(too)
+                print(fro)
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
                 to_safename = mycursor.fetchone()
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
@@ -126,7 +125,7 @@ def EthSync():
             bal = round((float(balance)/1000000000000000000),6)
         except Exception:
             bal = 0
-        print(address)
+        print("address",address)
         ret = mongo.db.dev_sws_history.update({
             "address":address            
         },{
@@ -399,7 +398,8 @@ def EthIntSync():
                     fromusern = token_deta['username']
                 else:
                     fromusern = None
-
+                print(too)
+                print(fro)
                 if too !="":
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
                     to_safename = mycursor.fetchone()
