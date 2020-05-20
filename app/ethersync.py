@@ -109,11 +109,10 @@ def EthSync():
                     fromusern = token_deta['username']
                 else:
                     fromusern = None                
-                print(too)
-                print(fro)
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
+
+                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
                 to_safename = mycursor.fetchone()
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
+                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                 from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
                 frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
@@ -230,9 +229,9 @@ def EthTimeSyncc(minn):
                 else:
                     fromusern = None
 
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
+                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
                 to_safename = mycursor.fetchone()
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
+                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                 from_safename = mycursor.fetchone()
 
 
@@ -398,15 +397,13 @@ def EthIntSync():
                     fromusern = token_deta['username']
                 else:
                     fromusern = None
-                print(too)
-                print(fro)
                 if too !="":
-                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
+                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
                     to_safename = mycursor.fetchone()
                 else:
                     to_safename = []
                 
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
+                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                 from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
                 frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
