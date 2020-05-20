@@ -99,17 +99,19 @@ def EthSync():
                 tx_id = transaction['hash']
                 blockNumber = transaction['blockNumber']
                 
-                token_details = temp_db.owners_data.find_one({"owner_address":too},{"username":1,"_id":0})
+                token_details = temp_db.owners_data.find_one({"owner_address":transaction['to']},{"username":1,"_id":0})
                 if token_details is not None:
                     usern = token_details['username']
                 else:
                     usern = None
-
-                token_deta = temp_db.owners_data.find_one({"owner_address":fro},{"username":1,"_id":0})
+                print(usern)
+                token_deta = temp_db.owners_data.find_one({"owner_address":transaction['from']},{"username":1,"_id":0})
                 if token_deta is not None:
                     fromusern = token_deta['username']
                 else:
                     fromusern = None                
+                print(fromusern)
+                print(too)
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'"')
                 to_safename = mycursor.fetchone()
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
@@ -217,13 +219,13 @@ def EthTimeSyncc(minn):
                 tx_id = transaction['hash']
                 blockNumber = transaction['blockNumber']
         
-                token_details = temp_db.owners_data.find_one({"owner_address":too},{"username":1,"_id":0})
+                token_details = temp_db.owners_data.find_one({"owner_address":transaction['to']},{"username":1,"_id":0})
                 if token_details is not None:
                     usern = token_details['username']
                 else:
                     usern = None
 
-                token_deta = temp_db.owners_data.find_one({"owner_address":fro},{"username":1,"_id":0})
+                token_deta = temp_db.owners_data.find_one({"owner_address":transaction['from']},{"username":1,"_id":0})
                 if token_deta is not None:
                     fromusern = token_deta['username']
                 else:
@@ -386,13 +388,13 @@ def EthIntSync():
             if send_amount != "0":
                 tx_id = transaction['hash']
                 intblockNumber = transaction['blockNumber']
-                token_details = temp_db.owners_data.find_one({"owner_address":too},{"username":1,"_id":0})
+                token_details = temp_db.owners_data.find_one({"owner_address":transaction['to']},{"username":1,"_id":0})
                 if token_details is not None:
                     usern = token_details['username']
                 else:
                     usern = None
 
-                token_deta = temp_db.owners_data.find_one({"owner_address":fro},{"username":1,"_id":0})
+                token_deta = temp_db.owners_data.find_one({"owner_address":transaction['from']},{"username":1,"_id":0})
                 if token_deta is not None:
                     fromusern = token_deta['username']
                 else:
