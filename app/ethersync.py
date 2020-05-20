@@ -6,6 +6,7 @@ from app.util import serialize_doc
 from app.config import ETH_balance
 from app.config import ETH_transactions
 from app.config import mydb,mycursor
+from pymongo import MongoClient
 import logging
 import datetime
 from datetime import timedelta  
@@ -26,6 +27,8 @@ ETHERSCAN_API_KEY = "UKIKGWXX57YZQBVF2DYG1KQYQFVKUU8CEH"
 TOPIC_TRANSFER = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
 ETH_internal_transactions ="http://api.etherscan.io/api?module=account&action=txlistinternal&address={{address}}&startblock={{startblock}}&endblock={{endblock}}&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
+client = MongoClient("mongodb://admin:0vXPeLcPxME40Yd@157.245.124.93/marketcap?authSource=admin")
+temp_db = client.marketcap
 
 def EthSync():
     print("start")
@@ -99,8 +102,21 @@ def EthSync():
                 to_safename = mycursor.fetchone()
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
                 from_safename = mycursor.fetchone()
-                to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None})
-                frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
+
+                token_details = temp_db.owners_data.find_one({"owner_address":str(too)},{"username":1,"_id":0})
+                if token_details is not None:
+                    usern = token_details['username']
+                else:
+                    usern = None
+
+                token_deta = temp_db.owners_data.find_one({"owner_address":str(fro)},{"username":1,"_id":0})
+                if token_deta is not None:
+                    fromusern = token_deta['username']
+                else:
+                    fromusern = None
+
+                to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
+                frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                 array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         balance = response['result']
         amount_recived =""
@@ -205,8 +221,22 @@ def EthTimeSyncc(minn):
                 to_safename = mycursor.fetchone()
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
                 from_safename = mycursor.fetchone()
-                to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None})
-                frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
+
+                token_details = temp_db.owners_data.find_one({"owner_address":str(too)},{"username":1,"_id":0})
+                if token_details is not None:
+                    usern = token_details['username']
+                else:
+                    usern = None
+
+                token_deta = temp_db.owners_data.find_one({"owner_address":str(fro)},{"username":1,"_id":0})
+                if token_deta is not None:
+                    fromusern = token_deta['username']
+                else:
+                    fromusern = None
+
+
+                to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
+                frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                 array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         ret = mongo.db.dev_sws_history.update({
             "address":address            
@@ -363,8 +393,19 @@ def EthIntSync():
                     to_safename = []
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
                 from_safename = mycursor.fetchone()
-                to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None})
-                frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
+                token_details = temp_db.owners_data.find_one({"owner_address":str(too)},{"username":1,"_id":0})
+                if token_details is not None:
+                    usern = token_details['username']
+                else:
+                    usern = None
+
+                token_deta = temp_db.owners_data.find_one({"owner_address":str(fro)},{"username":1,"_id":0})
+                if token_deta is not None:
+                    fromusern = token_deta['username']
+                else:
+                    fromusern = None
+                to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
+                frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                 array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})
         if array:
             for arra in array:
@@ -374,22 +415,6 @@ def EthIntSync():
         else:
             pass        
 
-
-def risk_score():
-    mycursor.execute('SELECT address FROM sws_risk_score')
-    check = mycursor.fetchall()
-    for addr in check:
-        address=addr[0]
-        mycursor.execute('SELECT risk_score_by_tx,riskscore_by_safename,riskscore_by_knownheist FROM sws_risk_score WHERE address="'+str(address)+'"')
-        check = mycursor.fetchall()
-        for record in check:
-            score = 0
-            for lst in record:
-                if lst is not None:
-                    score = lst+score
-            risk_score = 50+score
-            mycursor.execute('UPDATE sws_address SET address_risk_score="'+str(risk_score)+'" WHERE address = "'+str(address)+'"')
-            mydb.commit()
 
 
 """
