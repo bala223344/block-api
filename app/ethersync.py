@@ -100,13 +100,13 @@ def EthSync():
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
                 from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None})
-                frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
+                frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
                 array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         balance = response['result']
         amount_recived =""
         amount_sent =""
         try:
-            bal = (int(balance)/1000000000000000000)
+            bal = round((float(balance)/1000000000000000000),6)
         except Exception:
             bal = 0
         print(address)
@@ -206,7 +206,7 @@ def EthTimeSyncc(minn):
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
                 from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None})
-                frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
+                frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
                 array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         ret = mongo.db.dev_sws_history.update({
             "address":address            
@@ -364,7 +364,7 @@ def EthIntSync():
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
                 from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None})
-                frm.append({"from":fro,"send_amount":str(int(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
+                frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None})
                 array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})
         if array:
             for arra in array:
