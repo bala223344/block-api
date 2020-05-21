@@ -56,8 +56,8 @@ def create_app(test_config=None):
 
     EthSync_scheduler = BackgroundScheduler()
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=3)
-    #EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=18,minute=59)
-    EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=3)
+    EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=10,minute=37)
+    #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=3)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=20)
     EthSync_scheduler.start()
 
@@ -71,11 +71,11 @@ def create_app(test_config=None):
 
 
     EthIntSync_scheduler = BackgroundScheduler()
-    EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',minutes=10)
+    #EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',minutes=10)
     #EthIntSync_scheduler.add_job(EthIntSync2,trigger='interval',minutes=10)
     #EthIntSync_scheduler.add_job(EthIntSync3,trigger='interval',minutes=20)
     #EthIntSync_scheduler.add_job(EthIntSync4,trigger='interval',minutes=30)
-    #EthIntSync_scheduler.add_job(EthIntSync1, trigger='cron', day_of_week='mon-sat', hour=18,minute=59)
+    EthIntSync_scheduler.add_job(EthIntSync1, trigger='cron', day_of_week='mon-sat', hour=10,minute=40)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=30)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=60)
     EthIntSync_scheduler.start()
@@ -84,7 +84,7 @@ def create_app(test_config=None):
     btc_data_sync_scheduler = BackgroundScheduler()
     btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=5000)
     btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=2000)
-    btc_data_sync_scheduler.add_job(btc_data_sync, trigger='cron', day_of_week='mon-sat', hour=8,minute=5)
+    #btc_data_sync_scheduler.add_job(btc_data_sync, trigger='cron', day_of_week='mon-sat', hour=10,minute=59)
     btc_data_sync_scheduler.start()
 
 
