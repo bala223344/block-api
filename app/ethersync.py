@@ -94,7 +94,7 @@ def EthSync():
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                 from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
-                frm.append({"from":fro,"send_amount":str(round(float(send_amount)/1000000000000000000),6),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
+                frm.append({"from":fro,"send_amount":str(round((float(send_amount)/1000000000000000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                 array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         balance = response['result']
         amount_recived =""
@@ -191,7 +191,7 @@ def EthTimeSyncc(minn):
 
 
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
-                frm.append({"from":fro,"send_amount":str(round(float(send_amount)/1000000000000000000),6),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
+                frm.append({"from":fro,"send_amount":str(round((float(send_amount)/1000000000000000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                 array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         ret = mongo.db.dev_sws_history.update({
             "address":address            
@@ -345,7 +345,7 @@ def EthIntSync():
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                 from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
-                frm.append({"from":fro,"send_amount":str(round(float(send_amount)/1000000000000000000),6),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
+                frm.append({"from":fro,"send_amount":str(round((float(send_amount)/1000000000000000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                 array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})
         if array:
             for arra in array:
