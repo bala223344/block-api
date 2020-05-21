@@ -103,6 +103,7 @@ def EthSync():
             bal = round((float(balance)/1000000000000000000),6)
         except Exception:
             bal = 0
+        print(address)
         ret = mongo.db.dev_sws_history.update({
             "address":address            
         },{
