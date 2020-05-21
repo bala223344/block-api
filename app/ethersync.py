@@ -32,12 +32,12 @@ temp_db = client.marketcap
 
 def EthSync():
     print("start")
-    #mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
-    #current_tx = mycursor.fetchall()
-    addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
-    for addresses in addresses:
+    mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
+    current_tx = mycursor.fetchall()
+    #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
+    for addresses in current_tx:
         array=[]
-        address = addresses#[0]
+        address = addresses[0]
         ret=ETH_balance.replace("{{address}}",''+address+'')
         response_user_token = requests.get(url=ret)
         response = response_user_token.json()       
@@ -71,26 +71,6 @@ def EthSync():
             timestamp = transaction['timeStamp']
             first_date=int(timestamp)
             dt_object = datetime.datetime.fromtimestamp(first_date)
-            current_t = datetime.datetime.utcnow()
-
-            diff = current_t- dt_object
-            total_time = diff.days*24*60*60 + diff.seconds
-
-            if total_time <= 60:
-                total_time = round(total_time,2)
-                total_expected_time = "{} second ago".format(total_time)
-            elif total_time>60 and total_time<=3600:
-                total_time = total_time/60
-                total_time = round(total_time,1)
-                total_expected_time = "{} minutes ago".format(total_time)
-            elif total_time>3600 and total_time<=86400:
-                total_time = total_time/3600
-                total_time = round(total_time,1)
-                total_expected_time = "{} hours ago".format(total_time)
-            else:
-                total_time = total_time/86400
-                total_time = round(total_time,1)
-                total_expected_time = "{} days ago".format(total_time)
 
             fro =transaction['from']
             too=transaction['to']
@@ -109,14 +89,13 @@ def EthSync():
                     fromusern = token_deta['username']
                 else:
                     fromusern = None                
-
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
                 to_safename = mycursor.fetchone()
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                 from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
-                frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
-                array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
+                frm.append({"from":fro,"send_amount":str(round(float(send_amount)/1000000000000000000),6),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
+                array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         balance = response['result']
         amount_recived =""
         amount_sent =""
@@ -124,7 +103,6 @@ def EthSync():
             bal = round((float(balance)/1000000000000000000),6)
         except Exception:
             bal = 0
-        print("address",address)
         ret = mongo.db.dev_sws_history.update({
             "address":address            
         },{
@@ -146,15 +124,13 @@ def EthSync():
                             "transactions":listobj}})
 
 def EthTimeSyncc(minn):
-    """
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         "date_time": {
             "$lte": datetime.datetime.utcnow() - datetime.timedelta(minutes=minn)
         }
     }).distinct("address")
-    """
-    addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
+    #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
 
     for address in addresses:
         array=[]
@@ -188,27 +164,6 @@ def EthTimeSyncc(minn):
             timestamp = transaction['timeStamp']
             first_date=int(timestamp)
             dt_object = datetime.datetime.fromtimestamp(first_date)
-            current_t = datetime.datetime.utcnow()
-
-            diff = current_t- dt_object
-            total_time = diff.days*24*60*60 + diff.seconds
-
-            if total_time <= 60:
-                total_time = round(total_time,2)
-                total_expected_time = "{} second ago".format(total_time)
-            elif total_time>60 and total_time<=3600:
-                total_time = total_time/60
-                total_time = round(total_time,1)
-                total_expected_time = "{} minutes ago".format(total_time)
-            elif total_time>3600 and total_time<=86400:
-                total_time = total_time/3600
-                total_time = round(total_time,1)
-                total_expected_time = "{} hours ago".format(total_time)
-            else:
-                total_time = total_time/86400
-                total_time = round(total_time,1)
-                total_expected_time = "{} days ago".format(total_time)
-
 
             fro =transaction['from']
             too=transaction['to']
@@ -236,8 +191,8 @@ def EthTimeSyncc(minn):
 
 
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
-                frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
-                array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
+                frm.append({"from":fro,"send_amount":str(round(float(send_amount)/1000000000000000000),6),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
+                array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         ret = mongo.db.dev_sws_history.update({
             "address":address            
         },{
@@ -305,6 +260,10 @@ def EthIntSync4():
 
 
 def EthIntSync():
+    addresses = mongo.db.dev_sws_history.find({
+        "type_id": "1",
+        }).distinct("address")
+
     """
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
@@ -313,7 +272,7 @@ def EthIntSync():
         }
     }).distinct("address")
     """
-    addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
+    #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
     for address in addresses:
         array=[]
         blocks = mongo.db.dev_sws_history.aggregate(
@@ -356,26 +315,6 @@ def EthIntSync():
             timestamp = transaction['timeStamp']
             first_date=int(timestamp)
             dt_object = datetime.datetime.fromtimestamp(first_date)   
-            current_t = datetime.datetime.utcnow()
-
-            diff = current_t- dt_object
-            total_time = diff.days*24*60*60 + diff.seconds
-
-            if total_time <= 60:
-                total_time = round(total_time,2)
-                total_expected_time = "{} second ago".format(total_time)
-            elif total_time>60 and total_time<=3600:
-                total_time = total_time/60
-                total_time = round(total_time,1)
-                total_expected_time = "{} minutes ago".format(total_time)
-            elif total_time>3600 and total_time<=86400:
-                total_time = total_time/3600
-                total_time = round(total_time,1)
-                total_expected_time = "{} hours ago".format(total_time)
-            else:
-                total_time = total_time/86400
-                total_time = round(total_time,1)
-                total_expected_time = "{} days ago".format(total_time)
 
             fro =transaction['from']
             if 'to' in transaction:
@@ -406,8 +345,8 @@ def EthIntSync():
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                 from_safename = mycursor.fetchone()
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
-                frm.append({"from":fro,"send_amount":str(float(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
-                array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})
+                frm.append({"from":fro,"send_amount":str(round(float(send_amount)/1000000000000000000),6),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
+                array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})
         if array:
             for arra in array:
                 ret = mongo.db.dev_sws_history.update({
