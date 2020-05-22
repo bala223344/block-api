@@ -99,7 +99,10 @@ def EthSync():
                     array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         except Exception:
             pass
-        balance = response['result']
+        try:
+            balance = response['result']
+        except Exception:
+            balance = 0
         amount_recived =""
         amount_sent =""
         try:
@@ -352,6 +355,7 @@ def EthIntSync():
                     array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})
         except Exception:
             pass
+        print(address)
         if array:
             for arra in array:
                 ret = mongo.db.dev_sws_history.update({
@@ -361,7 +365,7 @@ def EthIntSync():
             pass        
 
 
-
+#1GQhVHcghcNrgdvuWqzHxM3Ln23hxfqpvX
 """
 ret=ETH_balance.replace("{{address}}",''+address+'')
 response_user_token = requests.get(url=ret)

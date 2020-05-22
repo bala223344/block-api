@@ -56,7 +56,7 @@ def create_app(test_config=None):
 
     EthSync_scheduler = BackgroundScheduler()
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=3)
-    EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=18,minute=20)
+    EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=12,minute=10)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=3)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=20)
     EthSync_scheduler.start()
@@ -75,16 +75,16 @@ def create_app(test_config=None):
     #EthIntSync_scheduler.add_job(EthIntSync2,trigger='interval',minutes=10)
     #EthIntSync_scheduler.add_job(EthIntSync3,trigger='interval',minutes=20)
     #EthIntSync_scheduler.add_job(EthIntSync4,trigger='interval',minutes=30)
-    EthIntSync_scheduler.add_job(EthIntSync1, trigger='cron', day_of_week='mon-sun', hour=21,minute=40)
+    EthIntSync_scheduler.add_job(EthIntSync1, trigger='cron', day_of_week='mon-sun', hour=13,minute=3)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=30)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=60)
     EthIntSync_scheduler.start()
 
 
     btc_data_sync_scheduler = BackgroundScheduler()
-    btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=5000)
-    btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=2000)
-    #btc_data_sync_scheduler.add_job(btc_data_sync, trigger='cron', day_of_week='mon-sat', hour=10,minute=59)
+    #btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=10)
+    btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=30)
+    #btc_data_sync_scheduler.add_job(btc_data_sync, trigger='cron', day_of_week='mon-sat', hour=9,minute=21)
     btc_data_sync_scheduler.start()
 
 
@@ -171,3 +171,4 @@ def create_app(test_config=None):
         invoice_notification_interval_scheduler.shutdown()
         EthSync_scheduler.shutdown()
         EthTimeSync_scheduler.shutdown()
+
