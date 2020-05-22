@@ -8,6 +8,7 @@ from app.config import SendGridAPIClient_key,Sendgrid_default_mail,BTC_balance
 from app.config import mydb,mycursor
 from app import mongo
 import numpy as np
+from app.ethersync import temp_db
 
 BTC_sync_balance="https://blockchain.coinmarketcap.com/api/address?address={{address}}&symbol=BTC&start={{block}}&limit=50"
 
@@ -18,7 +19,7 @@ def btc_data(address,symbol,type_id):
     ret=BTC_balance.replace("{{address}}",''+address+'')
     ret1=ret.replace("{{symbol}}",''+symbol+'')
     response_user_token = requests.get(url=ret1)
-    transaction = response_user_token.json()       
+    transaction = response_user_token.json()
     
     if symbol == "BTC":
         balance =transaction['balance']
@@ -95,6 +96,7 @@ def btc_notification(address,symbol,type_id):
 
 
 
+
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
 
 def btc_data_sync():
@@ -103,79 +105,79 @@ def btc_data_sync():
     #current_tx = ["1416bVmA8Wwd3GGGA9W3kgmWiJTota7U62","18xmAHjjsTe8FJ6PAKAL5TxBc4Ypewo6q3","1BPnQZhMzVmM2Rnhs9YpRf8kJvBAzaUcAt","1EAECn7nzqMbk7FD3qa1dvbYkWj58iSV69","1GQhVHcghcNrgdvuWqzHxM3Ln23hxfqpvX","1JDSPz2rsfwNixJzc8pWBQx5v7b4wr5equ","1LP5s5m1VVXd59AYzdjcDLm4Rz1Duw1s2v","3NxLx7v8N2uA1HA4z7cncYVMcjKakqBmm9"]
     for addresses in current_tx:
         address = addresses[0]
-        Recblocks = mongo.db.dev_sws_history.find_one({"address":address,"type_id":"2"})
-        if Recblocks is not None:
-            block = Recblocks['block']
-        else:
-            block = 1
-        ret=BTC_sync_balance.replace("{{address}}",''+address+'')
-        ret1=ret.replace("{{block}}",''+str(block)+'')
-        response_user_token = requests.get(url=ret1)
-        transaction = response_user_token.json()       
-        
-        balance =transaction['balance'] if "balance" in transaction else 0
-        amountReceived =transaction['amount_received']
-        amountSent =transaction['amount_sent']
-        transactions = transaction['txs']
         array=[]
-        for transaction in transactions:
-            fee=transaction['fee']
-            tx_id = transaction['hash']
-            frmm=transaction['inputs']
-            frm=[]
-            for trans in frmm:
-                fro=trans['address']
-                send=trans['value']
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
-                from_safename = mycursor.fetchone()
-                frm.append({"from":fro,"send_amount":str(int(send)/100000000),"safename":from_safename[0] if from_safename else None})
-            transac=transaction['outputs']
-            to=[]
-            for too in transac:
-                t = too['address'] 
-                recive =too['value']/100000000
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(t)+'"')
-                to_safename = mycursor.fetchone()
-                to.append({"to":t,"receive_amount": np.format_float_positional(recive),"safename":to_safename[0] if to_safename else None})
-            timestamp =transaction['timestamp']
-            dt_object = datetime.datetime.fromtimestamp(timestamp)
-            current_t = datetime.datetime.utcnow()
-
-            diff = current_t- dt_object
-            total_time = diff.days*24*60*60 + diff.seconds
-
-            if total_time <= 60:
-                total_time = round(total_time,2)
-                total_expected_time = "{} second ago".format(total_time)
-            elif total_time>60 and total_time<=3600:
-                total_time = total_time/60
-                total_time = round(total_time,1)
-                total_expected_time = "{} minutes ago".format(total_time)
-            elif total_time>3600 and total_time<=86400:
-                total_time = total_time/3600
-                total_time = round(total_time,1)
-                total_expected_time = "{} hours ago".format(total_time)
+        try:
+            Recblocks = mongo.db.dev_sws_history.find_one({"address":address,"type_id":"2"})
+            if Recblocks is not None:
+                block = Recblocks['block']
             else:
-                total_time = total_time/86400
-                total_time = round(total_time,1)
-                total_expected_time = "{} days ago".format(total_time)
+                block = 1
+            ret=BTC_sync_balance.replace("{{address}}",''+address+'')
+            ret1=ret.replace("{{block}}",''+str(block)+'')
+            response_user_token = requests.get(url=ret1)
+            transaction = response_user_token.json()       
+            
+            balance =transaction['balance'] if "balance" in transaction else 0
+            amountReceived =transaction['amount_received']
+            amountSent =transaction['amount_sent']
+            transactions = transaction['txs']
+            
+            for transaction in transactions:
+                fee=transaction['fee']
+                tx_id = transaction['hash']
+                
+                frmm=transaction['inputs']
+                frm=[]
+                for trans in frmm:
+                    fro=trans['address']
+                    send=trans['value']
 
-            array.append({"fee":fee,"from":frm,"to":to,"date":total_expected_time,"dt_object":dt_object,"Tx_id":tx_id})
-        if array:
-            block = block+len(array)
-        ret = mongo.db.dev_sws_history.update({
-            "address":address            
-        },{
-            "$set":{    
-                    "address":address,
-                    "symbol":"BTC",
-                    "type_id":"2",
-                    "block":int(block),
-                    "date_time":datetime.datetime.utcnow(),
-                    "balance":(int(balance)/100000000),
-                    "amountReceived":(int(amountReceived)/100000000),
-                    "amountSent":(int(amountSent)/100000000)
-                }},upsert=True)
+                    token_deta = temp_db.owners_data.find_one({"owner_address":trans['address']},{"username":1,"_id":0})
+                    if token_deta is not None:
+                        fromusern = token_deta['username']
+                    else:
+                        fromusern = None                
+
+                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
+                    from_safename = mycursor.fetchone()
+                    frm.append({"from":fro,"send_amount":str(round((float(send)/100000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
+                
+                transac=transaction['outputs']
+                to=[]
+                for too in transac:
+                    t = too['address'] 
+                    recive =too['value']/100000000
+
+                    token_details = temp_db.owners_data.find_one({"owner_address":too['address']},{"username":1,"_id":0})
+                    if token_details is not None:
+                        usern = token_details['username']
+                    else:
+                        usern = None
+
+                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(t)+'"')
+                    to_safename = mycursor.fetchone()
+                    to.append({"to":t,"receive_amount": np.format_float_positional(recive),"safename":to_safename[0] if to_safename else None,"openseaname":usern})
+                timestamp =transaction['timestamp']
+                dt_object = datetime.datetime.fromtimestamp(timestamp)
+                array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id})
+            if array:
+                block = block+len(array)
+            print(address)
+            ret = mongo.db.dev_sws_history.update({
+                "address":address            
+            },{
+                "$set":{    
+                        "address":address,
+                        "symbol":"BTC",
+                        "type_id":"2",
+                        "block":int(block),
+                        "date_time":datetime.datetime.utcnow(),
+                        "balance":round((float(balance)/100000000),6),
+                        "amountReceived":round((float(amountReceived)/100000000),6),
+                        "amountSent":round((float(amountSent)/100000000),6)
+                    }},upsert=True)
+        except Exception:
+            pass
         if array:
             for listobj in array:
                 ret = mongo.db.dev_sws_history.update({
