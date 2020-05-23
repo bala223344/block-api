@@ -21,6 +21,8 @@ from app.heist_associated_scheduler import heist_associated_fetch
 from app.top_users_scheduler import Top_user_percentage
 from app.ethersync import EthSync,EthTimeSync,EthTimeSync1,EthTimeSync2,EthTimeSync3,EthIntSync1,EthIntSync2,EthIntSync3,EthIntSync4
 from app.btc import btc_data_sync
+from app.gpl import GplDataSync
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
