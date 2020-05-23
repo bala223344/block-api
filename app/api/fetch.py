@@ -295,6 +295,7 @@ def local_transaction(address):
     return jsonify(docs),200
 
 
+
 #-------Api for return tx_history and balance by address--------
 
 @bp.route("/LocalTransaction",methods=['POST'])
@@ -306,11 +307,14 @@ def LocalTransaction():
     type_id=request.json.get("type_id","")
     docs = mongo.db.dev_sws_history.find_one({"address":address})
     if docs is not None:
-        tx = docs['transactions']
-        sortedArray = sorted(tx,key=lambda x:(x['dt_object']), reverse=True)
-        docs['transactions'] = sortedArray
-        docs=serialize_doc(docs)
-        return jsonify(docs),200
+        if 'transactions' in docs:
+            tx = docs['transactions']
+            sortedArray = sorted(tx,key=lambda x:(x['dt_object']), reverse=True)
+            docs['transactions'] = sortedArray
+            docs=serialize_doc(docs)
+            return jsonify(docs),200
+        else:
+            return jsonify({"status":"no data"})
     else:
         return jsonify({"status":"no data"})
 
