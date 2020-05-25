@@ -60,13 +60,13 @@ def create_app(test_config=None):
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=3)
     EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=12,minute=10)
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=5)
-    #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=3)
+    EthSync_scheduler.add_job(EthSync,trigger='interval',hours=2)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=20)
     EthSync_scheduler.start()
 
 
     EthTimeSync_scheduler = BackgroundScheduler()
-    EthTimeSync_scheduler.add_job(EthTimeSync,trigger='interval',minutes=50000)
+    EthTimeSync_scheduler.add_job(EthTimeSync,trigger='interval',hours=5000)
     #EthTimeSync_scheduler.add_job(EthTimeSync1,trigger='interval',minutes=30)
     #EthTimeSync_scheduler.add_job(EthTimeSync2,trigger='interval',minutes=40)
     #EthTimeSync_scheduler.add_job(EthTimeSync3,trigger='interval',minutes=6000)
@@ -76,12 +76,22 @@ def create_app(test_config=None):
     EthIntSync_scheduler = BackgroundScheduler()
     EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',hours=2)
     EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',hours=3)
-    #EthIntSync_scheduler.add_job(EthIntSync3,trigger='interval',minutes=20)
+    EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',minutes=5)
     #EthIntSync_scheduler.add_job(EthIntSync4,trigger='interval',minutes=30)
     EthIntSync_scheduler.add_job(EthIntSync1, trigger='cron', day_of_week='mon-sun', hour=13,minute=3)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=30)
     #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=60)
     EthIntSync_scheduler.start()
+
+    GplDataSync_scheduler = BackgroundScheduler()
+    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=2)
+    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=3)
+    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',minutes=5)
+    #EthIntSync_scheduler.add_job(GplDataSync,trigger='interval',minutes=30)
+    GplDataSync_scheduler.add_job(GplDataSync, trigger='cron', day_of_week='mon-sun', hour=13,minute=30)
+    #EthSync_scheduler.add_job(GplDataSync,trigger='interval',minutes=30)
+    #EthSync_scheduler.add_job(GplDataSync,trigger='interval',minutes=60)
+    GplDataSync_scheduler.start()
 
 
     btc_data_sync_scheduler = BackgroundScheduler()
@@ -174,4 +184,5 @@ def create_app(test_config=None):
         invoice_notification_interval_scheduler.shutdown()
         EthSync_scheduler.shutdown()
         EthTimeSync_scheduler.shutdown()
+        GplDataSync_scheduler.shutdown()
 
