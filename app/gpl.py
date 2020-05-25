@@ -60,79 +60,87 @@ def gpl_data(address,symbol,type_id):
 
 def GplDataSync():
     print("gpl_data_running")
-    mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
-    current_tx = mycursor.fetchall()
+    #mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
+    #current_tx = mycursor.fetchall()
     #current_tx = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4"]
-    for addresses in current_tx:
+    addresses = mongo.db.dev_sws_history.find({
+        "type_id": "1",
+        }).distinct("address")
+    for address in addresses:
         array=[]
-        address = addresses[0]
+        #address = addresses[0]
         #ret=GplBalance.replace("{{address}}",''+address+'')
         #response_user_token = requests.get(url=ret)
         #response = response_user_token.json()       
-    
-        blocks = mongo.db.dev_sws_history.aggregate(
-        [  
-            {"$unwind" : "$transactions"},
-            {
-                "$match": {
-                    "address":address
+        try:
+            blocks = mongo.db.dev_sws_history.aggregate(
+            [  
+                {"$unwind" : "$transactions"},
+                {
+                    "$match": {
+                        "address":address
+                    }
+                },
+                {
+                    "$group" : {
+                        "_id" : "$_id",
+                        "maxercblockNumber" : {"$max" : "$transactions.ercblockNumber"}
+                    }
                 }
-            },
-            {
-                "$group" : {
-                    "_id" : "$_id",
-                    "maxercblockNumber" : {"$max" : "$transactions.ercblockNumber"}
-                }
-            }
-        ])
-        blocks = [serialize_doc(doc) for doc in blocks]
-        if blocks:
-            block = blocks[0]
-            if block['maxercblockNumber'] is not None:
-                StartBlock = block['maxercblockNumber'] + 1
+            ])
+            blocks = [serialize_doc(doc) for doc in blocks]
+            if blocks:
+                block = blocks[0]
+                if block['maxercblockNumber'] is not None:
+                    StartBlock = block['maxercblockNumber'] + 1
+                else:
+                    StartBlock = 0
             else:
                 StartBlock = 0
-        else:
-            StartBlock = 0
-        EndBlock = StartBlock + SMART_CONTRACT_BLOCK_STEP
-        doc=GplTransactions.replace("{{address}}",''+address+'')
-        StarBlockrepl=doc.replace("{{startblock}}",''+str(StartBlock)+'')
-        EndBlockRep = StarBlockrepl.replace("{{endblock}}",''+str(EndBlock)+'')
-        response_user = requests.get(url=EndBlockRep)
-        res = response_user.json()       
-        transactions=res['result']
-        for transaction in transactions:
-            frm=[]
-            to=[]
-            fee =""
-            timestamp = transaction['timeStamp']
-            first_date=int(timestamp)
-            dt_object = datetime.fromtimestamp(first_date)
-            fro =transaction['from']
-            too=transaction['to']
-            send_amount=transaction['value']
-            blockNumber = transaction['blockNumber']
-            tx_id = transaction['hash']
-            contractAddress = transaction['contractAddress']
-            ErcContracts = ["0xeeddaa78e0b2de769e969bd049c8faff3280df97","0x95daaab98046846bf4b2853e23cba236fa394a31","0x0f5d2fb29fb7d3cfee444a200298f468908cc942"]
-            if contractAddress in ErcContracts:
-                token_details = temp_db.owners_data.find_one({"owner_address":transaction['to']},{"username":1,"_id":0})
-                if token_details is not None:
-                    usern = token_details['username']
-                else:
-                    usern = None
-                token_deta = temp_db.owners_data.find_one({"owner_address":transaction['from']},{"username":1,"_id":0})
-                if token_deta is not None:
-                    fromusern = token_deta['username']
-                else:
-                    fromusern = None                
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
-                to_safename = mycursor.fetchone()
-                mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
-                from_safename = mycursor.fetchone()
-                to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
-                frm.append({"from":fro,"send_amount":(int(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
-                array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"is_erc20":True,"ercblockNumber":int(blockNumber)})
+            EndBlock = StartBlock + SMART_CONTRACT_BLOCK_STEP
+            doc=GplTransactions.replace("{{address}}",''+address+'')
+            StarBlockrepl=doc.replace("{{startblock}}",''+str(StartBlock)+'')
+            EndBlockRep = StarBlockrepl.replace("{{endblock}}",''+str(EndBlock)+'')
+            response_user = requests.get(url=EndBlockRep)
+            res = response_user.json()
+            transactions=res['result']
+            for transaction in transactions:
+                frm=[]
+                to=[]
+                fee =""
+                try:
+                    timestamp = transaction['timeStamp']
+                except Exception:
+                    timestamp = 0
+                first_date=int(timestamp)
+                dt_object = datetime.fromtimestamp(first_date)
+                fro =transaction['from']
+                too=transaction['to']
+                send_amount=transaction['value']
+                blockNumber = transaction['blockNumber']
+                tx_id = transaction['hash']
+                contractAddress = transaction['contractAddress']
+                ErcContracts = ["0xeeddaa78e0b2de769e969bd049c8faff3280df97","0x95daaab98046846bf4b2853e23cba236fa394a31","0x0f5d2fb29fb7d3cfee444a200298f468908cc942"]
+                if contractAddress in ErcContracts:
+                    token_details = temp_db.owners_data.find_one({"owner_address":transaction['to']},{"username":1,"_id":0})
+                    if token_details is not None:
+                        usern = token_details['username']
+                    else:
+                        usern = None
+                    token_deta = temp_db.owners_data.find_one({"owner_address":transaction['from']},{"username":1,"_id":0})
+                    if token_deta is not None:
+                        fromusern = token_deta['username']
+                    else:
+                        fromusern = None                
+                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
+                    to_safename = mycursor.fetchone()
+                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
+                    from_safename = mycursor.fetchone()
+                    to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
+                    frm.append({"from":fro,"send_amount":(int(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
+                    array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"is_erc20":True,"ercblockNumber":int(blockNumber)})
+        except Exception:
+            pass
         if array:
             for listobj in array:
                 ret = mongo.db.dev_sws_history.update({
