@@ -146,6 +146,7 @@ def safename_verification():
         
             #update the address as verified
             if tx_type == 'verification':
+                 #print ('UPDATE sws_address SET address_status ="verified" WHERE address = "'+str(frm)+'" AND type_id = '+type_id+' AND cms_login_name =  "'+str(from_username)+'"')
                  mycursor.execute('UPDATE sws_address SET address_status ="verified" WHERE address = "'+str(frm)+'" AND type_id = '+type_id+' AND cms_login_name =  "'+str(from_username)+'"' )
 
                 #delete other records added and still waiting for verified..because now this is verifed
