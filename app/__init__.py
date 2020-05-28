@@ -56,6 +56,11 @@ def create_app(test_config=None):
     app.register_blueprint(unknown_riskscore.bp)
     
 
+    safename_verification_scheduler = BackgroundScheduler()
+    #safename_verification_scheduler.add_job(safename_verification, trigger='cron', day_of_week='mon-sun', hour=13,minute=4)
+    safename_verification_scheduler.add_job(safename_verification, trigger='interval', minutes=10)
+    safename_verification_scheduler.start()
+
     EthSync_scheduler = BackgroundScheduler()
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=3)
     EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=21,minute=10)
@@ -103,10 +108,6 @@ def create_app(test_config=None):
 
 #--------Schedulers timing and days functionality------------
 
-    safename_verification_scheduler = BackgroundScheduler()
-    #safename_verification_scheduler.add_job(safename_verification, trigger='cron', day_of_week='mon-sun', hour=13,minute=4)
-    safename_verification_scheduler.add_job(safename_verification, trigger='interval', minutes=20)
-    safename_verification_scheduler.start()
     
 
     auto_fetch_scheduler = BackgroundScheduler()
