@@ -47,7 +47,8 @@ def EthSync():
                 {"$unwind" : "$transactions"},
                 {
                     "$match": {
-                        "address":address
+                        "address":address,
+                        "type_id":"1"
                     }
                 },
                 {
@@ -124,7 +125,8 @@ def EthSync():
         if array:
             for listobj in array:
                 ret = mongo.db.dev_sws_history.update({
-                    "address":address            
+                    "address":address,            
+                    "type_id":"1"
                 },{
                     "$push":{    
                             "transactions":listobj}})
@@ -145,7 +147,8 @@ def EthTimeSyncc(minn):
             {"$unwind" : "$transactions"},
             {
                 "$match": {
-                    "address":address
+                    "address":address,
+                    "type_id":"1"
                 }
             },
             {
@@ -200,7 +203,8 @@ def EthTimeSyncc(minn):
                 frm.append({"from":fro,"send_amount":str(round((float(send_amount)/1000000000000000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                 array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
         ret = mongo.db.dev_sws_history.update({
-            "address":address            
+            "address":address,
+            "type_id":"1"            
         },{
             "$set":{    
                     "date_time":datetime.datetime.utcnow(),
@@ -208,7 +212,8 @@ def EthTimeSyncc(minn):
         if array:
             for listobj in array:
                 ret = mongo.db.dev_sws_history.update({
-                    "address":address            
+                    "address":address,
+                    "type_id":"1"            
                 },{
                     "$push":{    
                             "transactions":listobj
@@ -287,7 +292,8 @@ def EthIntSync():
                 {"$unwind" : "$transactions"},
                 {
                     "$match": {
-                        "address":address
+                        "address":address,
+                        "type_id":"1"
                     }
                 },
                 {
@@ -359,7 +365,8 @@ def EthIntSync():
         if array:
             for arra in array:
                 ret = mongo.db.dev_sws_history.update({
-                    "address":address            
+                    "address":address,
+                    "type_id":"1"            
                 },{'$push': {'transactions': arra}},upsert=False)
         else:
             pass        

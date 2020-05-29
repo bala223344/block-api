@@ -305,7 +305,7 @@ def LocalTransaction():
     address=request.json.get("address", None)    
     symbol=request.json.get("symbol", None)
     type_id=request.json.get("type_id","")
-    docs = mongo.db.dev_sws_history.find_one({"address":address})
+    docs = mongo.db.dev_sws_history.find_one({"address":address,"type_id":type_id})
     if docs is not None:
         if 'transactions' in docs:
             tx = docs['transactions']

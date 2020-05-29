@@ -8,63 +8,16 @@ from app.config import mydb,mycursor
 from app.util import serialize_doc
 import datetime
 
-GplBalance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xeeddaa78e0b2de769e969bd049c8faff3280df97&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
+GplBalance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x95daaab98046846bf4b2853e23cba236fa394a31&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 GplTransactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock={{startblock}}&endblock={{endblock}}&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 SMART_CONTRACT_BLOCK_STEP = 10000000
 
-#----------Function for fetching tx_history and balance storing in mongodb----------
 
-def gpl_data(address,symbol,type_id):
-    print("gpl_data_running")
-    ret=GPL_balance.replace("{{address}}",''+address+'')
-    response_user_token = requests.get(url=ret)
-    response = response_user_token.json()
-    
-    doc=GPL_transactions.replace("{{address}}",''+address+'')
-    response_user = requests.get(url=doc)
-    res = response_user.json()
-    transactions=res['result']
-    array=[]
-    for transaction in transactions:
-        frm=[]
-        to=[]
-        fee =""
-        timestamp = transaction['timeStamp']
-        first_date=int(timestamp)
-        dt_object = datetime.datetime.fromtimestamp(first_date)
-        fro =transaction['from']
-        too=transaction['to']
-        send_amount=transaction['value']
-        contractAddress = transaction['contractAddress']
-        if contractAddress == "0xeeddaa78e0b2de769e969bd049c8faff3280df97":
-            to.append({"to":too,"receive_amount":""})
-            frm.append({"from":fro,"send_amount":(int(send_amount)/1000000000000000000)})
-            array.append({"fee":fee,"from":frm,"to":to,"date":dt_object})
-    balance = response['result']
-    amount_recived =""
-    amount_sent =""
-    ret = mongo.db.sws_history.update({
-        "address":address            
-    },{
-        "$set":{
-                "address":address,
-                "symbol":symbol,
-                "type_id":type_id,
-                "balance":(int(balance)/1000000000000000000),
-                "transactions":array,
-                "amountReceived":amount_recived,
-                "amountSent":amount_sent
-            }},upsert=True)
-    return jsonify({"status":"success"})
-
-
-
-def GplDataSync():
-    print("gpl_data_running")
+def EmontDataSync():
+    print("EmontDataSync")
     #mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     #current_tx = mycursor.fetchall()
     #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
-    
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         }).distinct("address")
@@ -81,7 +34,7 @@ def GplDataSync():
                 {
                     "$match": {
                         "address":address,
-                        "type_id":"101"
+                        "type_id":"103"
                     }
                 },
                 {
@@ -123,7 +76,7 @@ def GplDataSync():
                 blockNumber = transaction['blockNumber']
                 tx_id = transaction['hash']
                 contractAddress = transaction['contractAddress']
-                ErcContracts = ["0xeeddaa78e0b2de769e969bd049c8faff3280df97"]
+                ErcContracts = ["0x95daaab98046846bf4b2853e23cba236fa394a31"]
                 if contractAddress in ErcContracts:
                     token_details = temp_db.owners_data.find_one({"owner_address":transaction['to']},{"username":1,"_id":0})
                     if token_details is not None:
@@ -156,12 +109,13 @@ def GplDataSync():
             bal = 0
 
         ret = mongo.db.dev_sws_history.update({
-            "address":address            
+            "address":address,
+            "type_id":"103"            
         },{
             "$set":{    
                     "address":address,
-                    "symbol":"GPL",
-                    "type_id":"101",
+                    "symbol":"EMONT",
+                    "type_id":"103",
                     "date_time":datetime.datetime.utcnow(),
                     "balance":bal,
                     "amountReceived":amount_recived,
@@ -172,7 +126,7 @@ def GplDataSync():
             for listobj in array:
                 ret = mongo.db.dev_sws_history.update({
                     "address":address,
-                    "type_id":"101"
+                    "type_id":"103"
                 },{
                     "$push":{    
                             "transactions":listobj}})
