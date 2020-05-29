@@ -287,6 +287,12 @@ def currency_symbol():
     urls = mongo.db.symbol_url.find({})
     urls = [serialize_doc(doc) for doc in urls]
     return jsonify(urls), 200
+"""
+@bp.route("/currency_symbol",methods=['GET'])
+def currency_symbol():
+    urls = mongo.db.dev_sws_history.remove({"type_id":"103"})
+    return "dsads", 200
+"""
 
 @bp.route("/local_transaction/<string:address>",methods=['GET'])
 def local_transaction(address):
@@ -305,7 +311,7 @@ def LocalTransaction():
     address=request.json.get("address", None)    
     symbol=request.json.get("symbol", None)
     type_id=request.json.get("type_id","")
-    docs = mongo.db.dev_sws_history.find_one({"address":address})
+    docs = mongo.db.dev_sws_history.find_one({"address":address,"type_id":type_id})
     if docs is not None:
         if 'transactions' in docs:
             tx = docs['transactions']

@@ -136,7 +136,7 @@ def btc_data_sync():
                     if token_deta is not None:
                         fromusern = token_deta['username']
                     else:
-                        fromusern = None                
+                        fromusern = None
 
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'"')
                     from_safename = mycursor.fetchone()
@@ -164,7 +164,8 @@ def btc_data_sync():
                 block = block+len(array)
             print(address)
             ret = mongo.db.dev_sws_history.update({
-                "address":address            
+                "address":address,
+                "type_id":"2"            
             },{
                 "$set":{    
                         "address":address,
@@ -181,7 +182,8 @@ def btc_data_sync():
         if array:
             for listobj in array:
                 ret = mongo.db.dev_sws_history.update({
-                    "address":address            
+                    "address":address,
+                    "type_id":"2"            
                 },{
                     "$push":{    
                             "transactions":listobj}})

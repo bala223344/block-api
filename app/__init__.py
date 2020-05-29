@@ -19,11 +19,11 @@ from app.riskscore_safename_scheduler import risk_score_by_safename
 from app.riskscore_oldtx_scheduler import tx_two_yearold
 from app.heist_associated_scheduler import heist_associated_fetch
 from app.top_users_scheduler import Top_user_percentage
-from app.ethersync import EthSync,EthTimeSync,EthTimeSync1,EthTimeSync2,EthTimeSync3,EthIntSync1,EthIntSync2,EthIntSync3,EthIntSync4
+from app.ethersync import EthSync,EthIntSync1,EthIntSync2,EthIntSync3,EthIntSync4
 from app.btc import btc_data_sync
 from app.gpl import GplDataSync
-
-
+from app.emont import EmontDataSync
+from app.mana import ManaDataSync
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping()
@@ -57,58 +57,49 @@ def create_app(test_config=None):
     
 
     safename_verification_scheduler = BackgroundScheduler()
-    #safename_verification_scheduler.add_job(safename_verification, trigger='cron', day_of_week='mon-sun', hour=13,minute=4)
     safename_verification_scheduler.add_job(safename_verification, trigger='interval', minutes=10)
     safename_verification_scheduler.start()
 
+
+
     EthSync_scheduler = BackgroundScheduler()
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=3)
-    EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=21,minute=10)
+    EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=11,minute=10)
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=5)
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=2)
-    #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=20)
     EthSync_scheduler.start()
 
-
-    EthTimeSync_scheduler = BackgroundScheduler()
-    EthTimeSync_scheduler.add_job(EthTimeSync,trigger='interval',hours=5000)
-    #EthTimeSync_scheduler.add_job(EthTimeSync1,trigger='interval',minutes=30)
-    #EthTimeSync_scheduler.add_job(EthTimeSync2,trigger='interval',minutes=40)
-    #EthTimeSync_scheduler.add_job(EthTimeSync3,trigger='interval',minutes=6000)
-    EthTimeSync_scheduler.start()
 
 
     EthIntSync_scheduler = BackgroundScheduler()
     EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',hours=2)
     EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',hours=3)
     EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',hours=5)
-    #EthIntSync_scheduler.add_job(EthIntSync4,trigger='interval',minutes=30)
-    EthIntSync_scheduler.add_job(EthIntSync1, trigger='cron', day_of_week='mon-sun', hour=21,minute=3)
-    #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=30)
-    #EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=60)
+    EthIntSync_scheduler.add_job(EthIntSync1, trigger='cron', day_of_week='mon-sun', hour=18,minute=27)
     EthIntSync_scheduler.start()
 
+
+
     GplDataSync_scheduler = BackgroundScheduler()
-    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=22222)
-    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=33333)
-    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',minutes=555555)
-    #EthIntSync_scheduler.add_job(GplDataSync,trigger='interval',minutes=30)
-    GplDataSync_scheduler.add_job(GplDataSync, trigger='cron', day_of_week='sun', hour=13,minute=30)
-    #EthSync_scheduler.add_job(GplDataSync,trigger='interval',minutes=30)
-    #EthSync_scheduler.add_job(GplDataSync,trigger='interval',minutes=60)
+    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=2)
+    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=3)
+    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=5)
+    GplDataSync_scheduler.add_job(GplDataSync, trigger='cron', day_of_week='mon-sun', hour=9,minute=45)
+    GplDataSync_scheduler.add_job(EmontDataSync,trigger='interval',hours=3)
+    GplDataSync_scheduler.add_job(EmontDataSync, trigger='cron', day_of_week='mon-sun', hour=9,minute=50)
+    GplDataSync_scheduler.add_job(ManaDataSync,trigger='interval',hours=3)
+    GplDataSync_scheduler.add_job(ManaDataSync, trigger='cron', day_of_week='mon-sun', hour=9,minute=55)
     GplDataSync_scheduler.start()
 
 
     btc_data_sync_scheduler = BackgroundScheduler()
-    #btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=10)
     btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=30)
-    #btc_data_sync_scheduler.add_job(btc_data_sync, trigger='cron', day_of_week='mon-sat', hour=9,minute=21)
     btc_data_sync_scheduler.start()
+
 
 
 #--------Schedulers timing and days functionality------------
 
-    
 
     auto_fetch_scheduler = BackgroundScheduler()
     auto_fetch_scheduler.add_job(auto_fetch, trigger='cron', day_of_week='sun', hour=11,minute=41)
@@ -184,6 +175,5 @@ def create_app(test_config=None):
         Top_user_percentage_scheduler.shutdown()
         invoice_notification_interval_scheduler.shutdown()
         EthSync_scheduler.shutdown()
-        EthTimeSync_scheduler.shutdown()
         GplDataSync_scheduler.shutdown()
 
