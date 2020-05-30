@@ -64,7 +64,7 @@ def create_app(test_config=None):
 
     EthSync_scheduler = BackgroundScheduler()
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=3)
-    EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=11,minute=10)
+    EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=22,minute=10)
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=5)
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=2)
     EthSync_scheduler.start()
@@ -75,7 +75,7 @@ def create_app(test_config=None):
     EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',hours=2)
     EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',hours=3)
     EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',hours=5)
-    EthIntSync_scheduler.add_job(EthIntSync1, trigger='cron', day_of_week='mon-sun', hour=18,minute=27)
+    EthIntSync_scheduler.add_job(EthIntSync1, trigger='cron', day_of_week='mon-sun', hour=22,minute=20)
     EthIntSync_scheduler.start()
 
 
@@ -84,11 +84,11 @@ def create_app(test_config=None):
     GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=2)
     GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=3)
     GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=5)
-    GplDataSync_scheduler.add_job(GplDataSync, trigger='cron', day_of_week='mon-sun', hour=9,minute=45)
+    GplDataSync_scheduler.add_job(GplDataSync, trigger='cron', day_of_week='mon-sun', hour=22,minute=25)
     GplDataSync_scheduler.add_job(EmontDataSync,trigger='interval',hours=3)
-    GplDataSync_scheduler.add_job(EmontDataSync, trigger='cron', day_of_week='mon-sun', hour=9,minute=50)
+    GplDataSync_scheduler.add_job(EmontDataSync, trigger='cron', day_of_week='mon-sun', hour=22,minute=30)
     GplDataSync_scheduler.add_job(ManaDataSync,trigger='interval',hours=3)
-    GplDataSync_scheduler.add_job(ManaDataSync, trigger='cron', day_of_week='mon-sun', hour=9,minute=55)
+    GplDataSync_scheduler.add_job(ManaDataSync, trigger='cron', day_of_week='mon-sun', hour=22,minute=50)
     GplDataSync_scheduler.start()
 
 

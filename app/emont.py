@@ -17,7 +17,7 @@ def EmontDataSync():
     print("EmontDataSync")
     #mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     #current_tx = mycursor.fetchall()
-    #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
+    #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4"]
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         }).distinct("address")
@@ -93,7 +93,7 @@ def EmontDataSync():
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                     from_safename = mycursor.fetchone()
                     to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
-                    frm.append({"from":fro,"send_amount":(int(send_amount)/100000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
+                    frm.append({"from":fro,"send_amount":(float(send_amount)/100000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                     array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"is_erc20":True,"ercblockNumber":int(blockNumber)})
         except Exception:
             pass
@@ -121,7 +121,7 @@ def EmontDataSync():
                     "amountReceived":amount_recived,
                     "amountSent":amount_sent
                 }},upsert=True)
-        
+
         if array:
             for listobj in array:
                 ret = mongo.db.dev_sws_history.update({
