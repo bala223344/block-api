@@ -19,11 +19,16 @@ from app.riskscore_safename_scheduler import risk_score_by_safename
 from app.riskscore_oldtx_scheduler import tx_two_yearold
 from app.heist_associated_scheduler import heist_associated_fetch
 from app.top_users_scheduler import Top_user_percentage
-from app.ethersync import EthSync,EthIntSync1,EthIntSync2,EthIntSync3,EthIntSync4
+from app.ethersync import EthSync,EthIntSync1,EthIntSync2,EthIntSync3,EthIntSync4,EthIntSync5
+from app.ethersync import EthTimeSync,EthTimeSync1,EthTimeSync2,EthTimeSync3,EthTimeSync4
 from app.btc import btc_data_sync
 from app.gpl import GplDataSync
 from app.emont import EmontDataSync
 from app.mana import ManaDataSync
+from apscheduler.triggers.combining import OrTrigger
+from apscheduler.triggers.cron import CronTrigger
+
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping()
@@ -55,45 +60,56 @@ def create_app(test_config=None):
     app.register_blueprint(balance.bp)
     app.register_blueprint(unknown_riskscore.bp)
     
-
     safename_verification_scheduler = BackgroundScheduler()
     safename_verification_scheduler.add_job(safename_verification, trigger='interval', minutes=10)
     safename_verification_scheduler.start()
 
-
-
     EthSync_scheduler = BackgroundScheduler()
-    EthSync_scheduler.add_job(EthSync,trigger='interval',hours=3)
-    EthSync_scheduler.add_job(EthSync, trigger='cron', day_of_week='mon-sun', hour=22,minute=10)
-    EthSync_scheduler.add_job(EthSync,trigger='interval',hours=5)
     EthSync_scheduler.add_job(EthSync,trigger='interval',hours=2)
+    EthSync_scheduler.add_job(EthSync,OrTrigger([CronTrigger(hour=6, minute=30),CronTrigger(hour=10, minute=20),CronTrigger(hour=14, minute=10),CronTrigger(hour=19, minute=40),CronTrigger(hour=4, minute=40)]))
+    EthSync_scheduler.add_job(EthSync,trigger='interval',hours=3)
+    EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=50)
     EthSync_scheduler.start()
 
-
+    EthTimeSync_scheduler = BackgroundScheduler()
+    EthTimeSync_scheduler.add_job(EthTimeSync,trigger='interval',minutes=8)
+    EthTimeSync_scheduler.add_job(EthTimeSync4,OrTrigger([CronTrigger(hour=5, minute=30),CronTrigger(hour=9, minute=20),CronTrigger(hour=13, minute=10),CronTrigger(hour=18, minute=40),CronTrigger(hour=5, minute=40)]))
+    EthTimeSync_scheduler.add_job(EthTimeSync2,trigger='interval',minutes=17)
+    EthTimeSync_scheduler.add_job(EthTimeSync3,trigger='interval',minutes=7)
+    EthTimeSync_scheduler.add_job(EthTimeSync1,trigger='interval',minutes=15)
+    EthTimeSync_scheduler.start()
 
     EthIntSync_scheduler = BackgroundScheduler()
-    EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',hours=2)
-    EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',hours=3)
-    EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',hours=5)
-    EthIntSync_scheduler.add_job(EthIntSync1, trigger='cron', day_of_week='mon-sun', hour=22,minute=20)
+    EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',minutes=3)
+    EthIntSync_scheduler.add_job(EthIntSync2,trigger='interval',minutes=7)
+    EthIntSync_scheduler.add_job(EthIntSync3,trigger='interval',minutes=15)
+    EthIntSync_scheduler.add_job(EthIntSync4,trigger='interval',minutes=18)
+    EthIntSync_scheduler.add_job(EthIntSync5,OrTrigger([CronTrigger(hour=5, minute=00),CronTrigger(hour=9, minute=00),CronTrigger(hour=13, minute=00),CronTrigger(hour=17, minute=00),CronTrigger(hour=3, minute=00)]))
     EthIntSync_scheduler.start()
 
-
-
     GplDataSync_scheduler = BackgroundScheduler()
-    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=2)
-    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=3)
-    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=5)
-    GplDataSync_scheduler.add_job(GplDataSync, trigger='cron', day_of_week='mon-sun', hour=22,minute=25)
-    GplDataSync_scheduler.add_job(EmontDataSync,trigger='interval',hours=3)
-    GplDataSync_scheduler.add_job(EmontDataSync, trigger='cron', day_of_week='mon-sun', hour=22,minute=30)
-    GplDataSync_scheduler.add_job(ManaDataSync,trigger='interval',hours=3)
-    GplDataSync_scheduler.add_job(ManaDataSync, trigger='cron', day_of_week='mon-sun', hour=22,minute=50)
+    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',minutes=40)
+    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',minutes=35)
+    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',hours=1)
+    GplDataSync_scheduler.add_job(GplDataSync,OrTrigger([CronTrigger(hour=4, minute=30),CronTrigger(hour=8, minute=20),CronTrigger(hour=12, minute=10),CronTrigger(hour=16, minute=40),CronTrigger(hour=2, minute=40)]))
     GplDataSync_scheduler.start()
 
+    EmontDataSync_scheduler = BackgroundScheduler()
+    EmontDataSync_scheduler.add_job(EmontDataSync,trigger='interval',hours=1)
+    EmontDataSync_scheduler.add_job(EmontDataSync,trigger='interval',minutes=30)
+    EmontDataSync_scheduler.add_job(EmontDataSync,trigger='interval',minutes=50)
+    EmontDataSync_scheduler.add_job(EmontDataSync,OrTrigger([CronTrigger(hour=3, minute=30),CronTrigger(hour=7, minute=20),CronTrigger(hour=11, minute=10),CronTrigger(hour=15, minute=40),CronTrigger(hour=1, minute=40)]))
+    EmontDataSync_scheduler.start()
+
+    ManaDataSync_scheduler = BackgroundScheduler()
+    ManaDataSync_scheduler.add_job(ManaDataSync,trigger='interval',hours=1)
+    ManaDataSync_scheduler.add_job(ManaDataSync,trigger='interval',minutes=30)
+    ManaDataSync_scheduler.add_job(ManaDataSync,trigger='interval',minutes=50)
+    ManaDataSync_scheduler.add_job(ManaDataSync,OrTrigger([CronTrigger(hour=2, minute=30),CronTrigger(hour=6, minute=20),CronTrigger(hour=10, minute=10),CronTrigger(hour=14, minute=40),CronTrigger(hour=00, minute=40)]))
+    ManaDataSync_scheduler.start()
 
     btc_data_sync_scheduler = BackgroundScheduler()
-    btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=30)
+    btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=5)
     btc_data_sync_scheduler.start()
 
 
@@ -176,4 +192,9 @@ def create_app(test_config=None):
         invoice_notification_interval_scheduler.shutdown()
         EthSync_scheduler.shutdown()
         GplDataSync_scheduler.shutdown()
-
+        safename_verification_scheduler.shutdown()
+        EthTimeSync_scheduler.shutdown()
+        EthIntSync_scheduler.shutdown()
+        EmontDataSync_scheduler.shutdown()
+        ManaDataSync_scheduler.shutdown()
+        btc_data_sync_scheduler.shutdown()

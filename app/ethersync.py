@@ -39,98 +39,128 @@ def EthSync():
         array=[]
         try:
             address = addresses[0]
-            ret=ETH_balance.replace("{{address}}",''+address+'')
-            response_user_token = requests.get(url=ret)
-            response = response_user_token.json()       
-            blocks = mongo.db.dev_sws_history.aggregate(
-            [  
-                {"$unwind" : "$transactions"},
-                {
-                    "$match": {
-                        "address":address,
-                        "type_id":"1"
-                    }
-                },
-                {
-                    "$group" : {
-                        "_id" : "$_id",
-                        "maxblockNumber" : {"$max" : "$transactions.blockNumber"}
-                    }
-                }
-            ])
-            blocks = [serialize_doc(doc) for doc in blocks]
-            if blocks:
-                block = blocks[0]
-                StartBlock = block['maxblockNumber'] + 1
-            else:
-                StartBlock = 0
-            EndBlock = StartBlock + SMART_CONTRACT_BLOCK_STEP
-            transactions = get_txn_list(address,StartBlock,EndBlock,ETHERSCAN_API_KEY)
-            for transaction in transactions:
-                frm=[]
-                to=[]
-                fee =""
-                timestamp = transaction['timeStamp']
-                first_date=int(timestamp)
-                dt_object = datetime.datetime.fromtimestamp(first_date)
+            EthTransaction(address,array)
+        except Exception:
+            pass    
 
-                fro =transaction['from']
-                too=transaction['to']
-                send_amount=transaction['value']
-                if send_amount != "0":
-                    tx_id = transaction['hash']
-                    blockNumber = transaction['blockNumber']
-                    
-                    token_details = temp_db.owners_data.find_one({"owner_address":transaction['to']},{"username":1,"_id":0})
-                    if token_details is not None:
-                        usern = token_details['username']
-                    else:
-                        usern = None
-                    token_deta = temp_db.owners_data.find_one({"owner_address":transaction['from']},{"username":1,"_id":0})
-                    if token_deta is not None:
-                        fromusern = token_deta['username']
-                    else:
-                        fromusern = None                
-                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
-                    to_safename = mycursor.fetchone()
-                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
-                    from_safename = mycursor.fetchone()
-                    to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
-                    frm.append({"from":fro,"send_amount":str(round((float(send_amount)/1000000000000000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
-                    array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
-        except Exception:
-            pass
+def EthTimeSync():
+    EthTimeSyncc(10)
+def EthTimeSync1():
+    EthTimeSyncc(30)
+def EthTimeSync2():
+    EthTimeSyncc(40)
+def EthTimeSync3():
+    EthTimeSyncc(60)
+def EthTimeSync4():
+    EthTimeSyncc(1)
+
+
+def EthTimeSyncc(minn):
+    addresses = mongo.db.dev_sws_history.find({
+        "type_id": "1",
+        "date_time": {
+            "$lte": datetime.datetime.utcnow() - datetime.timedelta(minutes=minn)
+        }
+    }).distinct("address")
+    for address in addresses:
+        array=[]
         try:
-            balance = response['result']
+            EthTransaction(address,array)
         except Exception:
-            balance = 0
-        amount_recived =""
-        amount_sent =""
-        try:
-            bal = round((float(balance)/1000000000000000000),6)
-        except Exception:
-            bal = 0
-        ret = mongo.db.dev_sws_history.update({
-            "address":address,
-            "type_id":"1"            
-        },{
-            "$set":{    
-                    "address":address,
-                    "symbol":"ETH",
-                    "type_id":"1",
-                    "date_time":datetime.datetime.utcnow(),
-                    "balance":bal,
-                    "amountReceived":amount_recived,
-                    "amountSent":amount_sent
-                }},upsert=True)
-        if array:
-            for listobj in array:
-                ret = mongo.db.dev_sws_history.update({
-                    "address":address,            
-                    "type_id":"1"
-                },{
-                    "$push":{    
-                            "transactions":listobj}})
+            pass    
+
+
+def EthTransaction(address,array):
+    ret=ETH_balance.replace("{{address}}",''+address+'')
+    response_user_token = requests.get(url=ret)
+    response = response_user_token.json()       
+    blocks = mongo.db.dev_sws_history.aggregate(
+    [  
+        {"$unwind" : "$transactions"},
+        {
+            "$match": {
+                "address":address,
+                "type_id":"1"
+            }
+        },
+        {
+            "$group" : {
+                "_id" : "$_id",
+                "maxblockNumber" : {"$max" : "$transactions.blockNumber"}
+            }
+        }
+    ])
+    blocks = [serialize_doc(doc) for doc in blocks]
+    if blocks:
+        block = blocks[0]
+        StartBlock = block['maxblockNumber'] + 1
+    else:
+        StartBlock = 0
+    EndBlock = StartBlock + SMART_CONTRACT_BLOCK_STEP
+    transactions = get_txn_list(address,StartBlock,EndBlock,ETHERSCAN_API_KEY)
+    for transaction in transactions:
+        frm=[]
+        to=[]
+        fee =""
+        timestamp = transaction['timeStamp']
+        first_date=int(timestamp)
+        dt_object = datetime.datetime.fromtimestamp(first_date)
+
+        fro =transaction['from']
+        too=transaction['to']
+        send_amount=transaction['value']
+        if send_amount != "0":
+            tx_id = transaction['hash']
+            blockNumber = transaction['blockNumber']
+            
+            token_details = temp_db.owners_data.find_one({"owner_address":transaction['to']},{"username":1,"_id":0})
+            if token_details is not None:
+                usern = token_details['username']
+            else:
+                usern = None
+            token_deta = temp_db.owners_data.find_one({"owner_address":transaction['from']},{"username":1,"_id":0})
+            if token_deta is not None:
+                fromusern = token_deta['username']
+            else:
+                fromusern = None                
+            mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
+            to_safename = mycursor.fetchone()
+            mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
+            from_safename = mycursor.fetchone()
+            to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
+            frm.append({"from":fro,"send_amount":str(round((float(send_amount)/1000000000000000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
+            array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
+    try:
+        balance = response['result']
+    except Exception:
+        balance = 0
+    amount_recived =""
+    amount_sent =""
+    try:
+        bal = round((float(balance)/1000000000000000000),6)
+    except Exception:
+        bal = 0
+    ret = mongo.db.dev_sws_history.update({
+        "address":address,
+        "type_id":"1"            
+    },{
+        "$set":{    
+                "address":address,
+                "symbol":"ETH",
+                "type_id":"1",
+                "date_time":datetime.datetime.utcnow(),
+                "balance":bal,
+                "amountReceived":amount_recived,
+                "amountSent":amount_sent
+            }},upsert=True)
+    if array:
+        for listobj in array:
+            ret = mongo.db.dev_sws_history.update({
+                "address":address,            
+                "type_id":"1"
+            },{
+                "$push":{    
+                        "transactions":listobj}})
 
 
 def get_txn_list(address, start_block, end_block, apikey):
@@ -163,19 +193,22 @@ def get_txn_list(address, start_block, end_block, apikey):
 #----------------------------------------------------------------------------------------------
 
 def EthIntSync1():
-    EthIntSync()
+    EthIntSync(5)
 
 def EthIntSync2():
-    EthIntSync()
+    EthIntSync(12)
 
 def EthIntSync3():
-    EthIntSync()
+    EthIntSync(27)
 
 def EthIntSync4():
-    EthIntSync()
+    EthIntSync(30)
 
+def EthIntSync5():
+    EthIntSync(120)
 
-def EthIntSync():
+def EthIntSync(minn):
+    """
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         }).distinct("address")
@@ -187,7 +220,6 @@ def EthIntSync():
             "$gte": datetime.datetime.utcnow() - datetime.timedelta(minutes=minn)
         }
     }).distinct("address")
-    """
     #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
     for address in addresses:
         array=[]
