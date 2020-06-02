@@ -10,7 +10,7 @@ mongo = db.init_db()
 #---------calling schedulers run time from config.py----------
 
 from app.heist_fetch_scheduler import auto_fetch
-from app.notification_scheduler import tx_notification,tx_notification1
+from app.notification_scheduler import tx_notification,tx_notification1,tx_notification2
 from app.pgpverification_scheduler import pgp_verification
 from app.invoice_scheduler import invoice_moving,invoice_notification_interval, safename_verification
 from app.riskscore_scheduler import risk_score,profile_risk_score
@@ -147,7 +147,7 @@ def create_app(test_config=None):
     tx_notification_scheduler = BackgroundScheduler()
     tx_notification_scheduler.add_job(tx_notification, trigger='interval', hours=2)
     tx_notification_scheduler.add_job(tx_notification1, trigger='interval', minutes=15)
-    #tx_notification_scheduler.add_job(tx_notification, trigger='cron', day_of_week='mon-sat', hour=11,minute=17)
+    tx_notification_scheduler.add_job(tx_notification2,OrTrigger([CronTrigger(hour=3, minute=30),CronTrigger(hour=15, minute=20)]))
     tx_notification_scheduler.start()
     
     risk_score_scheduler = BackgroundScheduler()
