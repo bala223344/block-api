@@ -46,153 +46,155 @@ def tx_notification():
     mycursor.execute('SELECT address,type_id FROM sws_address WHERE tx_notification_preferred = "1"')
     sws_addresses = mycursor.fetchall()
     for addres in sws_addresses:
-        address=addres[0]
-        type_id = addres[1] 
-        
-        if type_id == 1:
-            symbol = 'ETH'
-            currency = eth_notification(address,symbol,type_id)        
+        try:
+            address=addres[0]
+            type_id = addres[1] 
+            
+            if type_id == 1:
+                symbol = 'ETH'
+                currency = eth_notification(address,symbol,type_id)        
 
-        if type_id == 3:
-            symbol = 'ZRX'
-            currency = zrx_notification(address,symbol,type_id)
+            if type_id == 3:
+                symbol = 'ZRX'
+                currency = zrx_notification(address,symbol,type_id)
 
-        if type_id == 2:
-            symbol = 'BTC'
-            currency = btc_notification(address,symbol,type_id)
+            if type_id == 2:
+                symbol = 'BTC'
+                currency = btc_notification(address,symbol,type_id)
 
-        if type_id == 5:
-            symbol = 'ELF'
-            currency = elf_notification(address,symbol,type_id)
-        
-        if type_id == 27:
-            symbol = 'DASH'
-            currency = dash_notification(address,symbol,type_id)
+            if type_id == 5:
+                symbol = 'ELF'
+                currency = elf_notification(address,symbol,type_id)
+            
+            if type_id == 27:
+                symbol = 'DASH'
+                currency = dash_notification(address,symbol,type_id)
 
-        if type_id == 12:
-            symbol = 'BCH'
-            currency = bch_notification(address,symbol,type_id)
+            if type_id == 12:
+                symbol = 'BCH'
+                currency = bch_notification(address,symbol,type_id)
 
-        if type_id == 98:
-            symbol = 'ZEC'
-            currency = zcash_notification(address,symbol,type_id)
+            if type_id == 98:
+                symbol = 'ZEC'
+                currency = zcash_notification(address,symbol,type_id)
 
-        if type_id == 55:
-            symbol = 'MKR'
-            currency = mkr_notification(address,symbol,type_id)
+            if type_id == 55:
+                symbol = 'MKR'
+                currency = mkr_notification(address,symbol,type_id)
 
-        if type_id == 21:
-            symbol = 'LINK'
-            currency = link_notification(address,symbol,type_id)
+            if type_id == 21:
+                symbol = 'LINK'
+                currency = link_notification(address,symbol,type_id)
 
-        if type_id == 11:
-            symbol = 'BNB'
-            currency = bnb_notification(address,symbol,type_id)
+            if type_id == 11:
+                symbol = 'BNB'
+                currency = bnb_notification(address,symbol,type_id)
 
-        if type_id == 75:
-            symbol = 'XRP'
-            currency = xrp_notification(address,symbol,type_id)
+            if type_id == 75:
+                symbol = 'XRP'
+                currency = xrp_notification(address,symbol,type_id)
 
-        if type_id == 53:
-            symbol = 'LTC'
-            currency = ltc_notification(address,symbol,type_id)
+            if type_id == 53:
+                symbol = 'LTC'
+                currency = ltc_notification(address,symbol,type_id)
 
-        if type_id == 14:
-            symbol = 'BTG'
-            currency = btg_notification(address,symbol,type_id)
+            if type_id == 14:
+                symbol = 'BTG'
+                currency = btg_notification(address,symbol,type_id)
 
-        if type_id == 15:
-            symbol = 'BSV'
-            currency = bsv_notification(address,symbol,type_id)
+            if type_id == 15:
+                symbol = 'BSV'
+                currency = bsv_notification(address,symbol,type_id)
 
-        if type_id == 8:
-            symbol = 'REP'
-            currency = rep_notification(address,symbol,type_id)
+            if type_id == 8:
+                symbol = 'REP'
+                currency = rep_notification(address,symbol,type_id)
 
-        if type_id == 9:
-            symbol = 'AOA'
-            currency = aoa_notification(address,symbol,type_id)
+            if type_id == 9:
+                symbol = 'AOA'
+                currency = aoa_notification(address,symbol,type_id)
 
-        if type_id == 10:
-            symbol = 'BAT'
-            currency = bat_notification(address,symbol,type_id)
+            if type_id == 10:
+                symbol = 'BAT'
+                currency = bat_notification(address,symbol,type_id)
 
-        if type_id == 22:
-            symbol = 'CCCX'
-            currency = cccx_notification(address,symbol,type_id)
+            if type_id == 22:
+                symbol = 'CCCX'
+                currency = cccx_notification(address,symbol,type_id)
 
-        if type_id == 24:
-            symbol = 'MCO'
-            currency = mco_notification(address,symbol,type_id)
+            if type_id == 24:
+                symbol = 'MCO'
+                currency = mco_notification(address,symbol,type_id)
 
-        if type_id == 25:
-            symbol = 'CRO'
-            currency = cro_notification(address,symbol,type_id)
+            if type_id == 25:
+                symbol = 'CRO'
+                currency = cro_notification(address,symbol,type_id)
 
-        if type_id == 26:
-            symbol = 'DAI'
-            currency = dai_notification(address,symbol,type_id)
+            if type_id == 26:
+                symbol = 'DAI'
+                currency = dai_notification(address,symbol,type_id)
 
-        if type_id == 31:
-            symbol = 'EKT'
-            currency = ekt_notification(address,symbol,type_id)
+            if type_id == 31:
+                symbol = 'EKT'
+                currency = ekt_notification(address,symbol,type_id)
 
-        if type_id == 32:
-            symbol = 'EGT'
-            currency = egt_notification(address,symbol,type_id)
+            if type_id == 32:
+                symbol = 'EGT'
+                currency = egt_notification(address,symbol,type_id)
 
-        if type_id == 34:
-            symbol = 'ENJ'
-            currency = enj_notification(address,symbol,type_id)
+            if type_id == 34:
+                symbol = 'ENJ'
+                currency = enj_notification(address,symbol,type_id)
 
-        if type_id == 38:
-            symbol = 'GNT'
-            currency = gnt_notification(address,symbol,type_id)
+            if type_id == 38:
+                symbol = 'GNT'
+                currency = gnt_notification(address,symbol,type_id)
 
-        if type_id == 41:
-            symbol = 'HOT'
-            currency = hot_notification(address,symbol,type_id)
+            if type_id == 41:
+                symbol = 'HOT'
+                currency = hot_notification(address,symbol,type_id)
 
-        if type_id == 42:
-            symbol = 'HT'
-            currency = ht_notification(address,symbol,type_id)
+            if type_id == 42:
+                symbol = 'HT'
+                currency = ht_notification(address,symbol,type_id)
 
-        if type_id == 44:
-            symbol = 'ICX'
-            currency = icx_notification(address,symbol,type_id)
+            if type_id == 44:
+                symbol = 'ICX'
+                currency = icx_notification(address,symbol,type_id)
 
-        if type_id == 45:
-            symbol = 'INB'
-            currency = inb_notification(address,symbol,type_id)
+            if type_id == 45:
+                symbol = 'INB'
+                currency = inb_notification(address,symbol,type_id)
 
-        if type_id == 50:
-            symbol = 'KCS'
-            currency = kcs_notification(address,symbol,type_id)
+            if type_id == 50:
+                symbol = 'KCS'
+                currency = kcs_notification(address,symbol,type_id)
 
-        if type_id == 51:
-            symbol = 'LAMB'
-            currency = lamb_notification(address,symbol,type_id)
+            if type_id == 51:
+                symbol = 'LAMB'
+                currency = lamb_notification(address,symbol,type_id)
 
-        if type_id == 46:
-            symbol = 'IOST'
-            currency = iost_notification(address,symbol,type_id)
+            if type_id == 46:
+                symbol = 'IOST'
+                currency = iost_notification(address,symbol,type_id)
 
-        if type_id == 48:
-            symbol = 'JCT'
-            currency = jct_notification(address,symbol,type_id)
+            if type_id == 48:
+                symbol = 'JCT'
+                currency = jct_notification(address,symbol,type_id)
 
-        if type_id == 54:
-            symbol = 'MAID'
-            currency = maid_notification(address,symbol,type_id)
+            if type_id == 54:
+                symbol = 'MAID'
+                currency = maid_notification(address,symbol,type_id)
 
-        if type_id == 56:
-            symbol = 'MXM'
-            currency = mxm_notification(address,symbol,type_id)
+            if type_id == 56:
+                symbol = 'MXM'
+                currency = mxm_notification(address,symbol,type_id)
 
-        if type_id == 58:
-            symbol = 'XIN'
-            currency = xin_notification(address,symbol,type_id)
-
+            if type_id == 58:
+                symbol = 'XIN'
+                currency = xin_notification(address,symbol,type_id)
+        except Exception:
+            pass
 
         '''
         if type_id == 75:
