@@ -162,7 +162,6 @@ def btc_data_sync():
                 array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id})
             if array:
                 block = block+len(array)
-            print(address)
             ret = mongo.db.dev_sws_history.update({
                 "address":address,
                 "type_id":"2"            
