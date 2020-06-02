@@ -301,6 +301,16 @@ def local_transaction(address):
     return jsonify(docs),200
 
 
+@bp.route("/transactioncheck/<string:minn>/<string:type_id>",methods=['GET'])
+def transactioncheck(minn,type_id):
+    addresses = mongo.db.dev_sws_history.find({
+        "type_id":type_id,
+        "date_time": {
+            "$gte": datetime.datetime.utcnow() - datetime.timedelta(minutes=int(minn))
+        }
+    }).count()
+    return jsonify({"count":addresses}),200
+
 
 #-------Api for return tx_history and balance by address--------
 

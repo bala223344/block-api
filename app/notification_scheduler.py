@@ -37,6 +37,9 @@ from app.mxm import mxm_notification
 from app.xin import xin_notification
 
 
+def tx_notification1():
+    tx_notification()
+
 #----------Function for new transaction notification----------
 
 def tx_notification():

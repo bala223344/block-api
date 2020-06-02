@@ -60,6 +60,18 @@ def gpl_data(address,symbol,type_id):
 
 
 def GplDataSync():
+    GplDatafunct()
+
+def GplDataSync1():
+    GplDatafunct()
+
+def GplDataSync2():
+    GplDatafunct()
+
+def GplDataSync3():
+    GplDatafunct()
+
+def GplDatafunct():
     print("gpl_data_running")
     #mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     #current_tx = mycursor.fetchall()

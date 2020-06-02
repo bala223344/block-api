@@ -88,7 +88,6 @@ def btc_notification(address,symbol,type_id):
                 html_content= '<h3> You got a new transaction on your BTC address </h3><strong>Address:</strong> ' + str(address) +'')
             sg = SendGridAPIClient(SendGridAPIClient_key)
             response = sg.send(message)
-            print(response.status_code, response.body, response.headers)
         else:
             pass
     else:
