@@ -6,7 +6,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from app.config import SendGridAPIClient_key,Sendgrid_default_mail
 from app.config import mydb,mycursor
-
+import datetime
 
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
 
@@ -86,3 +86,108 @@ def icx_notification(address,symbol,type_id):
             pass
     else:
         pass
+
+
+def EmontDataSync():
+    addresses = mongo.db.dev_sws_history.find({
+        "type_id": "1",
+        }).distinct("address")
+    for address in addresses:
+        array=[]
+        ret=ICX_transactions.replace("{{address}}",''+address+'')
+        response_user_token = requests.get(url=ret)
+        response = response_user_token.json()       
+        try:
+            blocks = mongo.db.dev_sws_history.aggregate(
+            [  
+                {"$unwind" : "$transactions"},
+                {
+                    "$match": {
+                        "address":address,
+                        "type_id":"103"
+                    }
+                },
+                {
+                    "$group" : {
+                        "_id" : "$_id",
+                        "maxercblockNumber" : {"$max" : "$transactions.ercblockNumber"}
+                    }
+                }
+            ])
+            if blocks:
+                block = blocks[0]
+                if block['maxercblockNumber'] is not None:
+                    StartBlock = block['maxercblockNumber'] + 1
+                else:
+                    StartBlock = 0
+            else:
+                StartBlock = 0
+            EndBlock = 1
+            doc=ICX_transactions.replace("{{address}}",''+address+'')
+            StarBlockrepl=doc.replace("{{startblock}}",''+str(StartBlock)+'')
+            EndBlockRep = StarBlockrepl.replace("{{endblock}}",''+str(EndBlock)+'')
+            response_user = requests.get(url=EndBlockRep)
+            res = response_user.json()
+            transactions=res['result']
+            for transaction in transactions:
+                frm=[]
+                to=[]
+                fee =""
+                try:
+                    timestamp = transaction['timeStamp']
+                except Exception:
+                    timestamp = 0
+                first_date=int(timestamp)
+                dt_object = datetime.datetime.fromtimestamp(first_date)
+                fro =transaction['from']
+                too=transaction['to']
+                send_amount=transaction['value']
+                blockNumber = transaction['blockNumber']
+                tx_id = transaction['hash']
+                contractAddress = transaction['contractAddress']
+                ErcContracts = ["0x95daaab98046846bf4b2853e23cba236fa394a31"]
+                if contractAddress in ErcContracts:
+                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
+                    to_safename = mycursor.fetchone()
+                    mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
+                    from_safename = mycursor.fetchone()
+                    to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":None})
+                    frm.append({"from":fro,"send_amount":(float(send_amount)/100000000),"safename":from_safename[0] if from_safename else None,"openseaname":None})
+                    array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"is_erc20":True,"ercblockNumber":int(blockNumber)})
+        except Exception:
+            pass
+        try:
+            balance = response['result']
+        except Exception:
+            balance = 0
+        amount_recived =""
+        amount_sent =""
+        try:
+            bal = round((float(balance)/100000000),6)
+        except Exception:
+            bal = 0
+
+        ret = mongo.db.dev_sws_history.update({
+            "address":address,
+            "type_id":"103"            
+        },{
+            "$set":{    
+                    "address":address,
+                    "symbol":"EMONT",
+                    "type_id":"103",
+                    "date_time":datetime.datetime.utcnow(),
+                    "balance":bal,
+                    "amountReceived":amount_recived,
+                    "amountSent":amount_sent
+                }},upsert=True)
+
+        if array:
+            for listobj in array:
+                ret = mongo.db.dev_sws_history.update({
+                    "address":address,
+                    "type_id":"103"
+                },{
+                    "$push":{    
+                            "transactions":listobj}})
+
+

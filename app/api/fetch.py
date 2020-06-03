@@ -366,3 +366,14 @@ def GetNotes(address):
         docs = mongo.db.dev_sws_notes.find({"address":address}).sort("created_at",1)
         docs = [serialize_doc(doc) for doc in docs]
         return jsonify({"Notes":docs}),200
+
+        
+"""
+@bp.route("/GetNotes/<string:address>",methods=['GET'])
+def GetNotes(address):
+    docs = mongo.db.dev_sws_notes.find({"address":address}).sort("created_at",1)
+    docs = [serialize_doc(doc) for doc in docs]
+    mycursor.execute('SELECT membership FROM sws_address WHERE address="'+str(address)+'"')
+    to_safename = mycursor.fetchone()
+    return jsonify({"Notes":docs,"MembershipStatus":to_safename[0]}),200
+"""
