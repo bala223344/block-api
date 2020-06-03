@@ -11,8 +11,19 @@ GplBalance="https://api.etherscan.io/api?module=account&action=tokenbalance&cont
 GplTransactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock={{startblock}}&endblock={{endblock}}&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 SMART_CONTRACT_BLOCK_STEP = 10000000
 
-
 def ManaDataSync():
+    ManaDataFunc()
+
+def ManaDataSync1():
+    ManaDataFunc()
+
+def ManaDataSync2():
+    ManaDataFunc()
+
+def ManaDataSync3():
+    ManaDataFunc()
+
+def ManaDataFunc():
     print("ManaDataSync")
     #mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     #current_tx = mycursor.fetchall()

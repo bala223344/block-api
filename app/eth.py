@@ -128,6 +128,7 @@ def eth_notification(address,symbol,type_id):
                 if email_id is not None:    
                     frm_safename=fro
                     to_safename=too
+                    print(email_id)
                     message = Mail(
                             from_email=Sendgrid_default_mail,
                             to_emails=email_id,
@@ -135,16 +136,14 @@ def eth_notification(address,symbol,type_id):
                             html_content= '<h3> You got a new transaction </h3><strong>Date:</strong> ' + str(dt_object) +' <div><strong>From:</strong> ' + str(frm_safename) + ' </div><strong>To:</strong> ' + str(to_safename) + ' </div><div><strong>Amount:</strong> ' + str(send_amount) + ' </div><div><strong>Tx_id:</strong> ' + str(tx_id) + ' </div><div><strong>Coin Type:</strong> ''ETH''  </div>' )
                     sg = SendGridAPIClient(SendGridAPIClient_key)
                     response = sg.send(message)
-                    print(response.status_code, response.body, response.headers)
                 else:
-                    print("email is not none")
+                    pass
             else:
-                print("amount is 0")
+                pass
         else:
-            print("no new transaction")
+            pass
     else:
-        print("no transcations")
-
+        pass
 
 
 

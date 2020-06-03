@@ -14,6 +14,18 @@ SMART_CONTRACT_BLOCK_STEP = 10000000
 
 
 def EmontDataSync():
+    EmontDataFunc()
+
+def EmontDataSync1():
+    EmontDataFunc()
+
+def EmontDataSync2():
+    EmontDataFunc()
+
+def EmontDataSync3():
+    EmontDataFunc()
+
+def EmontDataFunc():
     print("EmontDataSync")
     #mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     #current_tx = mycursor.fetchall()

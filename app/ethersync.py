@@ -30,7 +30,21 @@ ETH_internal_transactions ="http://api.etherscan.io/api?module=account&action=tx
 client = MongoClient("mongodb://admin:0vXPeLcPxME40Yd@157.245.124.93/marketcap?authSource=admin")
 temp_db = client.marketcap
 
+
 def EthSync():
+    EthSyncFunc()
+
+def EthSync1():
+    EthSyncFunc()
+
+def EthSync2():
+    EthSyncFunc()
+
+def EthSync3():
+    EthSyncFunc()
+
+
+def EthSyncFunc():
     print("start")
     mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     current_tx = mycursor.fetchall()
@@ -205,7 +219,7 @@ def EthIntSync4():
     EthIntSync(30)
 
 def EthIntSync5():
-    EthIntSync(120)
+    EthIntSync(180)
 
 def EthIntSync(minn):
     """
