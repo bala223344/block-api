@@ -374,9 +374,11 @@ def CreateNotes():
 
 @bp.route("/GetNotes/<string:address>",methods=['GET'])
 def GetNotes(address):
+    cursor = mydb.cursor()
     docs = mongo.db.dev_sws_notes.find({"address":address}).sort("created_at",1)
     docs = [serialize_doc(doc) for doc in docs]
-    mycursor.execute('SELECT u.membership FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
-    membership = mycursor.fetchone()
+    cursor.execute('SELECT u.membership FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
+    membership = cursor.fetchone()
+    cursor.close()
     MembershipStatus=membership[0]
     return jsonify({"Notes":docs,"MembershipStatus":MembershipStatus}),200
