@@ -5,7 +5,7 @@ from app import mongo
 from app.util import serialize_doc
 from app.config import ETH_balance
 from app.config import ETH_transactions
-from app.config import mydb,mycursor
+from app.config import mydb
 from pymongo import MongoClient
 import logging
 import datetime
@@ -46,8 +46,10 @@ def EthSync3():
 
 def EthSyncFunc():
     print("start")
+    mycursor = mydb.cursor()
     mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     current_tx = mycursor.fetchall()
+    mycursor.close()
     #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
     for addresses in current_tx:
         array=[]
@@ -137,10 +139,12 @@ def EthTransaction(address,array):
                 fromusern = token_deta['username']
             else:
                 fromusern = None                
+            mycursor = mydb.cursor()
             mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
             to_safename = mycursor.fetchone()
             mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
             from_safename = mycursor.fetchone()
+            mycursor.close()
             to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
             frm.append({"from":fro,"send_amount":str(round((float(send_amount)/1000000000000000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
             array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
@@ -300,6 +304,7 @@ def EthIntSync(minn):
                     else:
                         fromusern = None
                     if too !="":
+                        mycursor = mydb.cursor()
                         mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
                         to_safename = mycursor.fetchone()
                     else:
@@ -307,6 +312,7 @@ def EthIntSync(minn):
                     
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                     from_safename = mycursor.fetchone()
+                    mycursor.close()
                     to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
                     frm.append({"from":fro,"send_amount":str(round((float(send_amount)/1000000000000000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                     array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})

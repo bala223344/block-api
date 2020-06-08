@@ -7,7 +7,7 @@ import datetime
 import dateutil.parser
 from app.util import serialize_doc
 from dateutil.relativedelta import relativedelta
-from app.config import mydb,mycursor
+from app.config import mydb
 
 
 #----------Blueprint connection----------
@@ -251,6 +251,7 @@ def unknown_riskscore():
         
     
     records = mongo.db.sws_history.find_one({"address":address})
+    mycursor = mydb.cursor()
     if records is not None:
         print("record is not none")
         transactions=records['transactions']
@@ -315,6 +316,7 @@ def unknown_riskscore():
     heist_associated_addresses=[]
     mycursor.execute('SELECT address FROM sws_heist_address WHERE (tag_name = "heist_associated")')
     ret = mycursor.fetchall()
+    mycursor.close()
     for add in ret:
         addres=add[0]
         heist_associated_addresses.append(addres)

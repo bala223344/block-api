@@ -5,7 +5,7 @@ from app.config import ICX_balance,ICX_transactions
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from app.config import SendGridAPIClient_key,Sendgrid_default_mail
-from app.config import mydb,mycursor
+from app.config import mydb
 import datetime
 
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
@@ -26,7 +26,7 @@ def icx_data(address,symbol,type_id):
         fee =""
         timestamp = transaction['timeStamp']
         first_date=int(timestamp)
-        dt_object = datetime.fromtimestamp(first_date)
+        dt_object = datetime.datetime.fromtimestamp(first_date)
         fro =transaction['from']
         too=transaction['to']
         send_amount=transaction['value']
@@ -65,6 +65,7 @@ def icx_notification(address,symbol,type_id):
             tx_list.append({"transaction":"tx"})
 
     total_current_tx = len(tx_list)
+    mycursor = mydb.cursor()
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
     tx_count=current_tx[0]
@@ -72,6 +73,7 @@ def icx_notification(address,symbol,type_id):
         mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
         email = mycursor.fetchone()
+        mycursor.close()
         email_id=email[0]
         if email_id is not None:
             message = Mail(
@@ -92,6 +94,7 @@ def EmontDataSync():
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         }).distinct("address")
+    mycursor = mydb.cursor()
     for address in addresses:
         array=[]
         ret=ICX_transactions.replace("{{address}}",''+address+'')
@@ -151,6 +154,7 @@ def EmontDataSync():
                     to_safename = mycursor.fetchone()
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                     from_safename = mycursor.fetchone()
+                    mycursor.close()
                     to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":None})
                     frm.append({"from":fro,"send_amount":(float(send_amount)/100000000),"safename":from_safename[0] if from_safename else None,"openseaname":None})
                     array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"is_erc20":True,"ercblockNumber":int(blockNumber)})

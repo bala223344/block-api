@@ -7,7 +7,7 @@ import datetime
 import dateutil.parser
 from app.util import serialize_doc
 from dateutil.relativedelta import relativedelta
-from app.config import mydb,mycursor
+from app.config import mydb
 
 #-----Calling functions at the call of Transaction Api------
 

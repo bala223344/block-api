@@ -1,6 +1,6 @@
 import requests
 from app.config import ETH_SCAM_URL
-from app.config import mydb,mycursor
+from app.config import mydb
 
 
 
@@ -12,6 +12,7 @@ def auto_fetch():
     response = response_user_token.json()
     result = response['result']
     if result:
+        mycursor = mydb.cursor()
         for record in result:
             if "addresses" in record:
                 coin = record['coin']

@@ -1,12 +1,13 @@
 
 import requests
-from app.config import mydb,mycursor,ETH_TRANSACTION_URL,BTC_TRANSACTION
+from app.config import mydb,ETH_TRANSACTION_URL,BTC_TRANSACTION
 
 
 
 #-------Scheduler for find ETHERNUM heist assosiated addresses-------
 
 def heist_associated_fetch():
+    mycursor = mydb.cursor()
     mycursor.execute('select coin, address from `sws_heist_address`')
     result = mycursor.fetchall()
     for res in result:
@@ -103,6 +104,8 @@ def heist_associated_fetch():
                     subcategory = ""
                     conversion = ""
                     mycursor.execute('INSERT INTO sws_heist_address (id,coin,tag_name,status,address,source,subcategory,description,also_known_as) VALUES ("'+str(ids)+'","'+str(coin)+'","'+str(category)+'","'+str(status)+'","'+str(address)+'","'+str(url)+'","'+str(subcategory)+'","'+str(conversion)+'","related to heist_address")')
+                    mycursor.close()
                     mydb.commit()
+                    
                 else:
                     print("already_exist")

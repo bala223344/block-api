@@ -5,7 +5,7 @@ from app.config import BTC_balance
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from app.config import SendGridAPIClient_key,Sendgrid_default_mail,BTC_balance
-from app.config import mydb,mycursor
+from app.config import mydb
 from app import mongo
 import numpy as np
 from app.ethersync import temp_db
@@ -72,6 +72,7 @@ def btc_notification(address,symbol,type_id):
     response_user_token = requests.get(url=ret1)
     transaction = response_user_token.json()  
     total_current_tx=transaction['transaction_count']
+    mycursor = mydb.cursor()
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
     tx_count=current_tx[0]
@@ -79,6 +80,7 @@ def btc_notification(address,symbol,type_id):
         mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
         email = mycursor.fetchone()
+        mycursor.close()
         email_id=email[0]
         if email_id is not None:
             message = Mail(
@@ -99,6 +101,7 @@ def btc_notification(address,symbol,type_id):
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
 
 def btc_data_sync():
+    mycursor = mydb.cursor()
     mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(2)+'"')
     current_tx = mycursor.fetchall()
     #current_tx = ["1416bVmA8Wwd3GGGA9W3kgmWiJTota7U62","18xmAHjjsTe8FJ6PAKAL5TxBc4Ypewo6q3","1BPnQZhMzVmM2Rnhs9YpRf8kJvBAzaUcAt","1EAECn7nzqMbk7FD3qa1dvbYkWj58iSV69","1GQhVHcghcNrgdvuWqzHxM3Ln23hxfqpvX","1JDSPz2rsfwNixJzc8pWBQx5v7b4wr5equ","1LP5s5m1VVXd59AYzdjcDLm4Rz1Duw1s2v","3NxLx7v8N2uA1HA4z7cncYVMcjKakqBmm9"]
@@ -155,6 +158,7 @@ def btc_data_sync():
 
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(t)+'"')
                     to_safename = mycursor.fetchone()
+                    mycursor.close()
                     to.append({"to":t,"receive_amount": np.format_float_positional(recive),"safename":to_safename[0] if to_safename else None,"openseaname":usern})
                 timestamp =transaction['timestamp']
                 dt_object = datetime.datetime.fromtimestamp(timestamp)

@@ -2,7 +2,7 @@ import time
 import datetime
 import dateutil.parser
 from app import mongo
-from app.config import mydb,mycursor,ETH_TRANSACTION_URL,BTC_TRANSACTION
+from app.config import mydb,ETH_TRANSACTION_URL,BTC_TRANSACTION
 from dateutil.relativedelta import relativedelta
 
 
@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 def tx_two_yearold():
     #mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT(3) NOT NULL AUTO_INCREMENT,address varchar(100),type_id int(3) NULL,risk_score_by_tx float(3) NULL,riskscore_by_safename float(3) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
+    mycursor = mydb.cursor()
     mycursor.execute('SELECT address,type_id FROM sws_address')
     check = mycursor.fetchall()
     for details in check:
@@ -22,6 +23,7 @@ def tx_two_yearold():
             mydb.commit()
     mycursor.execute('SELECT address FROM sws_risk_score')
     check = mycursor.fetchall()
+    mycursor.close()
     for addrr in check:
         address=addrr[0] 
         records = mongo.db.sws_history.find_one({"address":address})

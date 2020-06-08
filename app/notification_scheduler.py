@@ -1,4 +1,4 @@
-from app.config import mydb,mycursor
+from app.config import mydb
 from app.eth import eth_notification
 from app.btc import btc_notification
 from app.xrp import xrp_notification
@@ -46,8 +46,10 @@ def tx_notification2():
 #----------Function for new transaction notification----------
 
 def tx_notification():
+    mycursor = mydb.cursor()
     mycursor.execute('SELECT address,type_id FROM sws_address WHERE tx_notification_preferred = "1"')
     sws_addresses = mycursor.fetchall()
+    mycursor.close()
     for addres in sws_addresses:
         try:
             address=addres[0]

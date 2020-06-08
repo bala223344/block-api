@@ -3,7 +3,7 @@ from flask import jsonify
 from datetime import datetime
 from app import mongo
 from app.ethersync import temp_db
-from app.config import mydb,mycursor
+from app.config import mydb
 from app.util import serialize_doc
 import datetime
 
@@ -98,10 +98,12 @@ def ManaDataFunc():
                         fromusern = token_deta['username']
                     else:
                         fromusern = None                
+                    mycursor = mydb.cursor() 
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
                     to_safename = mycursor.fetchone()
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                     from_safename = mycursor.fetchone()
+                    mycursor.close()
                     to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
                     frm.append({"from":fro,"send_amount":(int(send_amount)/1000000000000000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                     array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"is_erc20":True,"ercblockNumber":int(blockNumber)})

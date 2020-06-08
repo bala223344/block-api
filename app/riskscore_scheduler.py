@@ -1,4 +1,4 @@
-from app.config import mydb,mycursor
+from app.config import mydb
 import numpy as np
 
 
@@ -6,6 +6,7 @@ import numpy as np
 #-------scheduler for calculating overall riskscore from sws_risk_score table and update in sws_address table------- 
 
 def risk_score():
+    mycursor = mydb.cursor()
     mycursor.execute('SELECT address FROM sws_risk_score')
     check = mycursor.fetchall()
     for addr in check:
@@ -26,6 +27,7 @@ def risk_score():
 #-------scheduler for calculating overall profile riskscore------- 
 
 def profile_risk_score():
+    mycursor = mydb.cursor()
     mycursor.execute('SELECT username FROM sws_user')
     sws_users = mycursor.fetchall()
     for user in sws_users:

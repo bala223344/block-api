@@ -6,7 +6,7 @@ from app.config import CRO_balance,CRO_transactions
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from app.config import SendGridAPIClient_key,Sendgrid_default_mail
-from app.config import mydb,mycursor
+from app.config import mydb
 
 
 
@@ -68,7 +68,7 @@ def cro_notification(address,symbol,type_id):
         contractAddress = transaction['contractAddress']
         if contractAddress == "0xa0b73e1ff0b80914ab6fe0444e65848c4c34450b":
             tx_list.append({"transaction":"tx"})
-
+    mycursor = mydb.cursor()
     total_current_tx = len(tx_list)
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
@@ -77,6 +77,7 @@ def cro_notification(address,symbol,type_id):
         mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
         email = mycursor.fetchone()
+        mycursor.close()
         email_id=email[0]
         if email_id is not None:
             message = Mail(
