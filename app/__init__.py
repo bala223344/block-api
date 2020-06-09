@@ -80,7 +80,7 @@ def create_app(test_config=None):
     EthTimeSync_scheduler.start()
 
     EthIntSync_scheduler = BackgroundScheduler()
-    EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',minutes=4)
+    EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',minutes=7)
     EthIntSync_scheduler.add_job(EthIntSync2,trigger='interval',minutes=10)
     EthIntSync_scheduler.add_job(EthIntSync3,trigger='interval',minutes=21)
     EthIntSync_scheduler.add_job(EthIntSync4,trigger='interval',minutes=25)
@@ -109,7 +109,7 @@ def create_app(test_config=None):
     ManaDataSync_scheduler.start()
 
     btc_data_sync_scheduler = BackgroundScheduler()
-    btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=5)
+    btc_data_sync_scheduler.add_job(btc_data_sync,trigger='interval',minutes=10)
     btc_data_sync_scheduler.start()
 
 

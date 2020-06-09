@@ -2,7 +2,7 @@ import requests
 from flask import jsonify
 from datetime import datetime
 from app import mongo
-from app.ethersync import temp_db
+from app.ethersync import client
 from app.config import mydb
 from app.util import serialize_doc
 import datetime
@@ -31,6 +31,7 @@ def ManaDataFunc():
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         }).distinct("address")
+    temp_db = client.marketcap
     for address in addresses:
         array=[]
         #address = addresses[0]

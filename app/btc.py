@@ -8,7 +8,7 @@ from app.config import SendGridAPIClient_key,Sendgrid_default_mail,BTC_balance
 from app.config import mydb
 from app import mongo
 import numpy as np
-from app.ethersync import temp_db
+from app.ethersync import client
 
 BTC_sync_balance="https://blockchain.coinmarketcap.com/api/address?address={{address}}&symbol=BTC&start={{block}}&limit=50"
 
@@ -104,6 +104,7 @@ def btc_data_sync():
     mycursor = mydb.cursor()
     mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(2)+'"')
     current_tx = mycursor.fetchall()
+    temp_db = client.marketcap
     #current_tx = ["1416bVmA8Wwd3GGGA9W3kgmWiJTota7U62","18xmAHjjsTe8FJ6PAKAL5TxBc4Ypewo6q3","1BPnQZhMzVmM2Rnhs9YpRf8kJvBAzaUcAt","1EAECn7nzqMbk7FD3qa1dvbYkWj58iSV69","1GQhVHcghcNrgdvuWqzHxM3Ln23hxfqpvX","1JDSPz2rsfwNixJzc8pWBQx5v7b4wr5equ","1LP5s5m1VVXd59AYzdjcDLm4Rz1Duw1s2v","3NxLx7v8N2uA1HA4z7cncYVMcjKakqBmm9"]
     for addresses in current_tx:
         address = addresses[0]

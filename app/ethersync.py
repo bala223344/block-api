@@ -28,7 +28,6 @@ TOPIC_TRANSFER = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523
 ETH_internal_transactions ="http://api.etherscan.io/api?module=account&action=txlistinternal&address={{address}}&startblock={{startblock}}&endblock={{endblock}}&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
 client = MongoClient("mongodb://admin:0vXPeLcPxME40Yd@157.245.124.93/marketcap?authSource=admin")
-temp_db = client.marketcap
 
 
 def EthSync():
@@ -114,6 +113,7 @@ def EthTransaction(address,array):
         StartBlock = 0
     EndBlock = StartBlock + SMART_CONTRACT_BLOCK_STEP
     transactions = get_txn_list(address,StartBlock,EndBlock,ETHERSCAN_API_KEY)
+    temp_db = client.marketcap
     for transaction in transactions:
         frm=[]
         to=[]
@@ -238,6 +238,7 @@ def EthIntSync(minn):
             "$gte": datetime.datetime.utcnow() - datetime.timedelta(minutes=minn)
         }
     }).distinct("address")
+    temp_db = client.marketcap
     #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
     for address in addresses:
         array=[]
