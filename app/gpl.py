@@ -61,12 +61,11 @@ def gpl_data(address,symbol,type_id):
 
 
 def GplDataSync():
-    mycur = mydb()
-    mycursor = mycur.cursor()
-    mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"AND address_status="verified" OR "secure"')
-    current_tx = mycursor.fetchall()
-    mycursor.close()
-    transactions = list(current_tx)
+    addresses = mongo.db.dev_sws_history.find({
+        "type_id": "1",
+        }).distinct("address")
+
+    transactions = addresses
     rang = len(transactions)/10
     rang = round(rang)
     for a in range(0,rang):
@@ -100,12 +99,12 @@ def GplDatafunct(small_list):
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         }).distinct("address")
-    temp_db = client.marketcap
     """
-    for addresses in small_list:
+    temp_db = client.marketcap
+    for address in small_list:
         try:
             array=[]
-            address = addresses[0]
+            #address = addresses[0]
             ret=GplBalance.replace("{{address}}",''+address+'')
             response_user_token = requests.get(url=ret)
             response = response_user_token.json()       

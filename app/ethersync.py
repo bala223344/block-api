@@ -34,7 +34,7 @@ client = MongoClient("mongodb://admin:0vXPeLcPxME40Yd@157.245.124.93/marketcap?a
 def EthSync():
     mycur = mydb()
     mycursor = mycur.cursor()
-    mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"AND address_status="verified" OR "secure"')
+    mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     current_tx = mycursor.fetchall()
     mycursor.close()
     transactions = list(current_tx)
