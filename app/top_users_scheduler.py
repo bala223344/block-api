@@ -7,7 +7,8 @@ import numpy as np
 #-------Scheduler for calculating risk score by if receive fund from heist or heist associated address-------
                         
 def Top_user_percentage():
-    mycursor = mydb.cursor()
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT address,address_risk_score FROM sws_address')
     check = mycursor.fetchall()
     all_records_count = len(check)

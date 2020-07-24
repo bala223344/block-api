@@ -78,7 +78,8 @@ def dash_notification(address,symbol,type_id):
     addr =data[''+address+'']
     add =addr['address']
     total_current_tx =add['transaction_count']
-    mycursor = mydb.cursor()
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchall()
     transactions_count=current_tx[0]

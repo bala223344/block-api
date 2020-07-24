@@ -10,6 +10,7 @@ from pymongo import MongoClient
 import logging
 import datetime
 from datetime import timedelta  
+from threading import Thread
 
 ETHER_SCAN_DOMAIN = "http://api.etherscan.io/api"
 
@@ -31,35 +32,47 @@ client = MongoClient("mongodb://admin:0vXPeLcPxME40Yd@157.245.124.93/marketcap?a
 
 
 def EthSync():
-    EthSyncFunc()
+    mycur = mydb()
+    mycursor = mycur.cursor()
+    mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"AND address_status="verified" OR "secure"')
+    current_tx = mycursor.fetchall()
+    mycursor.close()
+    transactions = list(current_tx)
+    rang = len(transactions)/10
+    rang = round(rang)
+    for a in range(0,rang):
+        try:
+            if len(transactions) > 10 : 
+                small_list = transactions[:10]
+                del transactions[:10]
+            else:
+                small_list = transactions
+            t = Thread(target=EthSyncFunc, args=(small_list,))
+            t.start()
+        except Exception:
+            pass
 
-def EthSync1():
-    EthSyncFunc()
-
-def EthSync2():
-    EthSyncFunc()
-
-def EthSync3():
-    EthSyncFunc()
-
-
-def EthSyncFunc():
+def EthSyncFunc(small_list):
+    """
     print("start")
     mycursor = mydb.cursor()
     mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     current_tx = mycursor.fetchall()
     mycursor.close()
     #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
-    for addresses in current_tx:
+    """
+    for addresses in small_list:
         array=[]
         try:
             address = addresses[0]
             EthTransaction(address,array)
         except Exception:
             pass    
-
+"""
 def EthTimeSync():
     EthTimeSyncc(10)
+
+
 def EthTimeSync1():
     EthTimeSyncc(30)
 def EthTimeSync2():
@@ -68,7 +81,6 @@ def EthTimeSync3():
     EthTimeSyncc(60)
 def EthTimeSync4():
     EthTimeSyncc(1)
-
 
 def EthTimeSyncc(minn):
     addresses = mongo.db.dev_sws_history.find({
@@ -83,7 +95,7 @@ def EthTimeSyncc(minn):
             EthTransaction(address,array)
         except Exception:
             pass    
-
+"""
 
 def EthTransaction(address,array):
     ret=ETH_balance.replace("{{address}}",''+address+'')
@@ -139,7 +151,8 @@ def EthTransaction(address,array):
                 fromusern = token_deta['username']
             else:
                 fromusern = None                
-            mycursor = mydb.cursor()
+            mycur = mydb()
+            mycursor = mycur.cursor()
             mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
             to_safename = mycursor.fetchone()
             mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
@@ -211,8 +224,32 @@ def get_txn_list(address, start_block, end_block, apikey):
 #----------------------------------------------------------------------------------------------
 
 def EthIntSync1():
-    EthIntSync(5)
+    addresses = mongo.db.dev_sws_history.find({
+        "type_id": "1",
+        "date_time": {
+            "$gte": datetime.datetime.utcnow() - datetime.timedelta(minutes=10)
+        }
+    }).distinct("address")
+    #print(addresses)
 
+    rang = len(addresses)/10
+    rang = round(rang)
+    for a in range(0,rang):
+        try:
+            if len(addresses) > 10 : 
+                small_list = addresses[:10]
+                del addresses[:10]
+            else:
+                small_list = addresses
+            t = Thread(target=EthIntSync, args=(small_list,))
+            t.start()
+        except Exception:
+            pass
+        #print("threads are running",len(addresses))
+
+#    EthIntSync(5)
+
+"""
 def EthIntSync2():
     EthIntSync(12)
 
@@ -224,13 +261,15 @@ def EthIntSync4():
 
 def EthIntSync5():
     EthIntSync(180)
+"""
 
-def EthIntSync(minn):
+def EthIntSync(small_list):
     """
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         }).distinct("address")
 
+    """
     """
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
@@ -238,9 +277,10 @@ def EthIntSync(minn):
             "$gte": datetime.datetime.utcnow() - datetime.timedelta(minutes=minn)
         }
     }).distinct("address")
+    """
     temp_db = client.marketcap
     #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
-    for address in addresses:
+    for address in small_list:
         array=[]
         try:
             blocks = mongo.db.dev_sws_history.aggregate(
@@ -305,7 +345,8 @@ def EthIntSync(minn):
                     else:
                         fromusern = None
                     if too !="":
-                        mycursor = mydb.cursor()
+                        mycur = mydb()
+                        mycursor = mycur.cursor()
                         mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
                         to_safename = mycursor.fetchone()
                     else:

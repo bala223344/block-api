@@ -65,7 +65,8 @@ def icx_notification(address,symbol,type_id):
             tx_list.append({"transaction":"tx"})
 
     total_current_tx = len(tx_list)
-    mycursor = mydb.cursor()
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
     tx_count=current_tx[0]
@@ -94,7 +95,8 @@ def EmontDataSync():
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         }).distinct("address")
-    mycursor = mydb.cursor()
+    mycur = mydb()
+    mycursor = mycur.cursor()
     for address in addresses:
         array=[]
         ret=ICX_transactions.replace("{{address}}",''+address+'')

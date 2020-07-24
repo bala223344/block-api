@@ -71,7 +71,8 @@ def btg_notification(address,symbol,type_id):
     response_user_token = requests.get(url=ret)
     transaction = response_user_token.json()  
     total_current_tx=transaction['txApperances']
-    mycursor = mydb.cursor()
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
     tx_count=current_tx[0]

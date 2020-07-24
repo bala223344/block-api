@@ -68,7 +68,8 @@ def cro_notification(address,symbol,type_id):
         contractAddress = transaction['contractAddress']
         if contractAddress == "0xa0b73e1ff0b80914ab6fe0444e65848c4c34450b":
             tx_list.append({"transaction":"tx"})
-    mycursor = mydb.cursor()
+    mycur = mydb()
+    mycursor = mycur.cursor()
     total_current_tx = len(tx_list)
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()

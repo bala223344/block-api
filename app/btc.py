@@ -72,7 +72,8 @@ def btc_notification(address,symbol,type_id):
     response_user_token = requests.get(url=ret1)
     transaction = response_user_token.json()  
     total_current_tx=transaction['transaction_count']
-    mycursor = mydb.cursor()
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
     tx_count=current_tx[0]
@@ -101,7 +102,8 @@ def btc_notification(address,symbol,type_id):
 #----------Function for fetching tx_history and balance storing in mongodb also send notification if got new one----------
 
 def btc_data_sync():
-    mycursor = mydb.cursor()
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(2)+'"')
     current_tx = mycursor.fetchall()
     temp_db = client.marketcap

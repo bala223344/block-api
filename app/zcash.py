@@ -78,7 +78,8 @@ def zcash_notification(address,symbol,type_id):
     sent = response['sentCount']
     recv = response['recvCount']
     total_current_tx  = int(sent) + int(recv)
-    mycursor = mydb.cursor()
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchall()
     transactions_count=current_tx[0]

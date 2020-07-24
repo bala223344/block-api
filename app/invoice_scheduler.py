@@ -146,7 +146,8 @@ def safename_verification():
         
             #update the address as verified
             if tx_type == 'verification':
-                 mycursor = mydb.cursor()
+                 mycur = mydb()
+                 mycursor = mycur.cursor()
                  #print ('UPDATE sws_address SET address_status ="verified" WHERE address = "'+str(frm)+'" AND type_id = '+type_id+' AND cms_login_name =  "'+str(from_username)+'"')
                  mycursor.execute('UPDATE sws_address SET address_status ="verified" WHERE address = "'+str(frm)+'" AND type_id = '+type_id+' AND cms_login_name =  "'+str(from_username)+'"' )
 
@@ -243,7 +244,8 @@ def invoice_notification_interval():
         created_at = data['created_at']
         notes = data['from_notes']
         to_username = data['to_username']
-        mycursor = mydb.cursor()
+        mycur = mydb()
+        mycursor = mycur.cursor()
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(to)+'"')
         email = mycursor.fetchone()
         mycursor.close()

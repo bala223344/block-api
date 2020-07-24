@@ -8,6 +8,7 @@ import dateutil.parser
 from app.util import serialize_doc
 from dateutil.relativedelta import relativedelta
 from app.config import mydb
+import pymysql
 
 #-----Calling functions at the call of Transaction Api------
 
@@ -374,7 +375,8 @@ def CreateNotes():
 
 @bp.route("/GetNotes/<string:address>",methods=['GET'])
 def GetNotes(address):
-    cursor = mydb.cursor()
+    mycur = mydb()
+    cursor = mycur.cursor()
     docs = mongo.db.dev_sws_notes.find({"address":address}).sort("created_at",1)
     docs = [serialize_doc(doc) for doc in docs]
     cursor.execute('SELECT u.membership FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')

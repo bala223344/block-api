@@ -9,7 +9,8 @@ from sendgrid.helpers.mail import Mail
 #-----------scheduler for Pages PGP Verification------------
 
 def pgp_verification():
-    mycursor = mydb.cursor()
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT username FROM sws_user')
     usernames = mycursor.fetchall()
     for username in usernames:

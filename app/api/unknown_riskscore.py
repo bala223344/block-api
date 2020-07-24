@@ -251,7 +251,8 @@ def unknown_riskscore():
         
     
     records = mongo.db.sws_history.find_one({"address":address})
-    mycursor = mydb.cursor()
+    mycur = mydb()
+    mycursor = mycur.cursor()
     if records is not None:
         print("record is not none")
         transactions=records['transactions']

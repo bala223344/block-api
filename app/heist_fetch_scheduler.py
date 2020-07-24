@@ -12,7 +12,8 @@ def auto_fetch():
     response = response_user_token.json()
     result = response['result']
     if result:
-        mycursor = mydb.cursor()
+        mycur = mydb()
+        mycursor = mycur.cursor()
         for record in result:
             if "addresses" in record:
                 coin = record['coin']

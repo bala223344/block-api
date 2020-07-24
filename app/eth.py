@@ -114,7 +114,8 @@ def eth_notification(address,symbol,type_id):
         too=transaction['to']
         send_amount=(int(transaction['value'])/1000000000000000000)
         tx_id = transaction['hash']
-        mycursor = mydb.cursor()
+        mycur = mydb()
+        mycursor = mycur.cursor()
         mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
         current_tx = mycursor.fetchall()
         transactions_count=current_tx[0]

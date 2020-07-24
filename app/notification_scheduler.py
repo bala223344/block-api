@@ -46,7 +46,8 @@ def tx_notification2():
 #----------Function for new transaction notification----------
 
 def tx_notification():
-    mycursor = mydb.cursor()
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT address,type_id FROM sws_address WHERE tx_notification_preferred = "1"')
     sws_addresses = mycursor.fetchall()
     mycursor.close()

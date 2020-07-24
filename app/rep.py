@@ -70,7 +70,8 @@ def rep_notification(address,symbol,type_id):
 
     total_current_tx = len(tx_list)
     print("699")
-    mycursor = mydb.cursor()
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
     tx_count=current_tx[0]
