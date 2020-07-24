@@ -91,7 +91,7 @@ def create_app(test_config=None):
     EmontDataSync_scheduler.start()
 
     ManaDataSync_scheduler = BackgroundScheduler()
-    ManaDataSync_scheduler.add_job(ManaDataSync,trigger='interval',seconds=15)
+    ManaDataSync_scheduler.add_job(ManaDataSync,trigger='interval',minutes=15)
     ManaDataSync_scheduler.start()
 
     btc_data_sync_scheduler = BackgroundScheduler()

@@ -36,7 +36,6 @@ def EthSync():
     mycursor = mycur.cursor()
     mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     current_tx = mycursor.fetchall()
-    mycursor.close()
     transactions = list(current_tx)
     rang = len(transactions)/10
     rang = round(rang)
@@ -47,12 +46,13 @@ def EthSync():
                 del transactions[:10]
             else:
                 small_list = transactions
-            t = Thread(target=EthSyncFunc, args=(small_list,))
+            t = Thread(target=EthSyncFunc, args=(small_list,mycursor))
             t.start()
         except Exception:
             pass
+    mycursor.close()
 
-def EthSyncFunc(small_list):
+def EthSyncFunc(small_list,mycursor):
     """
     print("start")
     mycursor = mydb.cursor()
@@ -61,10 +61,10 @@ def EthSyncFunc(small_list):
     mycursor.close()
     #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
     """
-    for addresses in small_list:
+    for address in small_list:
         array=[]
         try:
-            address = addresses[0]
+            #address = addresses[0]
             ret=ETH_balance.replace("{{address}}",''+address+'')
             response_user_token = requests.get(url=ret)
             response = response_user_token.json()       
@@ -121,13 +121,10 @@ def EthSyncFunc(small_list):
                         fromusern = token_deta['username']
                     else:
                         fromusern = None                
-                    mycur = mydb()
-                    mycursor = mycur.cursor()
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
                     to_safename = mycursor.fetchone()
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                     from_safename = mycursor.fetchone()
-                    mycursor.close()
                     to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
                     frm.append({"from":fro,"send_amount":str(round((float(send_amount)/1000000000000000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                     array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
@@ -227,6 +224,8 @@ def get_txn_list(address, start_block, end_block, apikey):
 #----------------------------------------------------------------------------------------------
 
 def EthIntSync1():
+    mycur = mydb()
+    mycursor = mycur.cursor()
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         "date_time": {
@@ -244,11 +243,12 @@ def EthIntSync1():
                 del addresses[:10]
             else:
                 small_list = addresses
-            t = Thread(target=EthIntSync, args=(small_list,))
+            t = Thread(target=EthIntSync, args=(small_list,mycursor))
             t.start()
         except Exception:
             pass
         #print("threads are running",len(addresses))
+    mycursor.close()
 
 #    EthIntSync(5)
 
@@ -266,7 +266,7 @@ def EthIntSync5():
     EthIntSync(180)
 """
 
-def EthIntSync(small_list):
+def EthIntSync(small_list,mycursor):
     """
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
@@ -348,8 +348,6 @@ def EthIntSync(small_list):
                     else:
                         fromusern = None
                     if too !="":
-                        mycur = mydb()
-                        mycursor = mycur.cursor()
                         mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
                         to_safename = mycursor.fetchone()
                     else:
@@ -357,7 +355,6 @@ def EthIntSync(small_list):
                     
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                     from_safename = mycursor.fetchone()
-                    mycursor.close()
                     to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
                     frm.append({"from":fro,"send_amount":str(round((float(send_amount)/1000000000000000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                     array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})
