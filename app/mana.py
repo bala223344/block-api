@@ -6,6 +6,7 @@ from app.ethersync import client
 from app.config import mydb
 from app.util import serialize_doc
 import datetime
+from threading import Thread
 
 GplBalance="https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x0f5d2fb29fb7d3cfee444a200298f468908cc942&address={{address}}&tag=latest&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 GplTransactions="http://api.etherscan.io/api?module=account&action=tokentx&address={{address}}&startblock={{startblock}}&endblock={{endblock}}&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
@@ -15,11 +16,10 @@ def ManaDataSync():
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         }).distinct("address")
-
     transactions = addresses
     rang = len(transactions)/10
     rang = round(rang)
-    for a in range(0,rang):
+    for a in range(0,rang+1):
         try:
             if len(transactions) > 10 : 
                 small_list = transactions[:10]
@@ -140,7 +140,6 @@ def ManaDataFunc(small_list):
                 bal = round((float(balance)/1000000000000000000),6)
             except Exception:
                 bal = 0
-
             ret = mongo.db.dev_sws_history.update({
                 "address":address,
                 "type_id":"104"            
@@ -154,7 +153,6 @@ def ManaDataFunc(small_list):
                         "amountReceived":amount_recived,
                         "amountSent":amount_sent
                     }},upsert=True)
-            
             if array:
                 for listobj in array:
                     ret = mongo.db.dev_sws_history.update({

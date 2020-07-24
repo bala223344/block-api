@@ -68,7 +68,7 @@ def GplDataSync():
     transactions = addresses
     rang = len(transactions)/10
     rang = round(rang)
-    for a in range(0,rang):
+    for a in range(0,rang+1):
         try:
             if len(transactions) > 10 : 
                 small_list = transactions[:10]

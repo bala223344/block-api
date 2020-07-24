@@ -24,7 +24,7 @@ from app.ethersync import EthSync,EthIntSync1#,EthIntSync2,EthIntSync3,EthIntSyn
 from app.btc import btc_data_sync
 from app.gpl import GplDataSync#,GplDataSync1,GplDataSync2,GplDataSync3
 from app.emont import EmontDataSync#,EmontDataSync1,EmontDataSync2,EmontDataSync3
-from app.mana import ManaDataSync#,ManaDataSync1,ManaDataSync2,ManaDataSync3
+from app.mana import ManaDataSync #,ManaDataSync1,ManaDataSync2,ManaDataSync3
 from apscheduler.triggers.combining import OrTrigger
 from apscheduler.triggers.cron import CronTrigger
 
@@ -87,11 +87,11 @@ def create_app(test_config=None):
     GplDataSync_scheduler.start()
 
     EmontDataSync_scheduler = BackgroundScheduler()
-    EmontDataSync_scheduler.add_job(EmontDataSync,trigger='interval',minutes=15)
+    EmontDataSync_scheduler.add_job(EmontDataSync,trigger='interval',minutes=17)
     EmontDataSync_scheduler.start()
 
     ManaDataSync_scheduler = BackgroundScheduler()
-    ManaDataSync_scheduler.add_job(ManaDataSync,trigger='interval',minutes=12)
+    ManaDataSync_scheduler.add_job(ManaDataSync,trigger='interval',seconds=15)
     ManaDataSync_scheduler.start()
 
     btc_data_sync_scheduler = BackgroundScheduler()
