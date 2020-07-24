@@ -16,8 +16,6 @@ SMART_CONTRACT_BLOCK_STEP = 10000000
 
 
 def EmontDataSync():
-    mycur = mydb()
-    mycursor = mycur.cursor()
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         }).distinct("address")
@@ -32,23 +30,20 @@ def EmontDataSync():
                 del transactions[:10]
             else:
                 small_list = transactions
-            t = Thread(target=EmontDataFunc, args=(small_list,mycursor))
+            t = Thread(target=EmontDataFunc, args=(small_list,))
             t.start()
         except Exception:
             pass
-    mycursor.close()
 """
 def EmontDataSync1():
     EmontDataFunc()
-
 def EmontDataSync2():
     EmontDataFunc()
-
 def EmontDataSync3():
     EmontDataFunc()
 """
 
-def EmontDataFunc(small_list,mycursor):
+def EmontDataFunc(small_list):
     #mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     #current_tx = mycursor.fetchall()
     #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4"]
@@ -126,10 +121,13 @@ def EmontDataFunc(small_list,mycursor):
                             fromusern = token_deta['username']
                         else:
                             fromusern = None                
+                        mycur = mydb()
+                        mycursor = mycur.cursor()
                         mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
                         to_safename = mycursor.fetchone()
                         mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                         from_safename = mycursor.fetchone()
+                        mycursor.close()
                         to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
                         frm.append({"from":fro,"send_amount":(float(send_amount)/100000000),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                         array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"is_erc20":True,"ercblockNumber":int(blockNumber)})
@@ -169,4 +167,3 @@ def EmontDataFunc(small_list,mycursor):
                                 "transactions":listobj}})
         except Exception:
             pass
-

@@ -36,6 +36,7 @@ def EthSync():
     mycursor = mycur.cursor()
     mycursor.execute('SELECT address FROM sws_address WHERE type_id="'+str(1)+'"')
     current_tx = mycursor.fetchall()
+    mycursor.close()
     transactions = list(current_tx)
     rang = len(transactions)/10
     rang = round(rang)
@@ -46,13 +47,12 @@ def EthSync():
                 del transactions[:10]
             else:
                 small_list = transactions
-            t = Thread(target=EthSyncFunc, args=(small_list,mycursor))
+            t = Thread(target=EthSyncFunc, args=(small_list,))
             t.start()
         except Exception:
             pass
-    mycursor.close()
 
-def EthSyncFunc(small_list,mycursor):
+def EthSyncFunc(small_list):
     """
     print("start")
     mycursor = mydb.cursor()
@@ -61,10 +61,10 @@ def EthSyncFunc(small_list,mycursor):
     mycursor.close()
     #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
     """
-    for address in small_list:
+    for addresses in small_list:
         array=[]
         try:
-            #address = addresses[0]
+            address = addresses[0]
             ret=ETH_balance.replace("{{address}}",''+address+'')
             response_user_token = requests.get(url=ret)
             response = response_user_token.json()       
@@ -121,10 +121,13 @@ def EthSyncFunc(small_list,mycursor):
                         fromusern = token_deta['username']
                     else:
                         fromusern = None                
+                    mycur = mydb()
+                    mycursor = mycur.cursor()
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
                     to_safename = mycursor.fetchone()
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                     from_safename = mycursor.fetchone()
+                    mycursor.close()
                     to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
                     frm.append({"from":fro,"send_amount":str(round((float(send_amount)/1000000000000000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                     array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
@@ -165,8 +168,6 @@ def EthSyncFunc(small_list,mycursor):
 """
 def EthTimeSync():
     EthTimeSyncc(10)
-
-
 def EthTimeSync1():
     EthTimeSyncc(30)
 def EthTimeSync2():
@@ -175,7 +176,6 @@ def EthTimeSync3():
     EthTimeSyncc(60)
 def EthTimeSync4():
     EthTimeSyncc(1)
-
 def EthTimeSyncc(minn):
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
@@ -224,8 +224,6 @@ def get_txn_list(address, start_block, end_block, apikey):
 #----------------------------------------------------------------------------------------------
 
 def EthIntSync1():
-    mycur = mydb()
-    mycursor = mycur.cursor()
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         "date_time": {
@@ -243,35 +241,30 @@ def EthIntSync1():
                 del addresses[:10]
             else:
                 small_list = addresses
-            t = Thread(target=EthIntSync, args=(small_list,mycursor))
+            t = Thread(target=EthIntSync, args=(small_list,))
             t.start()
         except Exception:
             pass
         #print("threads are running",len(addresses))
-    mycursor.close()
 
 #    EthIntSync(5)
 
 """
 def EthIntSync2():
     EthIntSync(12)
-
 def EthIntSync3():
     EthIntSync(27)
-
 def EthIntSync4():
     EthIntSync(30)
-
 def EthIntSync5():
     EthIntSync(180)
 """
 
-def EthIntSync(small_list,mycursor):
+def EthIntSync(small_list):
     """
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         }).distinct("address")
-
     """
     """
     addresses = mongo.db.dev_sws_history.find({
@@ -348,6 +341,8 @@ def EthIntSync(small_list,mycursor):
                     else:
                         fromusern = None
                     if too !="":
+                        mycur = mydb()
+                        mycursor = mycur.cursor()
                         mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
                         to_safename = mycursor.fetchone()
                     else:
@@ -355,6 +350,7 @@ def EthIntSync(small_list,mycursor):
                     
                     mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                     from_safename = mycursor.fetchone()
+                    mycursor.close()
                     to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
                     frm.append({"from":fro,"send_amount":str(round((float(send_amount)/1000000000000000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                     array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"internal_transaction":True,"intblockNumber":int(intblockNumber)})
@@ -377,14 +373,11 @@ def EthIntSync(small_list,mycursor):
 ret=ETH_balance.replace("{{address}}",''+address+'')
 response_user_token = requests.get(url=ret)
 response = response_user_token.json()       
-
 doc=ETH_transactions.replace("{{address}}",''+address+'')
 response_user = requests.get(url=doc)
 res = response_user.json()       
-
 transactions=res['result']
 array=[]
-
 for transaction in transactions:
     frm=[]
     to=[]
@@ -417,7 +410,6 @@ ret = mongo.db.sws_history.update({
         }},upsert=True)
 internal_transact = eth_data_internal(address,symbol,type_id)
 return jsonify({"status":"success"})
-
 """
 
 
@@ -430,7 +422,6 @@ return jsonify({"status":"success"})
 
 """
 #----------Function for fetching tx_history and balance for ETH storing in mongodb----------
-
 def eth_data(address,symbol,type_id):
     ret=ETH_balance.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
@@ -439,10 +430,8 @@ def eth_data(address,symbol,type_id):
     doc=ETH_transactions.replace("{{address}}",''+address+'')
     response_user = requests.get(url=doc)
     res = response_user.json()       
-
     transactions=res['result']
     array=[]
-
     for transaction in transactions:
         frm=[]
         to=[]
@@ -475,10 +464,6 @@ def eth_data(address,symbol,type_id):
             }},upsert=True)
     internal_transact = eth_data_internal(address,symbol,type_id)
     return jsonify({"status":"success"})
-
-
-
-
 def eth_data_internal(address,symbol,type_id):
     ret=ETH_internal_transactions.replace("{{address}}",''+address+'')
     response_user_token = requests.get(url=ret)
@@ -486,7 +471,6 @@ def eth_data_internal(address,symbol,type_id):
     
     transactions=response['result']
     array=[]
-
     for transaction in transactions:
         frm=[]
         to=[]
@@ -519,7 +503,6 @@ def EthTimeSyncc(minn):
         }
     }).distinct("address")
     #addresses = ["0xa6fe83Dcf28Cc982818656ba680e03416824D5E4","0xBcBF6aC5F9D4D5D35bAC4029B73AA4B9Ed5e8c0b","0x467D629A836d50AbECec436A615030A845feD378","0x17DB4E652e5058CEE05E1dC6C39E392e5cFDD670"]
-
     for address in addresses:
         array=[]
         blocks = mongo.db.dev_sws_history.aggregate(
@@ -553,7 +536,6 @@ def EthTimeSyncc(minn):
             timestamp = transaction['timeStamp']
             first_date=int(timestamp)
             dt_object = datetime.datetime.fromtimestamp(first_date)
-
             fro =transaction['from']
             too=transaction['to']
             send_amount=transaction['value']
@@ -566,19 +548,15 @@ def EthTimeSyncc(minn):
                     usern = token_details['username']
                 else:
                     usern = None
-
                 token_deta = temp_db.owners_data.find_one({"owner_address":transaction['from']},{"username":1,"_id":0})
                 if token_deta is not None:
                     fromusern = token_deta['username']
                 else:
                     fromusern = None
-
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(too)+'" AND address_safename_enabled="yes"')
                 to_safename = mycursor.fetchone()
                 mycursor.execute('SELECT address_safename FROM sws_address WHERE address="'+str(fro)+'" AND address_safename_enabled="yes"')
                 from_safename = mycursor.fetchone()
-
-
                 to.append({"to":too,"receive_amount":"","safename":to_safename[0] if to_safename else None,"openseaname":usern})
                 frm.append({"from":fro,"send_amount":str(round((float(send_amount)/1000000000000000000),6)),"safename":from_safename[0] if from_safename else None,"openseaname":fromusern})
                 array.append({"fee":fee,"from":frm,"to":to,"date":dt_object,"dt_object":dt_object,"Tx_id":tx_id,"blockNumber":int(blockNumber)})
@@ -599,7 +577,6 @@ def EthTimeSyncc(minn):
                             "transactions":listobj
                             }
                 })
-
 def EthTimeSync():
     EthTimeSyncc(10)
 def EthTimeSync1():
@@ -608,5 +585,4 @@ def EthTimeSync2():
     EthTimeSyncc(40)
 def EthTimeSync3():
     EthTimeSyncc(60)
-
 """
