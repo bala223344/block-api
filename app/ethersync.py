@@ -227,7 +227,7 @@ def EthIntSync1():
     addresses = mongo.db.dev_sws_history.find({
         "type_id": "1",
         "date_time": {
-            "$gte": datetime.datetime.utcnow() - datetime.timedelta(minutes=10)
+            "$gte": datetime.datetime.utcnow() - datetime.timedelta(minutes=58)
         }
     }).distinct("address")
     #print(addresses)

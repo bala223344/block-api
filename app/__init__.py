@@ -64,9 +64,10 @@ def create_app(test_config=None):
     safename_verification_scheduler.add_job(safename_verification, trigger='interval', minutes=10)
     safename_verification_scheduler.start()
 
-    EthSync_scheduler = BackgroundScheduler()
-    EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=7)
-    EthSync_scheduler.start()
+	
+#    EthSync_scheduler = BackgroundScheduler()
+ #   EthSync_scheduler.add_job(EthSync,trigger='interval',minutes=20)
+  #  EthSync_scheduler.start()
 
     """
     EthTimeSync_scheduler = BackgroundScheduler()
@@ -78,20 +79,20 @@ def create_app(test_config=None):
     EthTimeSync_scheduler.start()
     """
 
-    EthIntSync_scheduler = BackgroundScheduler()
-    EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',minutes=10)
-    EthIntSync_scheduler.start()
+   # EthIntSync_scheduler = BackgroundScheduler()
+   # EthIntSync_scheduler.add_job(EthIntSync1,trigger='interval',minutes=35)
+   # EthIntSync_scheduler.start()
 
     GplDataSync_scheduler = BackgroundScheduler()
-    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',minutes=13)
+    GplDataSync_scheduler.add_job(GplDataSync,trigger='interval',minutes=45)
     GplDataSync_scheduler.start()
 
     EmontDataSync_scheduler = BackgroundScheduler()
-    EmontDataSync_scheduler.add_job(EmontDataSync,trigger='interval',minutes=17)
+    EmontDataSync_scheduler.add_job(EmontDataSync,trigger='interval',minutes=40)
     EmontDataSync_scheduler.start()
 
     ManaDataSync_scheduler = BackgroundScheduler()
-    ManaDataSync_scheduler.add_job(ManaDataSync,trigger='interval',minutes=15)
+    ManaDataSync_scheduler.add_job(ManaDataSync,trigger='interval',minutes=50)
     ManaDataSync_scheduler.start()
 
     btc_data_sync_scheduler = BackgroundScheduler()
