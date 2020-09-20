@@ -5,7 +5,7 @@ from app.config import ZEC_balance,ZEC_transactions
 from app import mongo
 from sendgrid.helpers.mail import Mail
 from app.config import SendGridAPIClient_key,Sendgrid_default_mail,BTC_balance
-from app.config import mydb,mycursor
+from app.config import mydb
 from sendgrid import SendGridAPIClient
 
 
@@ -78,7 +78,8 @@ def zcash_notification(address,symbol,type_id):
     sent = response['sentCount']
     recv = response['recvCount']
     total_current_tx  = int(sent) + int(recv)
-
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchall()
     transactions_count=current_tx[0]
@@ -87,6 +88,7 @@ def zcash_notification(address,symbol,type_id):
         mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
         email = mycursor.fetchone()
+        mycursor.close()
         email_id=email[0] 
         
         if email_id is not None:    

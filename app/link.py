@@ -6,7 +6,7 @@ from app.config import LINK_balance,LINK_transactions
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from app.config import ETH_transactions
-from app.config import mydb,mycursor,Sendgrid_default_mail,SendGridAPIClient_key
+from app.config import mydb,Sendgrid_default_mail,SendGridAPIClient_key
 
 
 #----------Function for fetching tx_history and balance storing in mongodb----------
@@ -67,6 +67,8 @@ def link_notification(address,symbol,type_id):
             tx_list.append({"transaction":"tx"})
 
     total_current_tx = len(tx_list)
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT total_tx_calculated FROM sws_address WHERE address="'+str(address)+'"')
     current_tx = mycursor.fetchone()
     tx_count=current_tx[0]
@@ -74,6 +76,7 @@ def link_notification(address,symbol,type_id):
         mycursor.execute('UPDATE sws_address SET total_tx_calculated ="'+str(total_current_tx)+'"  WHERE address = "'+str(address)+'"')
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(address)+'"')
         email = mycursor.fetchone()
+        mycursor.close()
         email_id=email[0]
         if email_id is not None:
             message = Mail(

@@ -1,6 +1,6 @@
 import os
 from app.config import template
-from app.config import mydb,mycursor,SendGridAPIClient_key,Sendgrid_default_mail
+from app.config import mydb,SendGridAPIClient_key,Sendgrid_default_mail
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
@@ -9,6 +9,8 @@ from sendgrid.helpers.mail import Mail
 #-----------scheduler for Pages PGP Verification------------
 
 def pgp_verification():
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT username FROM sws_user')
     usernames = mycursor.fetchall()
     for username in usernames:
@@ -23,6 +25,7 @@ def pgp_verification():
             keybase_changes =changes.replace('{{PGP_sign_key}}',''+keybase+'')
             mycursor.execute('SELECT address,type_id FROM sws_address where cms_login_name=''"' + str(user) + '"''')
             check = mycursor.fetchall()
+            mycursor.close()
             no_of_addresses=len(check)
             template_array=[]
             for addr in range(0,no_of_addresses):

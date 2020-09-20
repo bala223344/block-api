@@ -2,7 +2,7 @@ import requests
 from flask import jsonify
 from datetime import datetime
 from app import mongo
-from app.config import QTUM_balance,QTUM_transactions
+from app.config import QTUM_balance,QTUM_transactions,url_hash
 
 
 

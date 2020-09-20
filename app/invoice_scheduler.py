@@ -4,7 +4,7 @@ from flask import (
 )
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from app.config import mydb,mycursor,Sendgrid_default_mail,SendGridAPIClient_key
+from app.config import mydb,Sendgrid_default_mail,SendGridAPIClient_key
 from app import mongo
 import datetime
 from app.util import serialize_doc
@@ -146,6 +146,8 @@ def safename_verification():
         
             #update the address as verified
             if tx_type == 'verification':
+                 mycur = mydb()
+                 mycursor = mycur.cursor()
                  #print ('UPDATE sws_address SET address_status ="verified" WHERE address = "'+str(frm)+'" AND type_id = '+type_id+' AND cms_login_name =  "'+str(from_username)+'"')
                  mycursor.execute('UPDATE sws_address SET address_status ="verified" WHERE address = "'+str(frm)+'" AND type_id = '+type_id+' AND cms_login_name =  "'+str(from_username)+'"' )
 
@@ -156,6 +158,7 @@ def safename_verification():
                  #send a mail
                  mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(frm)+'"')
                  email = mycursor.fetchone()
+                 mycursor.close()
                  if email[0]:
                     email_id=email[0]
                     if email_id is not None:
@@ -241,8 +244,11 @@ def invoice_notification_interval():
         created_at = data['created_at']
         notes = data['from_notes']
         to_username = data['to_username']
+        mycur = mydb()
+        mycursor = mycur.cursor()
         mycursor.execute('SELECT u.email FROM db_safename.sws_address as a left join db_safename.sws_user as u on a.cms_login_name = u.username where a.address="'+str(to)+'"')
         email = mycursor.fetchone()
+        mycursor.close()
         if email[0]:
             email_id=email[0]
             if email_id is not None:

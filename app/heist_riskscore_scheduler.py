@@ -1,4 +1,4 @@
-from app.config import mydb,mycursor
+from app.config import mydb
 from app import mongo
 
 
@@ -7,6 +7,8 @@ from app import mongo
                         
 def risk_score_by_heist():
   #  mycursor.execute("""CREATE TABLE IF NOT EXISTS `sws_risk_score` ( id INT NOT NULL AUTO_INCREMENT,address varchar(100),risk_score_by_tx float(3) NULL,type_id int(3) NULL,riskscore_by_safename float(3) NULL,riskscore_by_knownheist float(3) NULL,PRIMARY KEY (id))""")
+    mycur = mydb()
+    mycursor = mycur.cursor()
     mycursor.execute('SELECT address,type_id FROM sws_address')
     check = mycursor.fetchall()
     for check in check:
