@@ -28,7 +28,10 @@ ETHERSCAN_API_KEY = "UKIKGWXX57YZQBVF2DYG1KQYQFVKUU8CEH"
 TOPIC_TRANSFER = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
 ETH_internal_transactions ="http://api.etherscan.io/api?module=account&action=txlistinternal&address={{address}}&startblock={{startblock}}&endblock={{endblock}}&sort=asc&apikey=V9GBE7D675BBBSR7D8VEYGZE5DTQBD9RMJ"
 
-client = MongoClient("mongodb://admin:0vXPeLcPxME40Yd@157.245.124.93/marketcap?authSource=admin")
+
+client = MongoClient("mongodb+srv://remoteuser:0vXPeLcPxME40Ydv@cg-cluster.a3zdw.mongodb.net/marketcap?retryWrites=true&w=majority")
+
+temp_db = client.marketcap
 
 
 def EthSync():
